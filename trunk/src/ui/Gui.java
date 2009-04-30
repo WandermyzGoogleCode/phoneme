@@ -2,19 +2,8 @@ package ui;
 import entity.*;
 import java.util.ArrayList;
 import entity.ResulType;
-public class Gui {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	public void pushResult(ResulType type,Object o){
-		//
-	}
+public interface Gui {
+	public void pushResult(ResulType type,Object o);
 
 	/**
 	 * 对于userList中的每一个用户，都问同一个问题askInfo，将回答的结果返回。
@@ -22,17 +11,12 @@ public class Gui {
 	 * @param userList
 	 * @return
 	 */
-	public ArrayList<Boolean> checkUserList(ArrayList<UserInfo> userList, String askInfo){
-		ArrayList<Boolean> r = new ArrayList<Boolean>();
-		return r;
-	}
+	public ArrayList<Boolean> checkUserList(ArrayList<UserInfo> userList, String askInfo);
 	
-	public boolean yseOrNo(String askInfo){
-		return true;
-	}
+	public boolean yseOrNo(String askInfo);
 	
-	public UserInfo selMatchedUser(UserInfo a, ArrayList<UserInfo> list){
-		UserInfo r = new UserInfo();
-		return r;
-	}
+	public UserInfo selMatchedUser(UserInfo a, ArrayList<UserInfo> list);
+	
+	//让用户选择返回的用户信息中的每一个字段是来源于a还是来源于b
+	public UserInfo mergeUserInfo(UserInfo a, UserInfo b);
 }
