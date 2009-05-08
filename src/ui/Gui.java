@@ -3,7 +3,7 @@ import entity.*;
 import java.util.ArrayList;
 import entity.ResulType;
 public interface Gui {
-	public void pushResult(ResulType type,Object o);
+	public void pushResult(ResulType type, Object o);
 
 	/**
 	 * 对于userList中的每一个用户，都问同一个问题askInfo，将回答的结果返回。

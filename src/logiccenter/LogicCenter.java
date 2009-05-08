@@ -25,9 +25,13 @@ public interface LogicCenter {
 	
 	public ReturnType removeSynContact(UserName un);
 	
+	public ReturnType addPerContact(UserName un);
+	
 	public ReturnType removePerContact(UserName un);
 	
 	public ReturnType createGroup(Group g, Permission p);
+	
+	public ReturnType setGroupPermission(Group g, Permission p);
 	
 	public ReturnType removeGroup(Group g);
 	
@@ -45,7 +49,9 @@ public interface LogicCenter {
 	
 	public ReturnType admitApplication(ID gID, ID uID);
 	
-	public ReturnType setPermission(Permission p);
+	public ReturnType setPermission(ID uid, Permission p);
+	
+	public ReturnType setVisibility(ID uid, int visibility);
 
 	//判断一些是否是同步联系人，如果是同步联系人，则不能修改BaseUserInfo
 	//同步过程
