@@ -144,7 +144,7 @@ public interface LogicCenter {
 	public ReturnType setPermission(ID uid, Permission p);
 	//TODO 这个是干嘛的来着。。
 	/**
-	 *
+	 * 人立方中使用，设定与自己的最短距离为visibility以下的人才能获得自己与联系人的关系
 	 * @param uid
 	 * @param visibility
 	 * @return
