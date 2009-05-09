@@ -30,6 +30,11 @@ public interface DataCenter {
 	 */
 	public ReturnType addSynRelationship(ID uid);
 	
+	/**
+	 * 删除同步联系人关系，（从自己到uid用户)
+	 * @param uid 同步联系人的ID
+	 * @return
+	 */
 	public ReturnType removeSynRelationship(ID uid);
 
 	/**
@@ -38,11 +43,26 @@ public interface DataCenter {
 	 * @return
 	 */
 	public ReturnType addPerRelationship(ID uid);
-
+	
+	/**
+	 * 删除被授权联系人关系
+	 * @param uid 被授权联系人的ID
+	 * @return
+	 */
 	public ReturnType removePerRelationship(ID uid);
 	
+	/**
+	 * 导入文件
+	 * @param fileName 文件名
+	 * @return
+	 */
 	public ReturnType importFile(String fileName);
 	
+	/**
+	 * 导出文件
+	 * @param fileName 文件名
+	 * @return
+	 */
 	public ReturnType exportFile(String fileName);
 
 	/**
