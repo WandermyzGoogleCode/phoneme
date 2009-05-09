@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import entity.*;
 public interface DataCenter {
 	//判断一些是否是同步联系人，如果是同步联系人，则不能修改BaseUserInfo
+	/**
+	 * 
+	 * @param
+	 */
 	public ReturnType setUserInfo(UserInfo b);	
 	public ReturnType setPermission(Permission p);
 	
@@ -12,7 +16,11 @@ public interface DataCenter {
 	 * @return
 	 */
 	public ReturnType setGroup(Group g);
-	
+	/**
+	 * 
+	 * @param g
+	 * @return
+	 */
 	public ReturnType removeGroup(Group g);
 	
 	/**
