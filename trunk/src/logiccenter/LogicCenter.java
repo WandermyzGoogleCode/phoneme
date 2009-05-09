@@ -93,14 +93,16 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public ReturnType editGroup(Group g);
+	
 	//TODO 邀请 里面该有一个group 参数吧？
+	//ANSWER: 有道理
 	/**
 	 * 邀请un加入群组，inviteInfo为邀请信息
 	 * @param un
 	 * @param inviteInfo
 	 * @return
 	 */
-	public ReturnType inviteToGroup(UserName un, String inviteInfo);
+	public ReturnType inviteToGroup(UserName un, Group g, String inviteInfo);
 	/**
 	 * 删除群组g中成员un，
 	 * @param un
@@ -134,6 +136,7 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public ReturnType admitApplication(ID gID, ID uID);
+	
 	/**
 	 * 设置uid的权限p
 	 * 对于用户的基本信息中的每一个字段（或者用户选中一些字段），用户选择“允许“或者“不允许”。
@@ -142,7 +145,11 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public ReturnType setPermission(ID uid, Permission p);
+	
 	//TODO 这个是干嘛的来着。。
+	//ANSWER: 如果B是A的同步联系人，那么就说明图中A到B有边。这条边的可见性定义为
+	//visibility，也就是说到达A的最短距离小于等于visibility的人才能通过这条边来扩展更多
+	//的人立方关系
 	/**
 	 * 人立方中使用，设定与自己的最短距离为visibility以下的人才能获得自己与联系人的关系
 	 * @param uid
