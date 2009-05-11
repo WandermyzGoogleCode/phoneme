@@ -48,25 +48,25 @@ public interface LogicCenter {
 	 * @param un
 	 * @return
 	 */
-	public ReturnType addSynContact(UserName un);
+	public ReturnType addSynContact(IdenticalInfoField un);
 	/**
 	 * 删除同步联系人
 	 * @param un
 	 * @return
 	 */
-	public ReturnType removeSynContact(UserName un);
+	public ReturnType removeSynContact(IdenticalInfoField un);
 	/**
 	 * 添加授权联系人
 	 * @param un
 	 * @return
 	 */
-	public ReturnType addPerContact(UserName un);
+	public ReturnType addPerContact(IdenticalInfoField un);
 	/**
 	 * 删除授权联系人
 	 * @param un
 	 * @return
 	 */
-	public ReturnType removePerContact(UserName un);
+	public ReturnType removePerContact(IdenticalInfoField un);
 	/**
 	 * 创建群组g，并给予创建者权限
 	 * @param g
@@ -102,14 +102,14 @@ public interface LogicCenter {
 	 * @param inviteInfo
 	 * @return
 	 */
-	public ReturnType inviteToGroup(UserName un, Group g, String inviteInfo);
+	public ReturnType inviteToGroup(IdenticalInfoField un, Group g, String inviteInfo);
 	/**
 	 * 删除群组g中成员un，
 	 * @param un
 	 * @param g
 	 * @return
 	 */
-	public ReturnType removeGroupMember(UserName un, Group g);
+	public ReturnType removeGroupMember(IdenticalInfoField un, Group g);
 	/**
 	 * 申请加入群组gID
 	 * @param gID
@@ -179,12 +179,14 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public StatResult getStatResult();
+	
 	/**
 	 * 导入
 	 * @param fileName
 	 * @return
 	 */
 	public ReturnType importFile(String fileName);
+	
 	/**
 	 * 导出
 	 * @param fileName
@@ -197,5 +199,5 @@ public interface LogicCenter {
 	 * @param b
 	 * @return
 	 */
-	public ReturnType relationCube(UserName a, UserName b);
+	public ReturnType relationCube(IdenticalInfoField a, IdenticalInfoField b);
 }
