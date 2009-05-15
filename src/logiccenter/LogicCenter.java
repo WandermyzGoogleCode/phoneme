@@ -1,6 +1,6 @@
 package logiccenter;
 import entity.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public interface LogicCenter {
 	/**
@@ -171,7 +171,7 @@ public interface LogicCenter {
 	 * @param uInfo
 	 * @return
 	 */
-	public ArrayList<UserInfo> localSearchContacts(UserInfo uInfo);
+	public List<UserInfo> localSearchContacts(UserInfo uInfo);
 	
 	/**
 	 * 返回统计信息
