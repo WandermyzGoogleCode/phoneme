@@ -1,5 +1,6 @@
 package datacenter;
-import java.util.ArrayList;
+import java.util.List;
+
 import entity.*;
 public interface DataCenter {
 	//判断一些是否是同步联系人，如果是同步联系人，则不能修改BaseUserInfo
@@ -86,5 +87,5 @@ public interface DataCenter {
 	 * @param source 获取用户信息的途径。比如直接从自己的数据库，或者从Outlook，Google Synchronized中等
 	 * @return
 	 */
-	public ArrayList<UserInfo> getAllUserInfo(LocalSynSource source);
+	public List<UserInfo> getAllUserInfo(LocalSynSource source);
 }

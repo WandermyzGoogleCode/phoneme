@@ -1,6 +1,6 @@
 package ui;
 import entity.*;
-import java.util.ArrayList;
+import java.util.List;
 import entity.ResulType;
 public interface Gui {
 	public void pushResult(ResulType type, Object o);
@@ -11,11 +11,11 @@ public interface Gui {
 	 * @param userList
 	 * @return
 	 */
-	public ArrayList<Boolean> checkUserList(ArrayList<UserInfo> userList, String askInfo);
+	public List<Boolean> checkUserList(List<UserInfo> userList, String askInfo);
 	
 	public boolean yseOrNo(String askInfo);
 	
-	public UserInfo selMatchedUser(UserInfo a, ArrayList<UserInfo> list);
+	public UserInfo selMatchedUser(UserInfo a, List<UserInfo> list);
 	
 	//让用户选择返回的用户信息中的每一个字段是来源于a还是来源于b
 	public UserInfo mergeUserInfo(UserInfo a, UserInfo b);
