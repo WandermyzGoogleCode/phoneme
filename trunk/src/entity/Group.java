@@ -2,6 +2,7 @@ package entity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Group {
 	private ID id;//Èº×éµÄID
@@ -27,5 +28,9 @@ public class Group {
 	public List<ID> getUsersID()
 	{
 		return users;
+	}
+	
+	public Set<String> getKeySet(){
+		return fieldMap.keySet();
 	}
 }
