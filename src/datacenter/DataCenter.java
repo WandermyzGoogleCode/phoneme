@@ -9,7 +9,7 @@ public interface DataCenter {
 	 * @param
 	 */
 	public ReturnType setUserInfo(UserInfo b);	
-	public ReturnType setPermission(Permission p);
+	public ReturnType setPermission(ID uid, Permission p);
 	
 	/**
 	 * 建立或修改群组g
@@ -25,14 +25,14 @@ public interface DataCenter {
 	public ReturnType removeGroup(Group g);
 	
 	/**
-	 * 增加同步联系人关系，（从自己到uid用户)
+	 * 增加同步联系人关系
 	 * @param uid 同步联系人的ID
 	 * @return
 	 */
 	public ReturnType addSynRelationship(ID uid);
 	
 	/**
-	 * 删除同步联系人关系，（从自己到uid用户)
+	 * 删除同步联系人关系
 	 * @param uid 同步联系人的ID
 	 * @return
 	 */
