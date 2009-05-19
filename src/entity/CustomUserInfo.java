@@ -11,6 +11,10 @@ public class CustomUserInfo {
 		return fieldMap.get(name);
 	}
 	
+	public void setInfoField(String name, InfoField info){
+		fieldMap.put(name, info);
+	}
+	
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
 	}
