@@ -1,4 +1,4 @@
-package entity;
+package entity.infoField;
 
 /**
  * 特殊的{@link InfoField}，表示该字段在数据库或者数据结构中建立了索引，

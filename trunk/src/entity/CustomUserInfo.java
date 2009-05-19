@@ -1,7 +1,10 @@
 package entity;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import entity.infoField.*;
 
 public class CustomUserInfo {
 	private Map<String, InfoField> fieldMap;
@@ -17,5 +20,14 @@ public class CustomUserInfo {
 	
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
+	}
+	
+	public CustomUserInfo()
+	{
+		fieldMap = new HashMap<String, InfoField>();
+		InfoFieldFactory factory = InfoFieldFactory.getFactory();
+		List<EmptyInfoField> fields = factory.makeAllCustomEmptyField();
+		for(EmptyInfoField field: fields)
+			fieldMap.put(field.getName(), field);		
 	}
 }

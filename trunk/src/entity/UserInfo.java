@@ -1,8 +1,8 @@
 package entity;
 
 public class UserInfo {
-	private BaseUserInfo baseInfo;
-	private CustomUserInfo customInfo;
+	private BaseUserInfo baseInfo = null;
+	private CustomUserInfo customInfo = null;
 	
 	public BaseUserInfo getBaseInfo()
 	{

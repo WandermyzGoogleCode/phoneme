@@ -11,9 +11,8 @@ public class IDFactory {
 	private IDFactory(){
 	}
 	
-	public static IDFactory getInstance()
+	synchronized public static IDFactory getInstance()
 	{
-		//TODO synchronized处理多线程
 		if (instance == null)
 			instance = new IDFactory();
 		return instance;
