@@ -1,6 +1,7 @@
 package logiccenter;
 import entity.*;
 import java.util.List;
+import entity.infoField.*;
 
 public interface LogicCenter {
 	/**

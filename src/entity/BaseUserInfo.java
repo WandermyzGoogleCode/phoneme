@@ -20,14 +20,6 @@ public class BaseUserInfo {
 		return fieldMap.get(name);
 	}
 	
-	public void setID(ID id){
-		this.id=id;
-	}
-	
-	public void setInfoField(String name,InfoField info){
-		fieldMap.put(name, info);
-	}
-	
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
 	}
@@ -44,5 +36,11 @@ public class BaseUserInfo {
 		List<EmptyInfoField> fields = factory.makeAllBaseEmptyField();
 		for(EmptyInfoField field: fields)
 			fieldMap.put(field.getName(), field);
+	}
+	public void setID(ID id){
+		this.id=id;
+	}
+	public void setInfoField(String name,InfoField info){
+		fieldMap.put(name, info);
 	}
 }
