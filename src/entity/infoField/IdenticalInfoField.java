@@ -1,4 +1,4 @@
-package entity;
+package entity.infoField;
 
 /**
  * 特殊的{@link InfoField}，他们是每个用户所唯一的。也就是说用户A和B不可能拥有一样的IdenticalInfoField，比如他们的邮箱、

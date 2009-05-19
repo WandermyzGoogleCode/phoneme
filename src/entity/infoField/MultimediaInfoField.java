@@ -1,4 +1,4 @@
-package entity;
+package entity.infoField;
 
 /**
  * 存照片等多媒体信息

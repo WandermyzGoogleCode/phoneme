@@ -1,7 +1,6 @@
-package entity;
-import entity.infoField.*;
+package entity.infoField;
 
-public class EmailAddr implements IdenticalInfoField 
+public class EmailAddr extends EmptyEmailAddr
 {
 	private String addr;
 
@@ -16,11 +15,8 @@ public class EmailAddr implements IdenticalInfoField
 		//检查格式，然后赋值
 		//TODO
 	}
-	
-	public String getName() {
-		return new String("EmailAddress");
-	}
 
+	@Override
 	public String getStringValue() {
 		return addr;
 	}

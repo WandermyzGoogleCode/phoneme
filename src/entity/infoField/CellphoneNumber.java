@@ -1,9 +1,9 @@
-package entity;
+package entity.infoField;
 
-public class MobilePhoneNumber implements IdenticalInfoField {
+public class CellphoneNumber extends EmptyCellphone{
 	private String number;
 
-	public MobilePhoneNumber(String number)
+	public CellphoneNumber(String number)
 	{
 		//检查格式
 		//TODO
@@ -14,11 +14,8 @@ public class MobilePhoneNumber implements IdenticalInfoField {
 		//检查格式，然后赋值
 		//TODO
 	}
-	
-	public String getName() {
-		return new String("MobilePhoneNumber");
-	}
 
+	@Override
 	public String getStringValue() {
 		return number;
 	}
