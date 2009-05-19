@@ -1,7 +1,5 @@
 package entity.infoField;
 
-import entity.IdenticalInfoField;
-
 /**
  * QQ这个IM的infoField
  * 其它的IM再说，反正都类似

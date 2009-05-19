@@ -1,7 +1,5 @@
 package entity.infoField;
 
-import entity.IndexedInfoField;
-
 /**
  * ¸öÈËÖ÷Ò³£¿
  * @author Administrator

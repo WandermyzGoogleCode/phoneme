@@ -9,6 +9,11 @@ package entity;
 public class ID {
 	private int id;
 	
+	static ID getNullID()
+	{
+		return new ID(-1);
+	}
+	
 	ID(int id)
 	{
 		this.id = id;
