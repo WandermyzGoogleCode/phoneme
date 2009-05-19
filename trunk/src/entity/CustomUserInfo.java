@@ -14,10 +14,6 @@ public class CustomUserInfo {
 		return fieldMap.get(name);
 	}
 	
-	public void setInfoField(String name, InfoField info){
-		fieldMap.put(name, info);
-	}
-	
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
 	}
@@ -29,5 +25,8 @@ public class CustomUserInfo {
 		List<EmptyInfoField> fields = factory.makeAllCustomEmptyField();
 		for(EmptyInfoField field: fields)
 			fieldMap.put(field.getName(), field);		
+	}
+	public void setInfoField(String name, InfoField info){
+		fieldMap.put(name, info);
 	}
 }

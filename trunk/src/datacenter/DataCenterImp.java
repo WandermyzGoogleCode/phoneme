@@ -14,6 +14,7 @@ import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 import entity.*;
+import entity.infoField.InfoFieldFactory;
 
 
 //!!!!!!Singleton
@@ -245,10 +246,6 @@ public class DataCenterImp implements DataCenter {
 	public List<UserInfo> getAllUserInfo(LocalSynSource source) {
 		// TODO Auto-generated method stub
 		List<UserInfo> result=new ArrayList<UserInfo>();
-		UserInfo userInfo=new UserInfo();
-		BaseUserInfo baseUserInfo=new BaseUserInfo();
-		CustomUserInfo customUserInfo=new CustomUserInfo();
-		InfoFieldFactory infoFieldFactory=new InfoFieldFactory();
 		try{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection connection=(Connection) DriverManager.getConnection(url);
@@ -257,26 +254,52 @@ public class DataCenterImp implements DataCenter {
 			String sql="SELECT UserID FROM UserInfo";
 			ResultSet allUserID=statement.executeQuery(sql);
 			//一个表项代表一个BaseUserInfo字段的所有用户的值
-			ArrayList<ResultSet> baseFieldList=new ArrayList<ResultSet>();
-			ArrayList<ResultSet> customFieldList= new ArrayList<ResultSet>();
+			Map<String,ResultSet> baseFieldList=new HashMap<String,ResultSet>();
+			Map<String,ResultSet> customFieldList= new HashMap<String,ResultSet>();
 			sql="SELECT ? FROM UserInfo";
 			PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql);
-			Iterator<String> iter=baseUserInfo.getKeySet().iterator();
+			Iterator<String> iter=new BaseUserInfo().getKeySet().iterator();
 			while(iter.hasNext()){
-				pstatement.setString(1, iter.next());
-				baseFieldList.add(pstatement.executeQuery());
+				String temp=iter.next();
+				pstatement.setString(1, temp);
+				baseFieldList.put(temp, pstatement.executeQuery());
 			}
-			iter=customUserInfo.getKeySet().iterator();
+			iter=new CustomUserInfo().getKeySet().iterator();
 			while(iter.hasNext()){
-				pstatement.setString(1, iter.next());
-				customFieldList.add(pstatement.executeQuery());
+				String temp=iter.next();
+				pstatement.setString(1, temp);
+				customFieldList.put(temp, pstatement.executeQuery());
 			}
+			while(allUserID.next()){
+				UserInfo userInfo=new UserInfo();
+				BaseUserInfo baseUserInfo=new BaseUserInfo();
+				CustomUserInfo customUserInfo=new CustomUserInfo(); 
+				baseUserInfo.setID(new ID(allUserID.getInt(1)));
+				Iterator<String> listIter=baseFieldList.keySet().iterator();
+				while(listIter.hasNext()){
+					//设置baseUserInfo的各个字段
+					String temp=listIter.next();
+					baseFieldList.get(temp).next();//此处可能有问题
+					baseUserInfo.setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, baseFieldList.get(temp).getString(1)));
+				}
+				userInfo.setBaseInfo(baseUserInfo);
+				listIter=customFieldList.keySet().iterator();
+				while(listIter.hasNext()){
+					//设置customUserInfo的各个字段
+					String temp=listIter.next();
+					customFieldList.get(temp).next();//此处可能有问题
+					customUserInfo.setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, customFieldList.get(temp).getString(1)));
+				}
+				userInfo.setCustomInfo(customUserInfo);
+				result.add(userInfo);
+			}
+			
 		}catch(Exception ex){
 			System.out.println(ex);
 			ex.printStackTrace();
 			System.exit(0);
 		}
-		return null;
+		return result;
 	}
 
 	@Override

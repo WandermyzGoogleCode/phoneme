@@ -14,7 +14,7 @@ public class ID {
 		return new ID(-1);
 	}
 	
-	ID(int id)
+	public ID(int id)
 	{
 		this.id = id;
 	}
