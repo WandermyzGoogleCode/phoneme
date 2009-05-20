@@ -88,4 +88,6 @@ public interface DataCenter {
 	 * @return
 	 */
 	public List<UserInfo> getAllUserInfo(LocalSynSource source);
+	
+	public ReturnType removeUserInfo(ID uid);
 }
