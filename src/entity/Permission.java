@@ -3,6 +3,7 @@ package entity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import entity.infoField.*;
 
@@ -41,5 +42,9 @@ public class Permission {
 		List<EmptyInfoField> ifields = factory.makeAllBaseEmptyField();
 		for(EmptyInfoField ifield: ifields)
 			fields.put(ifield.getName(), false);
+	}
+	
+	public Set<String> getKeySet(){
+		return fields.keySet();
 	}
 }

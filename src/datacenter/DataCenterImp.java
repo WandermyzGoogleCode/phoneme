@@ -30,6 +30,7 @@ public class DataCenterImp implements DataCenter {
 	private List<Group> groupDeleteBuffer;
 	private List<ID> syncIDDeleteBuffer;
 	private List<ID> perIDDeleteBuffer;
+	private List<ID> userIDDeleteBuffer;
 	private Map<Group,ID> deleteFromGroupBuffer;
 	
 	//数据库用户名
@@ -56,6 +57,7 @@ public class DataCenterImp implements DataCenter {
 		groupDeleteBuffer=new ArrayList<Group>();
 		syncIDDeleteBuffer=new ArrayList<ID>();
 		perIDDeleteBuffer=new ArrayList<ID>();
+		userIDDeleteBuffer=new ArrayList<ID>();
 		deleteFromGroupBuffer=new HashMap<Group,ID>();
 		
 		//建表
@@ -66,6 +68,7 @@ public class DataCenterImp implements DataCenter {
 	 	    
 	 	    boolean userInfoTableExist=true;
 	 	    boolean groupTableExist=true;
+	 	    boolean permissionTableExist=true;
 	 	    
 ///////////////！！！！！！！！！！！！（跟new BaseUserInfo()的实现有关，可能需要修改）
 			Iterator<String> fieldNameIter=(new BaseUserInfo()).getKeySet().iterator();
@@ -127,6 +130,25 @@ public class DataCenterImp implements DataCenter {
 	 	//建立Group成员表
 			if(groupTableExist==false){
 				sql="CREATE TABLE GroupMember(GroupID int not null,UserID int not null)";	 	    
+				statement.executeUpdate(sql);
+				connection.close();
+			}
+			
+		//判断Permission表是否存在
+			sql="SELECT * FROM Permission";
+			try{
+				statement.executeQuery(sql);
+			}catch(SQLException e){
+				permissionTableExist=false;
+			}
+		//建立Permission表
+			if(permissionTableExist==false){
+				sql="CREATE TABLE Permission(UserID int not null,";
+				fieldNameIter=(new Permission()).getKeySet().iterator();
+				while(fieldNameIter.hasNext()){
+					sql+=(","+fieldNameIter.next()+" int not null");
+				}
+				sql+=")";	 	    
 				statement.executeUpdate(sql);
 				connection.close();
 			}
@@ -512,7 +534,83 @@ public class DataCenterImp implements DataCenter {
 
 	@Override
 	public ReturnType setPermission(ID uid, Permission p) {
-		// TODO Auto-generated method stub
+		permissionWriteBuffer.add(p);
+		try{
+			if(permissionWriteBuffer.size()==1000){
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Connection connection=(Connection) DriverManager.getConnection(url);
+				connection.setAutoCommit(false);
+				
+				String sql1="UPDATAE Permission set";
+				String sql2="INSERT INTO Permission (UserID,";
+				Iterator<String> fieldNameIter=p.getKeySet().iterator();
+				int count=0;
+				while(fieldNameIter.hasNext()){
+					String temp=fieldNameIter.next();
+					sql1+=(","+temp+":=?");
+					sql2+=(","+temp);
+					count++;
+				}
+				sql1+=" WHERE UserID=?";
+				sql2+=") VALUES (?";//第一个?代表UserID，从第二个开始是字段内容
+				for(int i=0;i<count;i++)
+					sql2+=",?";
+				sql2+=")";
+				
+				PreparedStatement pstatement1=(PreparedStatement) connection.prepareStatement(sql1);
+				PreparedStatement pstatement2=(PreparedStatement) connection.prepareStatement(sql2);
+				for(int i=0;i<permissionWriteBuffer.size();i++){
+					boolean userExist=true;
+					try{
+						String tempSQL="SELECT count(*) FROM Permission WHERE UserID="+uid.getValue();
+						Statement statement = (Statement) connection.createStatement();
+						ResultSet rs=statement.executeQuery(tempSQL);
+						if(rs.next()){
+							if(rs.getInt(1)==0)
+								userExist=false;
+						}
+					}catch(SQLException e){
+						userExist=false;
+					}
+					if(userExist){
+						int keyNum=1;
+						fieldNameIter=permissionWriteBuffer.get(i).getKeySet().iterator();
+						while(fieldNameIter.hasNext()){
+							if( permissionWriteBuffer.get(i).getField(fieldNameIter.next())==true)
+								pstatement1.setInt(keyNum, 1);	
+							else 
+								pstatement1.setInt(keyNum, 0);
+							keyNum++;
+						}
+						pstatement1.setInt(keyNum, uid.getValue());
+						pstatement1.addBatch();
+					}else{
+						fieldNameIter=permissionWriteBuffer.get(i).getKeySet().iterator();
+						pstatement2.setInt(1, uid.getValue());
+						int keyNum=2;
+						while(fieldNameIter.hasNext()){
+							if( permissionWriteBuffer.get(i).getField(fieldNameIter.next())==true)
+								pstatement2.setInt(keyNum, 1);	
+							else 
+								pstatement2.setInt(keyNum, 0);
+							keyNum++;
+						}
+						pstatement2.addBatch();
+					}
+				}
+				pstatement1.executeBatch();
+				pstatement2.executeBatch();
+		 		connection.commit();
+		 		connection.close();
+		 		pstatement1.clearBatch();
+		 		pstatement2.clearBatch();
+		 		userInfoWriteBuffer.clear();
+			}
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+			System.exit(0);
+		}
 		return null;
 	}
 
@@ -556,7 +654,7 @@ public class DataCenterImp implements DataCenter {
 				for(int i=0;i<userInfoWriteBuffer.size();i++){
 					boolean userExist=true;
 					try{
-						String tempSQL="SELECT count(*) FROM GroupInfo WHERE GroupID="+userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue();
+						String tempSQL="SELECT count(*) FROM UserInfo WHERE UserID="+userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue();
 						Statement statement = (Statement) connection.createStatement();
 						ResultSet rs=statement.executeQuery(tempSQL);
 						if(rs.next()){
@@ -611,7 +709,33 @@ public class DataCenterImp implements DataCenter {
 		}
 		return null;
 	}
-	//TODO 貌似缺少RemoveUserInfo方法
-	//////////////!!!!!!!!!
+	
+	public ReturnType removeUserInfo(ID uid){
+		//TODO 貌似缺少RemoveUserInfo方法
+		userIDDeleteBuffer.add(uid);
+		if(userIDDeleteBuffer.size()==1000){
+			try{
+				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Connection connection=(Connection) DriverManager.getConnection(url);
+				connection.setAutoCommit(false);   
+				String sql="DELETE FROM UserInfo WHERE UserID=?";
+				PreparedStatement pstatement=(PreparedStatement) connection.prepareStatement(sql);
+				for(int i=0;i<userIDDeleteBuffer.size();i++){
+					pstatement.setInt(1, uid.getValue());
+					pstatement.addBatch();
+				}
+				pstatement.executeBatch();
+				connection.commit();
+				connection.close();
+				pstatement.clearBatch();
+				userIDDeleteBuffer.clear();
+			}catch(Exception ex){
+				System.out.println(ex);
+				ex.printStackTrace();
+				System.exit(0);
+			}
+		}
+		return null;
+	}
 
 }
