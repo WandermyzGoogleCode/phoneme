@@ -9,6 +9,6 @@ package entity.infoField;
 public abstract class EmptyInfoField implements InfoField {
 	@Override
 	public String getStringValue() {
-		return new String();
+		return "";
 	}
 }
