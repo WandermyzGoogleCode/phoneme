@@ -1,5 +1,6 @@
 package datacenter;
 
+import java.io.FileWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -259,8 +262,117 @@ public class DataCenterImp implements DataCenter {
 	}
 
 	@Override
-	public ReturnType exportFile(String fileName) {
-		// TODO Auto-generated method stub
+	public ReturnType exportFile(String dirName) {
+		// TODO 上面的fileName需要改为路径名，一下所有需要路径的地方加上路径名
+		try{
+			CSVWriter writer;
+			Iterator<String> iter;
+			String toWrite[];
+			//写UserInfo
+			writer=new CSVWriter(new FileWriter(dirName+"\\UserInfo.csv"),'#');
+			ArrayList<UserInfo> allUserInfo=(ArrayList<UserInfo>)getAllUserInfo(null);
+			int countBase=1;//已经有一个userID需要写入
+			int countCustom=0;
+			iter=new BaseUserInfo().getKeySet().iterator();
+			ArrayList<String> tempBase=new ArrayList<String>();
+			ArrayList<String> tempCustom=new ArrayList<String>();
+			while(iter.hasNext()){
+				tempBase.add(iter.next());
+				countBase++;
+			}
+			iter=new CustomUserInfo().getKeySet().iterator();
+			while(iter.hasNext()){
+				tempCustom.add(iter.next());
+				countCustom++;
+			}
+			toWrite=new String[countBase+countCustom];
+			toWrite[0]="UserID";
+			for(int i=1;i<countBase;i++){
+				toWrite[i]=tempBase.get(i-1);
+			}
+			for(int i=0;i<countCustom;i++){
+				toWrite[countBase+i]=tempCustom.get(i);
+			}
+			writer.writeNext(toWrite);
+			for(int i=0;i<allUserInfo.size();i++){
+				toWrite[0]=""+allUserInfo.get(i).getBaseInfo().getID().getValue();
+				for(int j=1;j<countBase;j++){
+					toWrite[j]=allUserInfo.get(i).getBaseInfo().getInfoField(tempBase.get(j-1)).getStringValue();
+				}
+				for(int j=1;j<countCustom;j++){
+					toWrite[countBase+i]=allUserInfo.get(i).getCustomInfo().getInfoField(tempCustom.get(j)).getStringValue();
+				}
+				writer.writeNext(toWrite);
+			}
+			
+			//写GroupInfo
+			writer=new CSVWriter(new FileWriter(dirName+"\\GroupInfo.csv"),'#');
+			ArrayList<Group> allGroup=(ArrayList<Group>)getAllGroup();
+			iter=new Group().getKeySet().iterator();
+			int count=1;
+			ArrayList<String> tempGroup=new ArrayList<String>();
+			while(iter.hasNext()){
+				tempGroup.add(iter.next());
+				count++;
+			}
+			toWrite=new String[count];
+			toWrite[0]="GroupID";
+			for(int i=1;i<count;i++){
+				toWrite[i]=tempGroup.get(i-1);
+			}
+			writer.writeNext(toWrite);
+			for(int i=0;i<allGroup.size();i++){
+				toWrite[0]=""+allGroup.get(i).getID().getValue();
+				for(int j=1;j<count;j++){
+					toWrite[j]=allGroup.get(i).getInfoField(tempGroup.get(j-1)).getStringValue();
+				}
+				writer.writeNext(toWrite);
+			}
+			//写GroupMember
+			writer=new CSVWriter(new FileWriter(dirName+"\\GroupMember.csv"),'#');
+			toWrite=new String[2];
+			toWrite[0]="GroupID";
+			toWrite[1]="UserID";
+			for(int i=0;i<allGroup.size();i++){
+				for(int j=0;j<allGroup.get(i).getUsersID().size();i++){
+					toWrite[0]=""+allGroup.get(i).getID().getValue();
+					toWrite[1]=""+allGroup.get(i).getUsersID().get(j).getValue();
+					writer.writeNext(toWrite);
+				}
+			}
+			//写Permission
+			writer=new CSVWriter(new FileWriter(dirName+"\\Permission.csv"),'#');
+			HashMap<ID,Permission> allPermission=(HashMap<ID,Permission>)getAllPermission();
+			iter=new Permission().getKeySet().iterator();
+			ArrayList<String> tempPer=new ArrayList<String>();
+			count=1;
+			while(iter.hasNext()){
+				tempPer.add(iter.next());
+				count++;
+			}
+			toWrite=new String[count];
+			toWrite[0]="UserID";
+			for(int i=1;i<count;i++){
+				toWrite[i]=tempPer.get(i-1);
+			}
+			writer.writeNext(toWrite);
+			Iterator<ID> iterID=allPermission.keySet().iterator();
+			while(iterID.hasNext()){
+				ID id=iterID.next();
+				toWrite[0]=""+id.getValue();
+				for(int i=1;i<count;i++){
+					if(allPermission.get(id).getField(tempPer.get(i-1))==true)
+						toWrite[i]=""+1;
+					else 
+						toWrite[i]=""+0;
+				}
+				writer.writeNext(toWrite);
+			}
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+			System.exit(0);
+		}
 		return null;
 	}
 
@@ -736,6 +848,92 @@ public class DataCenterImp implements DataCenter {
 			}
 		}
 		return null;
+	}
+	
+	private List<Group> getAllGroup(){
+		//TODO
+		List<Group> result=new ArrayList<Group>();
+		try{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection connection=(Connection) DriverManager.getConnection(url);
+			connection.setAutoCommit(false);
+			Statement statement=(Statement)connection.createStatement();
+			String sql="SELECT GroupID FROM GroupInfo";
+			ResultSet allGroupID=statement.executeQuery(sql);
+			//一个表项代表一个group字段的所有用户的值
+			Map<String,ResultSet> groupFieldList=new HashMap<String,ResultSet>();
+			String sql1="SELECT ? FROM GroupInfo";
+			String sql2="SELECT UserID FROM GroupMember WHERE GroupID=?";
+			PreparedStatement pstatement1=(PreparedStatement)connection.prepareStatement(sql1);
+			PreparedStatement pstatement2=(PreparedStatement)connection.prepareStatement(sql2);
+			Iterator<String> iter=new Group().getKeySet().iterator();
+			while(iter.hasNext()){
+				String temp=iter.next();
+				pstatement1.setString(1, temp);
+				groupFieldList.put(temp, pstatement1.executeQuery());
+			}
+			while(allGroupID.next()){
+				int groupID=allGroupID.getInt(1);
+				Group group=new Group();
+				group.setID(new ID(groupID));
+				pstatement2.setInt(1, groupID);
+				ResultSet idRs=pstatement2.executeQuery();
+				while(idRs.next()){
+					group.addToGroup(new ID(idRs.getInt(1)));
+				}
+				Iterator<String> listIter=groupFieldList.keySet().iterator();
+				while(listIter.hasNext()){
+					//设置group的各个字段
+					String temp=listIter.next();
+					groupFieldList.get(temp).next();//此处可能有问题
+					group.setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, groupFieldList.get(temp).getString(1)));
+				}
+				result.add(group);
+			}
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+			System.exit(0);
+		}
+		return result;
+	}
+	
+	private Map<ID,Permission> getAllPermission(){
+		Map<ID,Permission> result = new HashMap<ID,Permission>();
+		try{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection connection=(Connection) DriverManager.getConnection(url);
+			connection.setAutoCommit(false);
+			Statement statement=(Statement)connection.createStatement();
+			String sql="SELECT UserID FROM Permission";
+			ResultSet allUserID=statement.executeQuery(sql);
+			Iterator<String> iter=new Permission().getKeySet().iterator();
+			String sql1="SELECT ? FROM Permission WHERE UserID=?";
+			PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql1);
+			while(allUserID.next()){
+				ID id=new ID(allUserID.getInt(1));
+				Permission per=new Permission();
+				pstatement.setInt(2, id.getValue());
+				while(iter.hasNext()){
+					String temp=iter.next();
+					pstatement.setString(1, temp);
+					ResultSet rs=pstatement.executeQuery();
+					rs.next();
+					if(rs.getInt(1)==1)
+						per.setField(temp, true);
+					else
+						per.setField(temp, false);
+				}
+				result.put(id, per);
+			}
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+			System.exit(0);
+		}
+		return result;
 	}
 
 }

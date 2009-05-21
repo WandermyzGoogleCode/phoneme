@@ -31,7 +31,19 @@ public class Group {
 		return users;
 	}
 	
+	public void setInfoField(String name,InfoField info){
+		this.fieldMap.put(name, info);
+	}
+	
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
+	}
+	
+	public void setID(ID id){
+		this.id=id;
+	}
+	
+	public void addToGroup(ID id){
+		this.users.add(id);
 	}
 }
