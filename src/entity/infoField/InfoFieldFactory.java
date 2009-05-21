@@ -54,6 +54,14 @@ public class InfoFieldFactory {
 		return res;		
 	}
 	
+	public List<EmptyInfoField> makeAllGroupEmptyField()
+	{
+		ArrayList<EmptyInfoField> res = new ArrayList<EmptyInfoField>();
+		res.add(new EmptyGroupName());
+		res.add(new EmptyGroupDescription());
+		res.add(new EmptyTag());
+		return res;
+	}
 	public static InfoFieldFactory getFactory()
 	{
 		return factory;

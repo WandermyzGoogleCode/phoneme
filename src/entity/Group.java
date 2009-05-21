@@ -3,7 +3,9 @@ package entity;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
 import entity.infoField.*;
+import java.util.ArrayList;
 
 public class Group {
 	private ID id;//Èº×éµÄID
@@ -31,12 +33,19 @@ public class Group {
 		return users;
 	}
 	
-	public void setInfoField(String name,InfoField info){
-		this.fieldMap.put(name, info);
-	}
-	
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
+	}
+	
+	public Group()
+	{
+		id = adminUser = ID.getNullID();
+		users = new ArrayList<ID>();
+		fieldMap = new HashMap<String, InfoField>();
+		InfoFieldFactory factory = InfoFieldFactory.getFactory();
+		List<EmptyInfoField> fields = factory.makeAllGroupEmptyField();
+		for(EmptyInfoField field: fields)
+			fieldMap.put(field.getName(), field);
 	}
 	
 	public void setID(ID id){
