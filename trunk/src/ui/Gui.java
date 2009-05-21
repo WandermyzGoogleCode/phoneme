@@ -1,10 +1,8 @@
 package ui;
 import entity.*;
 import java.util.List;
-import entity.ResulType;
-public interface Gui {
-	public void pushResult(ResulType type, Object o);
 
+public interface Gui {
 	/**
 	 * 对于userList中的每一个用户，都问同一个问题askInfo，将回答的结果返回。
 	 * 
