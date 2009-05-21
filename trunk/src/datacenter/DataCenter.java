@@ -54,14 +54,14 @@ public interface DataCenter {
 	
 	/**
 	 * 导入文件
-	 * @param fileName 文件名
+	 * @param fileName 文件名，带路径
 	 * @return
 	 */
 	public ReturnType importFile(String fileName);
 	
 	/**
 	 * 导出文件
-	 * @param fileName 文件名
+	 * @param fileName 文件名，带路径
 	 * @return
 	 */
 	public ReturnType exportFile(String fileName);
