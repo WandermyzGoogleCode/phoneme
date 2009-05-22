@@ -1,6 +1,14 @@
 package logiccenter;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import serverlogiccenter.ServerLogicCenter;
 
 import entity.BaseUserInfo;
 import entity.Group;
@@ -16,6 +24,7 @@ import entity.infoField.IdenticalInfoField;
 public class LogicCenterImp implements LogicCenter {
 
 	private BaseUserInfo loginUser;//当前登录的用户
+	private ServerLogicCenter server;
 	
 	@Override
 	public ReturnType addPerContact(IdenticalInfoField un) {
@@ -186,4 +195,56 @@ public class LogicCenterImp implements LogicCenter {
 		return null;
 	}
 
+	@Override
+	public MessageBox getMessageBox()
+	{
+		//TODO 当前只是测试。好的流程应该是在用户登录的时候建立一个MessageBox，而不是每GET一次就建立一个。
+		return new MessageBox(loginUser.getID(), server);
+	}
+	
+	public LogicCenterImp()
+	{
+		try {
+		    Registry registry = LocateRegistry.getRegistry("Localhost");//TODO 当前只是本机网络测试
+		    server = (ServerLogicCenter) registry.lookup("logicCenterServer");
+		} catch (Exception e) {
+		    System.err.println("Client exception: " + e.toString());
+		    e.printStackTrace();
+		}			
+	}
+	
+	/**
+	 * 测试用
+	 * @param args
+	 */
+	public static void main(String args[])
+	{
+		LogicCenterImp logicCenterImp = new LogicCenterImp();
+		MessageBox messageBox = logicCenterImp.getMessageBox();
+		Tester tester = new Tester();
+		messageBox.addObserver(tester);
+		String cmd = "";
+		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));		
+		while (cmd != "exit")
+		{
+			System.out.println("Type something...('exit' to exit)");
+			try
+			{
+				cmd = stdin.readLine();
+			}
+			catch (Exception e){}
+		}
+	}
+}
+
+class Tester implements Observer
+{
+	@Override
+	public void update(Observable o, Object arg) 
+	{
+		MessageBox box = (MessageBox)o;
+		System.out.println("State Changed, new State: "+box.getState());
+		if (box.getUpdateTime() != null)
+			System.out.println("UpdateTime: "+box.getUpdateTime()+"\n");
+	}
 }

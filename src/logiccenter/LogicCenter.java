@@ -201,4 +201,10 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public ReturnType relationCube(IdenticalInfoField a, IdenticalInfoField b);
+	
+	/**
+	 * 获得当前登录用户的信息收件箱
+	 * @return
+	 */
+	public MessageBox getMessageBox();
 }

@@ -1,4 +1,4 @@
-package entity;
+package entity.message;
 
 /**
  * 所有服务器给客户端主动发送的东西都继承自这个接口，
