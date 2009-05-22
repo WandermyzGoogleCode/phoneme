@@ -45,7 +45,7 @@ public class DataCenterImp implements DataCenter {
 	//联结字符串
 	private String url="jdbc:mysql://localhost/"+dbName+"?user="+userName+"&password="+userPasswd;
 	
-	private static final DataCenterImp instance=null;
+	private static DataCenterImp instance=null;
 	
 	/**
 	 * 构造函数，进行初始化类成员变量，若表不存在则建表等操作
@@ -168,6 +168,9 @@ public class DataCenterImp implements DataCenter {
 	 * @return
 	 */
 	public static synchronized DataCenterImp Instance(){
+		if(instance==null){
+			instance=new DataCenterImp();
+		}
 		return instance;
 	}
 	
