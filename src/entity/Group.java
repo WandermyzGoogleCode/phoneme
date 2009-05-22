@@ -55,4 +55,8 @@ public class Group {
 	public void addToGroup(ID id){
 		this.users.add(id);
 	}
+	
+	public void setInfoField(String name,InfoField info){
+		this.fieldMap.put(name, info);
+	}
 }
