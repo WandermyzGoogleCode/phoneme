@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import serverlogiccenter.ServerLogicCenter;
+import serverLogicCenter.ServerLogicCenter;
 
 import entity.BaseUserInfo;
 import entity.Group;
