@@ -1,10 +1,13 @@
 package logiccenter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import serverlogiccenter.ServerLogicCenter;
 
 import entity.ID;
 
-import entity.Message;
+import entity.message.Message;
 
 /**
  * 一个给出当前有哪些消息的VirtualResult。
@@ -16,15 +19,19 @@ import entity.Message;
  *
  */
 public class MessageBox extends VirtualResult {
-	private ArrayList<Message> messages;
+	private List<Message> messages;
 	
 	/**
 	 * 单独获取新信息的线程Task
 	 * @author Administrator
 	 *
 	 */
+	
 	class MessageRetriever implements Runnable
 	{
+		private ServerLogicCenter server;
+		private ID thisUser;
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -40,6 +47,28 @@ public class MessageBox extends VirtualResult {
 			 * 	notifyObservers(); 
 			 * }
 			 */
+			try
+			{
+				messages = server.getAllMessages(thisUser);
+				setState(VirtualState.PREPARED);
+				while (true)
+				{
+					Message newMessage = server.getNewMessage(thisUser);
+					messages.add(newMessage);
+					setUpdateTime(Calendar.getInstance().getTime());
+				}
+			}
+			catch (Exception e)
+			{
+				System.err.println("Exception: "+e.toString());
+				e.printStackTrace();			
+			}
+		}
+		
+		public MessageRetriever(ID thisUser, ServerLogicCenter server)
+		{
+			this.thisUser = thisUser;
+			this.server = server;
 		}
 	}
 	
@@ -56,11 +85,10 @@ public class MessageBox extends VirtualResult {
 	 * 信息收件箱。
 	 * @param thisUser
 	 */
-	public MessageBox(ID thisUser)
+	public MessageBox(ID thisUser, ServerLogicCenter server)
 	{
-		state = VirtualState.LOADING;
-		Thread retrieveThread =  new Thread(new MessageRetriever());
+		Thread retrieveThread =  new Thread(new MessageRetriever(thisUser, server));
 		retrieveThread.start();
 		//TODO some other works...
-	}
+	}	
 }

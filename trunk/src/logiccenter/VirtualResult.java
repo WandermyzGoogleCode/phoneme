@@ -17,9 +17,9 @@ import java.util.Date;
  *
  */
 public abstract class VirtualResult extends Observable {
-	protected VirtualState state;//当前Result获取的状态
-	protected Error err;//如果当前状态为出错，那么这个记录了出错信息
-	protected Date updateTime;//当前Result最后一次更新的时间，当Result不断更新的时候有用
+	private VirtualState state = VirtualState.LOADING;//当前Result获取的状态
+	protected Error err = null;//如果当前状态为出错，那么这个记录了出错信息
+	protected Date updateTime = null;//当前Result最后一次更新的时间，当Result不断更新的时候有用
 	
 	public VirtualState getState(){
 		return state;
@@ -29,7 +29,27 @@ public abstract class VirtualResult extends Observable {
 		return err;
 	}
 	
-	public Date getUpdateTime(){
+	synchronized public Date getUpdateTime(){
 		return updateTime;
+	}
+	
+	synchronized protected void setState(VirtualState newState)
+	{
+		state = newState;
+		notifyObservers();
+	}
+	
+	synchronized protected void setUpdateTime(Date time)
+	{
+		this.state = VirtualState.PREPARED;
+		updateTime = time;
+		notifyObservers();
+	}
+	
+	synchronized protected void setError(Error err)
+	{
+		this.err = err;
+		this.state = VirtualState.ERRORED;
+		notifyObservers();
 	}
 }
