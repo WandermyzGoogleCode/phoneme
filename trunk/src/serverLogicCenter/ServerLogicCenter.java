@@ -12,11 +12,13 @@ public interface ServerLogicCenter extends Remote {
 	 * @param user
 	 * @return
 	 */
-	public List<Message> getAllMessages(ID user);
+	//TODO UNCOVER
+	//public List<Message> getAllMessages(ID user);
 	/**
 	 * 返回用户user最新更新的信息
 	 * @param user
 	 * @return
 	 */
-	public Message getNewMessage(ID user);
+	//TODO UNCOVER
+	//public Message getNewMessage(ID user);
 }

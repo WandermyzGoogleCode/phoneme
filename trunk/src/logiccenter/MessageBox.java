@@ -49,12 +49,14 @@ public class MessageBox extends VirtualResult {
 			 */
 			try
 			{
-				messages = server.getAllMessages(thisUser);
+				//TODO UNCOVER
+				//messages = server.getAllMessages(thisUser);
 				setState(VirtualState.PREPARED);
 				while (true)
 				{
-					Message newMessage = server.getNewMessage(thisUser);
-					messages.add(newMessage);
+					//TODO UNCOVER
+					//Message newMessage = server.getNewMessage(thisUser);
+					//messages.add(newMessage);
 					setUpdateTime(Calendar.getInstance().getTime());
 				}
 			}

@@ -14,13 +14,15 @@ import entity.message.SimpleStringMessage;
 
 public class ServerLogicCenterImp implements ServerLogicCenter {
 
-	@Override
+	//TODO UNCOVER
+	/*@Override
 	public List<Message> getAllMessages(ID user) {
 		// TODO 现在只是测试
 		return new ArrayList<Message>();
-	}
+	}*/
 
-	@Override
+	//TODO UNCOVER
+	/*@Override
 	public Message getNewMessage(ID user) {
 		// TODO 现在只是测试
 		System.out.println("Waiting for next message...");
@@ -36,7 +38,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			e.printStackTrace();			
 		}
 		return new SimpleStringMessage(line);
-	}
+	}*/
 
 	public static void main(String args[])
 	{
