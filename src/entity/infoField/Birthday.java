@@ -20,11 +20,19 @@ public class Birthday extends EmptyBirthday {
 	private final int dd=2;
 	
 	public static boolean check(String data){
-		return Pattern.matches("\\d+-\\d+-\\d", data);
+		return Pattern.matches("\\d+-\\d+-\\d+", data);
+	}
+
+	public boolean legalDate(){
+		//TODO 有空的话，加上更加精确的判断
+		return (y >= 0 && y <= 9999 && m >= 1 && m <= 12 && d >= 1 && d <= 31);
 	}
 	
 	public Birthday(String birthday)
 	{
+		//TODO TEST
+		System.err.println(birthday);
+		
 		if(birthday==null || !check(birthday))
 			birthday = nullData;
 		
@@ -33,6 +41,8 @@ public class Birthday extends EmptyBirthday {
 		this.m=Integer.parseInt(date[mm]);
 		this.d=Integer.parseInt(date[dd]);
 		this.day=birthday;
+		if (!legalDate())
+			setStringValue(nullData);
 	}
 	
 	public void setStringValue(String birthday)
@@ -45,6 +55,8 @@ public class Birthday extends EmptyBirthday {
 		this.m=Integer.parseInt(date[mm]);
 		this.d=Integer.parseInt(date[dd]);
 		this.day=birthday;
+		if (!legalDate())
+			setStringValue(nullData);
 	}
 
 	@Override

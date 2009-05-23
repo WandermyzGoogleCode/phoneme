@@ -293,6 +293,8 @@ public class LogicCenterImp implements LogicCenter {
 		res.setTotalCnt(allUsers.size());
 		@SuppressWarnings("unchecked")
 		ArrayList<UserInfo> distrib[] = new ArrayList[12];
+		for(int i=0; i<12; i++)
+			distrib[i] = new ArrayList<UserInfo>();
 		for(UserInfo userInfo:allUsers)
 			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("BirthDay")).getMonth()-1].add(userInfo);
 		res.setBirthDistrib(distrib);

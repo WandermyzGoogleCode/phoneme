@@ -199,6 +199,7 @@ public class MainWindow {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.exit(0);//测试时期用来强制结束MessageBox线程。
 	}
 
 	/**
@@ -305,6 +306,9 @@ public class MainWindow {
 
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println("统计！");
+				StatObserver observer = new StatObserver();
+				GetStatResultResult res = logicCenter.getStatResult();
+				res.addObserver(observer);
 				statDialog=new StaticDialog(shell,SWT.NONE);
 				statDialog.open();
 			}
@@ -697,7 +701,7 @@ public class MainWindow {
 				// Shell regist=new Shell();
 				// regist.open();
 				// Dialog a=new Dialog(shell);
-				SearchLocalDialog r = new SearchLocalDialog(shell, SWT.None);
+				SearchLocalDialog r = new SearchLocalDialog(MainWindow.this, shell, SWT.None);
 				r.open();
 			}
 		});
@@ -896,16 +900,12 @@ public class MainWindow {
 		RefreshObserver observer = new RefreshObserver();
 		allContactsBox = logicCenter.getAllContactsBox();
 		allContactsBox.addObserver(observer);
-		if (allContactsBox.getState() == VirtualState.PREPARED)
-			refreshContacts(allContactsBox.getContacts());
 		//TODO ERRORED的处理
 		
 		//TODO 正常情况下，应该登录后获取MessageBox，当前只是测试
 		MessageBoxObserver mObserver = new MessageBoxObserver();
 		messageBox = logicCenter.getMessageBox();
 		messageBox.addObserver(mObserver);
-		if (messageBox.getState() == VirtualState.PREPARED)
-			refreshMessageBox(messageBox.getMessages());
 		//TODO ERRORED的处理
 	}
 
@@ -1346,7 +1346,8 @@ public class MainWindow {
 				} else {
 					// TODO: 编辑联系人
 					// Debug:
-					EditContactDialog editContac = new EditContactDialog(shell,
+					int ind = current.getParentItem().indexOf(current);
+					EditContactDialog editContac = new EditContactDialog(allContactsBox.getContacts().get(ind), shell,
 							SWT.None);
 					editContac.open();
 
