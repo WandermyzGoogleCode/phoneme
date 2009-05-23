@@ -1506,8 +1506,19 @@ public class MainWindow {
 	void refreshMessageBox(List<Message> messages)
 	{
 		//TODO LIJING
+		Display.getDefault().syncExec(new RefreshMessageTask(messages));
 	}
-	
+	class RefreshMessageTask implements Runnable{
+		private List<Message> messages;
+		@Override
+		public void run() {
+			messageCompsite.setMessage(messages);
+		}
+		
+		public RefreshMessageTask(List<Message> messages){
+			this.messages = messages;
+		}
+	}
 	class RefreshObserver implements Observer
 	{
 		@Override

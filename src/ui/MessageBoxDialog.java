@@ -1,6 +1,6 @@
 package ui;
 
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import entity.VirtualResult.MessageBox;
+import entity.message.Message;
 
 public class MessageBoxDialog extends Composite {
 	private Text txt0;
@@ -46,13 +47,11 @@ public class MessageBoxDialog extends Composite {
 		}
 	}
 
-	public void setMessage(MessageBox m) {
-		txt0.setText(new Integer(m.getMessageCnt()).toString());
-
-		m.getMessageCnt();
-	//	List <Message> l=m.getMessages();
-		for(int i=0;i<m.getMessages().size();i++){   
-		      
-		   }   
+	public void setMessage(List<Message> m) {
+		int n=m.size();
+		txt0.setText(new Integer(n).toString());
+		for(int i=0;i<n;i++){
+			new TreeItem(tree,SWT.NONE).setText(m.get(i).toString());
+		}
 	}
 }
