@@ -1542,7 +1542,7 @@ public class MainWindow {
 	}
 	
 	void displayStat(StatResult result){
-		
+		Display.getDefault().syncExec(new DisplayStatTask(result));
 	}
 	
 	class StatObserver implements Observer{
