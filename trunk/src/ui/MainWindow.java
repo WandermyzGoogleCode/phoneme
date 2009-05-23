@@ -871,7 +871,7 @@ public class MainWindow {
 		MessageBoxObserver mObserver = new MessageBoxObserver();
 		MessageBox mBox = logicCenter.getMessageBox();
 		mBox.addObserver(mObserver);
-		if (box.getState() == VirtualState.PREPARED)
+		if (mBox.getState() == VirtualState.PREPARED)
 			refreshMessageBox(mBox.getMessages());
 		//TODO ERROREDµÄ´¦Àí
 	}
@@ -1512,6 +1512,8 @@ public class MainWindow {
 		private List<Message> messages;
 		@Override
 		public void run() {
+			//TODO TEST
+			System.err.println(messages.toString());
 			messageCompsite.setMessage(messages);
 		}
 		
