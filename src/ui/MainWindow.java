@@ -53,8 +53,10 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import com.swtdesigner.SWTResourceManager;
 
+import entity.StatResult;
 import entity.UserInfo;
 import entity.VirtualResult.AllContactsBox;
+import entity.VirtualResult.GetStatResultResult;
 import entity.VirtualResult.MessageBox;
 import entity.VirtualResult.VirtualState;
 import entity.message.Message;
@@ -1522,6 +1524,32 @@ public class MainWindow {
 		public void update(Observable o, Object arg1) {
 			MessageBox box = (MessageBox)o;
 			refreshMessageBox(box.getMessages());
+		}
+	}
+	
+	class DisplayStatTask implements Runnable{
+		StatResult result;
+		
+		@Override
+		public void run() {
+			// TODO Lijing Fill
+			
+		}
+		
+		public DisplayStatTask(StatResult result) {
+			this.result = result;
+		}
+	}
+	
+	void displayStat(StatResult result){
+		
+	}
+	
+	class StatObserver implements Observer{
+		@Override
+		public void update(Observable o, Object arg1) {
+			GetStatResultResult ro = (GetStatResultResult)o;
+			displayStat(ro.getStatResult());
 		}
 	}
 }
