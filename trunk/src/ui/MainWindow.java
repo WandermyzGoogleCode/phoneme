@@ -1469,18 +1469,19 @@ public class MainWindow {
 		private List<UserInfo> users;
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			int n=users.size();
 		//	tabItemAddressContact.
 			//treeAddressContactItemNoGroup.clearAll(true);
-			treeAddressContact.dispose();
+/*			treeAddressContact.dispose();
 			treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER);
 			treeAddressContact
 					.addSelectionListener(new TreeAddressContactSelectionListener());
 			treeAddressContact.setSortColumn(null);
 			treeAddressContact.setHeaderVisible(true);
 			tabItemAddressContact.setControl(treeAddressContact);
-
+*/
+			treeAddressContact.removeAll();
+			
 			TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
 			item1.setText("sql");
 			for(int i=0;i<n;i++){
