@@ -1,5 +1,7 @@
 package entity.infoField;
 
+import java.util.regex.Pattern;
+
 /**
  * 传入的时候，必须是yyyy-mm-dd，否则格式不合法
  * @author Administrator
@@ -15,12 +17,18 @@ public class Birthday extends EmptyBirthday {
 	private final int yyyy=0;
 	private final int mm=1;
 	private final int dd=2;
+	
+	Pattern checker = Pattern.compile("\\d+-\\d+-\\d");
 
+	boolean check(String data){
+		return Pattern.matches("\\d+-\\d+-\\d", data);
+	}
+	
 	public Birthday(String birthday)
 	{
 		//检查格式
 		//TODO 
-		if(birthday!=null){
+		if(birthday!=null && check(birthday)){
 			String date[]=birthday.split("-");
 			this.y=Integer.parseInt(date[yyyy]);
 			this.m=Integer.parseInt(date[mm]);
@@ -36,13 +44,13 @@ public class Birthday extends EmptyBirthday {
 	
 	public void setStringValue(String birthday)
 	{
-		//检查格式，然后赋值
-		//TODO
-		String date[]=birthday.split("-");
-		this.y=Integer.parseInt(date[yyyy]);
-		this.m=Integer.parseInt(date[mm]);
-		this.d=Integer.parseInt(date[dd]);
-		this.day=birthday;
+		if(birthday!=null && check(birthday)){
+			String date[]=birthday.split("-");
+			this.y=Integer.parseInt(date[yyyy]);
+			this.m=Integer.parseInt(date[mm]);
+			this.d=Integer.parseInt(date[dd]);
+			this.day=birthday;
+		}
 	}
 
 	@Override
