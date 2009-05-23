@@ -1,9 +1,9 @@
 package entity.infoField;
 
-public class CellphoneNumber extends EmptyCellphone{
+public class Phone extends EmptyPhone {
 	private String number;
 
-	public CellphoneNumber(String number)
+	public Phone(String number)
 	{
 		//ºÏ≤È∏Ò Ω
 		//TODO
@@ -19,6 +19,6 @@ public class CellphoneNumber extends EmptyCellphone{
 
 	@Override
 	public String getStringValue() {
-		return number;
+		return this.number;
 	}
 }

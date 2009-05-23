@@ -1,21 +1,20 @@
 package entity.infoField;
 
-public class EmailAddr extends EmptyEmailAddr
-{
+public class Address extends EmptyAddress {
 	private String addr;
 
-	public EmailAddr(String email)
+	public Address(String address)
 	{
 		//检查格式
 		//TODO
-		this.addr=email;
+		this.addr=address;
 	}
 	
-	public void setStringValue(String email)
+	public void setStringValue(String address)
 	{
 		//检查格式，然后赋值
 		//TODO
-		this.addr=email;
+		this.addr=address;
 	}
 
 	@Override
