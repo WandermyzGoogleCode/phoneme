@@ -11,7 +11,7 @@ public interface Gui {
 	 */
 	public List<Boolean> checkUserList(List<UserInfo> userList, String askInfo);
 	
-	public boolean yseOrNo(String askInfo);
+	public boolean yesOrNo(String askInfo);
 	
 	public UserInfo selMatchedUser(UserInfo a, List<UserInfo> list);
 	

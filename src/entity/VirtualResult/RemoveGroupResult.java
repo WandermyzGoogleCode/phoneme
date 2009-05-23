@@ -26,5 +26,4 @@ public class RemoveGroupResult extends OneTimeVirtualResult {
 		//TODO 成功以后，修改相应的群组信息，以及用户所创立的群组信息
 		return center.getServer().removeGroup(center.getLoginUser().getID(), g);
 	}
-
 }

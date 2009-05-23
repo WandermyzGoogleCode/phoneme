@@ -4,10 +4,7 @@ import java.util.List;
 
 import logiccenter.LogicCenter;
 
-import serverLogicCenter.ServerLogicCenter;
-
 import entity.ID;
-import entity.SimpleError;
 
 import entity.message.Message;
 
@@ -67,7 +64,7 @@ public class MessageBox extends VirtualResult {
 	}
 	
 	synchronized public List<Message> getMessages(){
-		if (!getState().equals(VirtualState.PREPARED)){//保护在没有准备好的时候就来索取
+		if (getState() != VirtualState.PREPARED){//保护在没有准备好的时候就来索取
 			System.err.println("err: you can't getMessages when it's not PREPARED.");
 			return null;
 		}
@@ -75,7 +72,7 @@ public class MessageBox extends VirtualResult {
 	}
 	
 	synchronized public int getMessageCnt(){
-		if (!getState().equals(VirtualState.PREPARED)){//保护在没有准备好的时候就来索取
+		if (getState() != VirtualState.PREPARED){//保护在没有准备好的时候就来索取
 			System.err.println("err: you can't getMessageCnt when it's not PREPARED.");
 			return 0;
 		}

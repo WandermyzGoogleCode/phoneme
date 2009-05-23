@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -261,8 +262,14 @@ public class LogicCenterImp implements LogicCenter {
 
 	@Override
 	public StatResult calcStat() {
-		// TODO Auto-generated method stub
-		return null;
+		StatResult res = new StatResult();
+		List<UserInfo> allUsers = dataCenter.getAllUserInfo(null);
+		res.setTotalCnt(allUsers.size());
+		//ArrayList<UserInfo> distrib[] = new ArrayList<UserInfo>[12]; 
+		//for(UserInfo userInfo:allUsers)
+			
+		//TODO NEXT
+		return res;
 	}
 
 	@Override

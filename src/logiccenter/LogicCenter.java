@@ -136,8 +136,6 @@ public interface LogicCenter {
 	 */
 	public EditGroupResult editGroup(Group g);
 	
-	//TODO 邀请 里面该有一个group 参数吧？
-	//ANSWER: 有道理
 	/**
 	 * 邀请un加入群组，inviteInfo为邀请信息
 	 * @param un
