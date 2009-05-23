@@ -11,7 +11,7 @@ public class EmailAddr extends EmptyEmailAddr
 	private static final String nullAddr = "";
 	private String addr;
 
-	boolean check(String data){
+	public static boolean check(String data){
 		return Pattern.matches("\\w+@\\w+.\\w+", data);
 	}
 	

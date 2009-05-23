@@ -179,6 +179,9 @@ public class MainWindow {
 	private Menu filemenu;
 	private MenuItem export;
 	private MenuItem menuimport;
+	
+	private AllContactsBox allContactsBox;
+	private MessageBox messageBox;
 
 	/**
 	 * Launch the application
@@ -861,18 +864,18 @@ public class MainWindow {
 		
 		//SpaceFlyer: 相关的逻辑部分从这里开始
 		RefreshObserver observer = new RefreshObserver();
-		AllContactsBox box = logicCenter.getAllContactsBox();
-		box.addObserver(observer);
-		if (box.getState() == VirtualState.PREPARED)
-			refreshContacts(box.getContacts());
+		allContactsBox = logicCenter.getAllContactsBox();
+		allContactsBox.addObserver(observer);
+		if (allContactsBox.getState() == VirtualState.PREPARED)
+			refreshContacts(allContactsBox.getContacts());
 		//TODO ERRORED的处理
 		
 		//TODO 正常情况下，应该登录后获取MessageBox，当前只是测试
 		MessageBoxObserver mObserver = new MessageBoxObserver();
-		MessageBox mBox = logicCenter.getMessageBox();
-		mBox.addObserver(mObserver);
-		if (mBox.getState() == VirtualState.PREPARED)
-			refreshMessageBox(mBox.getMessages());
+		messageBox = logicCenter.getMessageBox();
+		messageBox.addObserver(mObserver);
+		if (messageBox.getState() == VirtualState.PREPARED)
+			refreshMessageBox(messageBox.getMessages());
 		//TODO ERRORED的处理
 	}
 
@@ -1365,6 +1368,8 @@ public class MainWindow {
 					// Debug:
 					MessageDialog.openInformation(shell, "删除联系人", current
 							.getText());
+					int ind = current.getParent().indexOf(current);
+					//TODO NEXT
 				}
 			}
 		}
@@ -1506,15 +1511,12 @@ public class MainWindow {
 	
 	void refreshMessageBox(List<Message> messages)
 	{
-		//TODO LIJING
 		Display.getDefault().syncExec(new RefreshMessageTask(messages));
 	}
 	class RefreshMessageTask implements Runnable{
 		private List<Message> messages;
 		@Override
 		public void run() {
-			//TODO TEST
-			System.err.println(messages.toString());
 			messageCompsite.setMessage(messages);
 		}
 		
