@@ -670,6 +670,10 @@ public class MainWindow {
 		treeAddressContactColumnEmail.setWidth(100);
 		treeAddressContactColumnEmail.setText("E-mail");
 
+		treeAddressPermitColumnEmail = new TreeColumn(treeAddressContact,
+				SWT.NONE);
+		treeAddressPermitColumnEmail.setWidth(100);
+		treeAddressPermitColumnEmail.setText("生日");
 		tabItemAddressPermit = new TabItem(tabFolderAddress, SWT.NONE);
 		tabItemAddressPermit.setText("被授权联系人");
 
@@ -708,6 +712,11 @@ public class MainWindow {
 				SWT.NONE);
 		treeAddressPermitColumnEmail.setWidth(100);
 		treeAddressPermitColumnEmail.setText("E-mail");
+		
+		treeAddressPermitColumnEmail = new TreeColumn(treeAddressPermit,
+				SWT.NONE);
+		treeAddressPermitColumnEmail.setWidth(100);
+		treeAddressPermitColumnEmail.setText("生日");
 		// stackLayout.topControl = scrolledCompositeInfo;
 
 		final FormData fd_button = new FormData();
@@ -1404,7 +1413,19 @@ public class MainWindow {
 	
 	void refreshContacts(List<UserInfo> users)
 	{
-		
+		int n=users.size();
+		TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
+		item1.setText("sql");
+		for(int i=0;i<n;i++){
+			String name=users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
+			String nick=users.get(i).getBaseInfo().getInfoField("NickName").getStringValue();
+			String cell=users.get(i).getBaseInfo().getInfoField("CellPhone").getStringValue();
+			String email=users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
+			String tag=users.get(i).getCustomInfo().getInfoField("").getStringValue();
+			createTreeSubItem(item1, name, nick, "", tag,cell, email);
+			
+		}
+		item1.setExpanded(true);
 	}
 	
 	void refreshMessageBox(List<Message> users)

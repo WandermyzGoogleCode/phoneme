@@ -185,8 +185,8 @@ public class EditContactDialog extends Dialog{
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
 					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
 					
-				//	InfoField nicki=factory.makeInfoField("NickName", nick.getText());
-					//newUser.getBaseInfo().setInfoField(nicki.getName(), nicki);
+					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
+					newUser.getCustomInfo().setInfoField(nicki.getName(), nicki);
 					
 					MainWindow.logicCenter.editContactInfo(newUser);
 					
