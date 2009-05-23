@@ -18,16 +18,12 @@ public class Birthday extends EmptyBirthday {
 	private final int mm=1;
 	private final int dd=2;
 	
-	Pattern checker = Pattern.compile("\\d+-\\d+-\\d");
-
 	boolean check(String data){
 		return Pattern.matches("\\d+-\\d+-\\d", data);
 	}
 	
 	public Birthday(String birthday)
 	{
-		//ºÏ≤È∏Ò Ω
-		//TODO 
 		if(birthday!=null && check(birthday)){
 			String date[]=birthday.split("-");
 			this.y=Integer.parseInt(date[yyyy]);
