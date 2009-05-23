@@ -8,21 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import static java.lang.System.*;
 
 import algorithm.Matcher;
 import algorithm.SimpleUserInfoMatcher;
 
 import datacenter.DataCenter;
+import datacenter.DataCenterImp;
 
 import serverLogicCenter.ServerLogicCenter;
 
 import entity.BaseUserInfo;
 import entity.Group;
 import entity.ID;
-import entity.IDFactory;
 import entity.Password;
 import entity.Permission;
-import entity.ReturnType;
 import entity.StatResult;
 import entity.UserInfo;
 import entity.VirtualResult.AddPerContactResult;
@@ -53,12 +53,13 @@ import entity.VirtualResult.SearchGroupResult;
 import entity.VirtualResult.SearchUserResult;
 import entity.VirtualResult.SetPermissionResult;
 import entity.VirtualResult.SetVisibilityResult;
+import entity.VirtualResult.VirtualState;
 import entity.infoField.Birthday;
-import entity.infoField.EmailAddr;
 import entity.infoField.IdenticalInfoField;
 
 public class LogicCenterImp implements LogicCenter {
-
+	private static LogicCenterImp instance = null;
+	
 	private BaseUserInfo loginUser = new BaseUserInfo();//当前登录的用户
 	private ServerLogicCenter server = null;
 	private MessageBox messageBox = null;
@@ -142,8 +143,8 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public LocalSearchContactsResult localSearchContacts(UserInfo info) {
-		return new LocalSearchContactsResult(info, this);
+	public LocalSearchContactsResult localSearchContacts(UserInfo info, Matcher userMatcher) {
+		return new LocalSearchContactsResult(info, userMatcher, this);
 	}
 
 	@Override
@@ -251,8 +252,8 @@ public class LogicCenterImp implements LogicCenter {
 	 */
 	public static void main(String args[])
 	{
-		LogicCenterImp logicCenterImp = new LogicCenterImp(null);
-		MessageBox messageBox = logicCenterImp.getMessageBox();
+		LogicCenter logicCenter = new LogicCenterImp(DataCenterImp.Instance());
+		/*MessageBox messageBox = logicCenter.getMessageBox();
 		Tester tester = new Tester();
 		messageBox.addObserver(tester);
 		String cmd = "";
@@ -266,7 +267,19 @@ public class LogicCenterImp implements LogicCenter {
 				System.out.println("'"+cmd+"' read...\n");
 			}
 			catch (Exception e){}
+		}*/
+		
+		UserInfo newUser1 = UserInfo.getNewLocalUser();
+		EditContactInfoResult editRes = logicCenter.editContactInfo(newUser1);
+		out.println(editRes.getState());
+		try{
+			Thread.sleep(1000);			
 		}
+		catch (Exception e){}
+		out.println(editRes.getState());
+		if (editRes.getState() == VirtualState.ERRORED)
+			out.println(editRes.getError().toString());
+		out.println("Bye~");
 		System.exit(0);//当前MessageBox的线程不能自己消除。实现好了以后，该线程应该在退出登录的时候就自动消除。
 	}
 
@@ -284,15 +297,20 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public List<UserInfo> searchContacts(UserInfo info) {
+	public List<UserInfo> searchContacts(UserInfo info, Matcher matcher) {
 		//TODO 有空的话，加强一下搜索的智能性
 		List<UserInfo> allUsers = dataCenter.getAllUserInfo(null);
 		ArrayList<UserInfo> res = new ArrayList<UserInfo>();
-		Matcher matcher = new SimpleUserInfoMatcher();
 		for(UserInfo userInfo: allUsers)
 			if (matcher.match(info, userInfo))
 				res.add(userInfo);
 		return res;
+	}
+	
+	public synchronized static LogicCenter getInstance(){
+		if (instance == null)
+			instance = new LogicCenterImp(DataCenterImp.Instance());
+		return instance;
 	}
 }
 
