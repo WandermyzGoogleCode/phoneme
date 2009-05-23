@@ -1,5 +1,6 @@
 package ui;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -55,6 +56,7 @@ import com.swtdesigner.SWTResourceManager;
 import entity.UserInfo;
 import entity.VirtualResult.AllContactsBox;
 import entity.VirtualResult.MessageBox;
+import entity.message.Message;
 
 public class MainWindow {
 	public static LogicCenter logicCenter=LogicCenterImp.getInstance();
@@ -1405,6 +1407,11 @@ public class MainWindow {
 		
 	}
 	
+	void refreshMessageBox(List<Message> users)
+	{
+		//TODO LIJING
+	}
+	
 	{
 		AllContactsBox box = logicCenter.getAllContactsBox();
 		RefreshObserver observer = new RefreshObserver();
@@ -1418,6 +1425,15 @@ public class MainWindow {
 		{
 			AllContactsBox allContactsBox = (AllContactsBox)o;
 			refreshContacts(allContactsBox.getContacts());
+		}
+	}
+	
+	class MessageBoxObserver implements Observer{
+		Date lastUpdateTime = null;
+		@Override
+		public void update(Observable o, Object arg1) {
+			MessageBox box = (MessageBox)o;
+			refreshMessageBox(box.getMessages());
 		}
 	}
 }
