@@ -294,7 +294,7 @@ public class LogicCenterImp implements LogicCenter {
 		@SuppressWarnings("unchecked")
 		ArrayList<UserInfo> distrib[] = new ArrayList[12];
 		for(UserInfo userInfo:allUsers)
-			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("BirthDay")).getMonth()].add(userInfo);
+			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("BirthDay")).getMonth()-1].add(userInfo);
 		res.setBirthDistrib(distrib);
 		return res;
 	}

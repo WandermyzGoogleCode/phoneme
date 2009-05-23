@@ -10,7 +10,7 @@ public class CellphoneNumber extends EmptyCellphone{
 	private static final String nullNumber = "";
 	private String number;
 	
-	boolean check(String data){
+	public static boolean check(String data){
 		//TODO 更加准确的检测
 		return Pattern.matches("(\\+\\d{2})?\\d{11}", data);
 	}
