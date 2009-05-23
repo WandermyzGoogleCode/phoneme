@@ -50,7 +50,7 @@ public class MessageBoxDialog extends Composite {
 	public void setMessage(List<Message> m) {
 		int n=m.size();
 		txt0.setText(new Integer(n).toString());
-		tree.clearAll(true);
+		tree.removeAll();
 		for(int i=0;i<n;i++){
 			new TreeItem(tree,SWT.NONE).setText(m.get(i).toString());
 		}
