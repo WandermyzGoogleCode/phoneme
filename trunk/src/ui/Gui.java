@@ -1,6 +1,7 @@
 package ui;
-import entity.*;
 import java.util.List;
+
+import entity.UserInfo;
 
 public interface Gui {
 	/**
