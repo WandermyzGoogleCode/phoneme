@@ -25,6 +25,7 @@ import entity.VirtualResult.MessageBox;
 import entity.VirtualResult.QuitGroupResult;
 import entity.VirtualResult.RegisterResult;
 import entity.VirtualResult.RelationCubeResult;
+import entity.VirtualResult.RemoveContactInfoResult;
 import entity.VirtualResult.RemoveGroupMemberResult;
 import entity.VirtualResult.RemoveGroupResult;
 import entity.VirtualResult.RemovePerContactResult;
@@ -267,4 +268,11 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public List<UserInfo> searchContacts(UserInfo info);
+	
+	/**
+	 * É¾³ýÁªÏµÈË
+	 * @param id
+	 * @return
+	 */
+	public RemoveContactInfoResult removeContactInfo(ID id);
 }

@@ -41,6 +41,7 @@ import entity.VirtualResult.MessageBox;
 import entity.VirtualResult.QuitGroupResult;
 import entity.VirtualResult.RegisterResult;
 import entity.VirtualResult.RelationCubeResult;
+import entity.VirtualResult.RemoveContactInfoResult;
 import entity.VirtualResult.RemoveGroupMemberResult;
 import entity.VirtualResult.RemoveGroupResult;
 import entity.VirtualResult.RemovePerContactResult;
@@ -93,6 +94,11 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public EditContactInfoResult editContactInfo(UserInfo info) {
 		return new EditContactInfoResult(info, this);
+	}
+	
+	@Override
+	public RemoveContactInfoResult removeContactInfo(ID id) {
+		return new RemoveContactInfoResult(id, this);
 	}
 
 	@Override
