@@ -1,7 +1,9 @@
-package logiccenter;
+package entity.VirtualResult;
 
 import java.util.Observable;
 import java.util.Date;
+import entity.MyError;
+import static entity.VirtualResult.VirtualState.*;
 
 /**
  * 提供给GUI的带VirtualProxy的结果的最高层祖先。继承了
@@ -17,15 +19,15 @@ import java.util.Date;
  *
  */
 public abstract class VirtualResult extends Observable {
-	private VirtualState state = VirtualState.LOADING;//当前Result获取的状态
-	protected Error err = null;//如果当前状态为出错，那么这个记录了出错信息
+	private VirtualState state = LOADING;//当前Result获取的状态
+	protected MyError err = null;//如果当前状态为出错，那么这个记录了出错信息
 	protected Date updateTime = null;//当前Result最后一次更新的时间，当Result不断更新的时候有用
 	
 	public VirtualState getState(){
 		return state;
 	}
 	
-	public Error getError(){
+	public MyError getError(){
 		return err;
 	}
 	
@@ -33,24 +35,24 @@ public abstract class VirtualResult extends Observable {
 		return updateTime;
 	}
 	
-	synchronized protected void setState(VirtualState newState)
+	synchronized protected void setPrepared()
 	{
-		state = newState;
+		state = PREPARED;
 		notifyObservers();
 	}
 	
 	synchronized protected void setUpdateTime(Date time)
 	{
-		this.state = VirtualState.PREPARED;
+		this.state = PREPARED;
 		updateTime = time;
 		setChanged();
 		notifyObservers();
 	}
 	
-	synchronized protected void setError(Error err)
+	synchronized protected void setError(MyError err)
 	{
 		this.err = err;
-		this.state = VirtualState.ERRORED;
+		this.state = ERRORED;
 		notifyObservers();
 	}	
 }

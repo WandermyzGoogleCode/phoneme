@@ -15,7 +15,7 @@ public class ID implements Serializable{
 	private static final long serialVersionUID = -3866497586725147310L;
 	private int id;
 	
-	static ID getNullID()
+	static public ID getNullID()
 	{
 		return new ID(-1);
 	}
@@ -27,5 +27,9 @@ public class ID implements Serializable{
 	
 	public int getValue(){
 		return id;
+	}
+
+	public boolean isNull() {
+		return (id == -1);
 	}
 }

@@ -7,6 +7,11 @@ package entity.infoField;
  *
  */
 public abstract class EmptyInfoField implements InfoField {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8371556469263751670L;
+
 	@Override
 	public String getStringValue() {
 		return "";

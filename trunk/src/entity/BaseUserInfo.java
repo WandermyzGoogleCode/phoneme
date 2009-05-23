@@ -43,4 +43,8 @@ public class BaseUserInfo {
 	public void setInfoField(String name,InfoField info){
 		fieldMap.put(name, info);
 	}
+	
+	public boolean isNull(){
+		return (id.isNull());
+	}
 }

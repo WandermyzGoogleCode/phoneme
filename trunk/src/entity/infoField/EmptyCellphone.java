@@ -11,6 +11,11 @@ package entity.infoField;
 public class EmptyCellphone extends EmptyInfoField implements IdenticalInfoField 
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5463180936829136629L;
+
 	@Override
 	public String getName() {
 		return "CellPhone";

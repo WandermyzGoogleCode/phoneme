@@ -8,8 +8,15 @@ public interface DataCenter {
 	 * 
 	 * @param
 	 */
-	public ReturnType setUserInfo(UserInfo b);	
-	public ReturnType setPermission(ID uid, Permission p);
+	public ReturnType setUserInfo(UserInfo b);
+	
+	/**
+	 * 设立当前用户到id的权限，id可能是群组的id，也可能是用户的id
+	 * @param id
+	 * @param p
+	 * @return
+	 */
+	public ReturnType setPermission(ID id, Permission p);
 	
 	/**
 	 * 建立或修改群组g
@@ -44,6 +51,14 @@ public interface DataCenter {
 	 * @return
 	 */
 	public ReturnType addPerRelationship(ID uid);
+	
+	/**
+	 * 设置当前用户到uid用户的关系可见性。uid是当前用户的同步联系人。
+	 * @param uid
+	 * @param visibility
+	 * @return
+	 */
+	public ReturnType setVisibility(ID uid, int visibility);
 	
 	/**
 	 * 删除被授权联系人关系

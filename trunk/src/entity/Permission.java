@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,11 @@ import entity.infoField.*;
  * @author Administrator
  *
  */
-public class Permission {
+public class Permission implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8542014263985231177L;
 	//Map<字段名字，是否有权限知道>，其中字段名对应的就是InfoField.Name
 	private Map<String, Boolean> fields;
 	

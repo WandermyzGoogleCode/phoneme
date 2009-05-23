@@ -8,6 +8,11 @@ package entity.infoField;
 public class EmptyPhone extends EmptyInfoField implements IndexedInfoField 
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4109875034087236789L;
+
 	@Override
 	public String getName() {
 		return "Phone";
