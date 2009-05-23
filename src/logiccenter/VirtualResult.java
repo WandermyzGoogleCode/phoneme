@@ -43,6 +43,7 @@ public abstract class VirtualResult extends Observable {
 	{
 		this.state = VirtualState.PREPARED;
 		updateTime = time;
+		setChanged();
 		notifyObservers();
 	}
 	
@@ -51,5 +52,5 @@ public abstract class VirtualResult extends Observable {
 		this.err = err;
 		this.state = VirtualState.ERRORED;
 		notifyObservers();
-	}
+	}	
 }
