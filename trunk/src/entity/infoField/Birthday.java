@@ -19,6 +19,7 @@ public class Birthday extends EmptyBirthday {
 	public Birthday(String birthday)
 	{
 		//ºÏ≤È∏Ò Ω
+		System.err.println("Birthday: "+birthday);
 		//TODO 
 		String date[]=birthday.split("-");
 		this.y=Integer.parseInt(date[yyyy]);
