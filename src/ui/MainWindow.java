@@ -179,6 +179,10 @@ public class MainWindow {
 	private Menu filemenu;
 	private MenuItem export;
 	private MenuItem menuimport;
+	private MenuItem menustat;
+	private Menu statmenu;
+	private MenuItem stat;
+	private StaticDialog statDialog;
 	
 	private AllContactsBox allContactsBox;
 	private MessageBox messageBox;
@@ -287,7 +291,24 @@ public class MainWindow {
 				}
 			}
 		});
-		
+		//
+		menustat = new MenuItem(mainMenu, SWT.CASCADE);
+		menustat.setText("统计"); //$NON-NLS-1$
+
+		statmenu = new Menu(menustat);
+		menustat.setMenu(statmenu);
+
+		stat = new MenuItem(statmenu, SWT.NONE);
+		stat.setText("统计结果"); //$NON-NLS-1$
+		stat.addSelectionListener(new SelectionAdapter(){
+			
+
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("统计！");
+				statDialog=new StaticDialog(shell,SWT.NONE);
+				statDialog.open();
+			}
+		});
 		// “帮助”菜单
 		submenuMainHelp = new MenuItem(mainMenu, SWT.CASCADE);
 		submenuMainHelp.setText(Messages.getString("MainWindow.Help")); //$NON-NLS-1$
@@ -1555,7 +1576,8 @@ public class MainWindow {
 		@Override
 		public void run() {
 			// TODO Lijing Fill
-			
+			System.out.println("run");
+			statDialog.setStatics(result);
 		}
 		
 		public DisplayStatTask(StatResult result) {
