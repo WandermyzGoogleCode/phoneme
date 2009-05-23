@@ -21,6 +21,7 @@ public class EditContactInfoResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() {
 		center.getDataCenter().setUserInfo(info);
+		center.getAllContactsBox().editContact(info);
 		//TODO 当前没有处理dataCenter的错误
 		return new BoolInfo();
 	}

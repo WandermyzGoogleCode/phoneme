@@ -12,6 +12,7 @@ import entity.VirtualResult.AddPerContactResult;
 import entity.VirtualResult.AddSynContactResult;
 import entity.VirtualResult.AdmitApplicationResult;
 import entity.VirtualResult.AdmitInvitationResult;
+import entity.VirtualResult.AllContactsBox;
 import entity.VirtualResult.ApplyJoinGroupResult;
 import entity.VirtualResult.CreateGroupResult;
 import entity.VirtualResult.EditContactInfoResult;
@@ -209,6 +210,7 @@ public interface LogicCenter {
 	*/
 	/**
 	 * 修改联系人信息
+	 * 注意customUserInfo可能为null，此时不做修改。
 	 * @param cInfo
 	 * @return
 	 */
@@ -277,4 +279,6 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public RemoveContactInfoResult removeContactInfo(ID id);
+	
+	public AllContactsBox getAllContactsBox();
 }

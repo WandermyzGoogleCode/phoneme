@@ -1,5 +1,6 @@
 package entity.VirtualResult;
 
+import java.util.Calendar;
 import java.util.Observable;
 import java.util.Date;
 import entity.MyError;
@@ -47,6 +48,13 @@ public abstract class VirtualResult extends Observable {
 		updateTime = time;
 		setChanged();
 		notifyObservers();
+	}
+	
+	synchronized protected void setUpdateNow(){
+		this.state = PREPARED;
+		updateTime = Calendar.getInstance().getTime();
+		setChanged();
+		notifyObservers();		
 	}
 	
 	synchronized protected void setError(MyError err)
