@@ -10,6 +10,11 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Button;
 import com.swtdesigner.SWTResourceManager;
+
+import entity.UserInfo;
+import entity.infoField.InfoField;
+import entity.infoField.InfoFieldFactory;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 public class EditContactDialog extends Dialog{
@@ -23,6 +28,7 @@ public class EditContactDialog extends Dialog{
 	private Text personalStatment;
 	private Combo sex;
 	private Button cancel;
+	private DateTime dateTime;
 	
 	public EditContactDialog (Shell parent, int style) {
 		super (parent, style);
@@ -78,7 +84,7 @@ public class EditContactDialog extends Dialog{
 				label.setText("\u751F\u65E5");
 			}
 			{
-				DateTime dateTime = new DateTime(registInfo, SWT.NONE);
+				dateTime = new DateTime(registInfo, SWT.NONE);
 				dateTime.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8, SWT.NORMAL));
 				dateTime.setBounds(362, 72, 93, 24);
 			}
@@ -150,11 +156,39 @@ public class EditContactDialog extends Dialog{
 
 				private void gatherInfo() {
 					// TODO Auto-generated method stub
-					System.out.println(name.getText());
 					nick.getText();
-				
-					System.out.println(sex.getText());
-					cellphone.getText();
+					UserInfo newUser = UserInfo.getNewLocalUser();
+					InfoFieldFactory factory = InfoFieldFactory.getFactory();
+					InfoField nameInfo = factory.makeInfoField("Name", name
+							.getText());
+
+					newUser.getBaseInfo().setInfoField(nameInfo.getName(),
+							nameInfo);
+
+					InfoField emailInfo = factory.makeInfoField("EmailAddress",
+							text_3.getText());
+					newUser.getBaseInfo().setInfoField(emailInfo.getName(),
+							emailInfo);
+
+					InfoField cell = factory.makeInfoField("CellPhone",
+							cellphone.getText());
+					newUser.getBaseInfo().setInfoField(cell.getName(), cell);
+					
+					int day = dateTime.getDay(); // Calendar.DAY_OF_MONTH
+					int month = dateTime.getMonth(); // Calendar.MONTH
+					int year = dateTime.getYear(); // Calendar.YEAR
+					
+					String birth=""+year+"-"+month+"-"+day;
+
+					InfoField bir = factory.makeInfoField("BirthDay",birth);
+					newUser.getBaseInfo().setInfoField(bir.getName(), bir);
+					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
+					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
+					
+				//	InfoField nicki=factory.makeInfoField("NickName", nick.getText());
+					//newUser.getBaseInfo().setInfoField(nicki.getName(), nicki);
+					
+					MainWindow.logicCenter.editContactInfo(newUser);
 					
 				}
 			});

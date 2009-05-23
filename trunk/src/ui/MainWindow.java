@@ -1,5 +1,9 @@
 package ui;
 
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 
@@ -49,6 +53,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.UserInfo;
+import entity.VirtualResult.MessageBox;
 
 public class MainWindow {
 	public static LogicCenter logicCenter=LogicCenterImp.getInstance();
@@ -852,6 +857,7 @@ public class MainWindow {
 
 		// TODO 从数据库中读取同步联系人，填入相关控件（考虑DataBinding）
 		// Sample Code:
+	
 		TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
 		item1.setText("March");
 		createTreeSubItem(item1, "李宇骞", "SpaceFlyer", "老大", "大学同学",
@@ -1393,5 +1399,15 @@ public class MainWindow {
 		});
 	}
 	
-	
+	class refreshDate implements Observer
+	{
+		@Override
+		public void update(Observable o, Object arg) 
+		{
+			MessageBox box = (MessageBox)o;
+			System.out.println("State Changed, new State: "+box.getState());
+			if (box.getUpdateTime() != null)
+				System.out.println("UpdateTime: "+box.getUpdateTime()+"\n");
+		}
+	}
 }
