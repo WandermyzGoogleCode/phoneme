@@ -1407,23 +1407,17 @@ public class MainWindow {
 	
 	{
 		AllContactsBox box = logicCenter.getAllContactsBox();
-		RefreshObserver observer = new RefreshObserver(this);
+		RefreshObserver observer = new RefreshObserver();
 		box.addObserver(observer);
 	}
 	
 	class RefreshObserver implements Observer
 	{
-		private MainWindow mainWindow;
-		
 		@Override
 		public void update(Observable o, Object arg) 
 		{
 			AllContactsBox allContactsBox = (AllContactsBox)o;
-			mainWindow.refreshContacts(allContactsBox.getContacts());
-		}
-		
-		public RefreshObserver(MainWindow mainWindow){
-			this.mainWindow = mainWindow;
+			refreshContacts(allContactsBox.getContacts());
 		}
 	}
 }
