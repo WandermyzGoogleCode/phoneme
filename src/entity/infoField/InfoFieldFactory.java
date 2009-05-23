@@ -21,6 +21,66 @@ public class InfoFieldFactory {
 		if (name.equals("CellPhone"))
 			return new CellphoneNumber(value);
 		//TODO ¸ü¶àµÄinfoField
+		if (name.equals("Address"))
+		{
+			return new Address(value);
+		}
+		if (name.equals("BirthDay"))
+		{
+			return new Birthday(value);
+		}
+		if (name.equals("CellPhone"))
+		{
+			return new CellphoneNumber(value);
+		}		
+		if (name.equals("Company"))
+		{
+			return new Company(value);
+		}
+		if (name.equals("GroupDescription"))
+		{
+			return new GroupDescription(value);
+		}
+		if (name.equals("GroupName"))
+		{
+			return new GroupName(value);
+		}
+		if (name.equals("Image"))
+		{
+			return new Img(value);
+		}
+		if (name.equals("Name"))
+		{
+			return new Name(value);
+		}
+		if (name.equals("NickName"))
+		{
+			return new NickName(value);
+		}
+		if (name.equals("Phone"))
+		{
+			return new Phone(value);
+		}
+		if (name.equals("Position"))
+		{
+			return new Position(value);
+		}
+		if (name.equals("QQNumber"))
+		{
+			return new QQNumber(value);
+		}
+		if (name.equals("Remarks"))
+		{
+			return new Remarks(value);
+		}
+		if (name.equals("Category"))
+		{
+			return new Tag(value);
+		}
+		if (name.equals("Website"))
+		{
+			return new Web(value);
+		}
 		return null;
 	}
 	

@@ -1,5 +1,6 @@
 package datacenter;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.mysql.jdbc.Connection;
@@ -97,7 +99,7 @@ public class DataCenterImp implements DataCenter {
 				while(fieldNameIter.hasNext()){
 					sql+=(","+fieldNameIter.next()+" varchar(50)");
 				}
-				sql+=",WhetherSync int not null,WhetherPer int not null)";
+				sql+=",WhetherSync int not null DEFAULT 0,WhetherPer int not null DEFAULT 0)";
 				statement.executeUpdate(sql);	
 			}
 		
@@ -264,14 +266,14 @@ public class DataCenterImp implements DataCenter {
 	}
 
 	@Override
-	public ReturnType exportFile(String dirName) {
+	public ReturnType exportFile(String fileName) {
 		// TODO 上面的fileName需要改为路径名，一下所有需要路径的地方加上路径名
 		try{
 			CSVWriter writer;
 			Iterator<String> iter;
 			String toWrite[];
 			//写UserInfo
-			writer=new CSVWriter(new FileWriter(dirName+"\\UserInfo.csv"),'#');
+			writer=new CSVWriter(new FileWriter(fileName),'#');
 			ArrayList<UserInfo> allUserInfo=(ArrayList<UserInfo>)getAllUserInfo(null);
 			int countBase=1;//已经有一个userID需要写入
 			int countCustom=0;
@@ -301,15 +303,18 @@ public class DataCenterImp implements DataCenter {
 				for(int j=1;j<countBase;j++){
 					toWrite[j]=allUserInfo.get(i).getBaseInfo().getInfoField(tempBase.get(j-1)).getStringValue();
 				}
-				for(int j=1;j<countCustom;j++){
-					toWrite[countBase+i]=allUserInfo.get(i).getCustomInfo().getInfoField(tempCustom.get(j)).getStringValue();
+				for(int j=0;j<countCustom;j++){
+					toWrite[countBase+j]=allUserInfo.get(i).getCustomInfo().getInfoField(tempCustom.get(j)).getStringValue();
 				}
 				writer.writeNext(toWrite);
 			}
 			writer.close();
 			
+			//以下信息存于服务器，不需要导出
+			
+			
 			//写GroupInfo
-			writer=new CSVWriter(new FileWriter(dirName+"\\GroupInfo.csv"),'#');
+			/*writer=new CSVWriter(new FileWriter(dirName+"\\GroupInfo.csv"),'#');
 			ArrayList<Group> allGroup=(ArrayList<Group>)getAllGroup();
 			iter=new Group().getKeySet().iterator();
 			int count=1;
@@ -376,7 +381,7 @@ public class DataCenterImp implements DataCenter {
 				}
 				writer.writeNext(toWrite);
 			}
-			writer.close();
+			writer.close();*/
 			
 		}catch(Exception ex){
 			System.out.println(ex);
@@ -388,8 +393,9 @@ public class DataCenterImp implements DataCenter {
 
 	@Override
 	public List<UserInfo> getAllUserInfo(LocalSynSource source) {
-		// TODO Auto-generated method stub
 		List<UserInfo> result=new ArrayList<UserInfo>();
+		List<BaseUserInfo> baseResult=new ArrayList<BaseUserInfo>();
+		List<CustomUserInfo> customResult=new ArrayList<CustomUserInfo>();
 		try{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection connection=(Connection) DriverManager.getConnection(url);
@@ -397,46 +403,47 @@ public class DataCenterImp implements DataCenter {
 			Statement statement=(Statement)connection.createStatement();
 			String sql="SELECT UserID FROM UserInfo";
 			ResultSet allUserID=statement.executeQuery(sql);
-			//一个表项代表一个BaseUserInfo字段的所有用户的值
-			Map<String,ResultSet> baseFieldList=new HashMap<String,ResultSet>();
-			Map<String,ResultSet> customFieldList= new HashMap<String,ResultSet>();
-			sql="SELECT ? FROM UserInfo";
-			PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql);
-			Iterator<String> iter=new BaseUserInfo().getKeySet().iterator();
-			while(iter.hasNext()){
-				String temp=iter.next();
-				pstatement.setString(1, temp);
-				baseFieldList.put(temp, pstatement.executeQuery());
-			}
-			iter=new CustomUserInfo().getKeySet().iterator();
-			while(iter.hasNext()){
-				String temp=iter.next();
-				pstatement.setString(1, temp);
-				customFieldList.put(temp, pstatement.executeQuery());
-			}
+			BaseUserInfo baseUserInfo;
+			CustomUserInfo customUserInfo;
 			while(allUserID.next()){
-				UserInfo userInfo=new UserInfo();
-				BaseUserInfo baseUserInfo=new BaseUserInfo();
-				CustomUserInfo customUserInfo=new CustomUserInfo(); 
+				baseUserInfo=new BaseUserInfo();
 				baseUserInfo.setID(new ID(allUserID.getInt(1)));
-				Iterator<String> listIter=baseFieldList.keySet().iterator();
-				while(listIter.hasNext()){
-					//设置baseUserInfo的各个字段
-					String temp=listIter.next();
-					baseFieldList.get(temp).next();//此处可能有问题
-					baseUserInfo.setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, baseFieldList.get(temp).getString(1)));
+				baseResult.add(baseUserInfo);
+				customUserInfo=new CustomUserInfo();
+				customResult.add(customUserInfo);
+			}
+			allUserID.close();
+			for(int i=0;i<baseResult.size();i++){
+				Iterator<String> iter=new BaseUserInfo().getKeySet().iterator();
+				while(iter.hasNext()){
+					String temp=iter.next();
+					sql="SELECT "+temp+" FROM UserInfo WHERE UserID=?";
+					PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql);
+					pstatement.setInt(1, baseResult.get(i).getID().getValue());
+					ResultSet rs=pstatement.executeQuery();
+					
+					if(rs.next())
+						baseResult.get(i).setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, rs.getString(1)));
+					rs.close();
 				}
-				userInfo.setBaseInfo(baseUserInfo);
-				listIter=customFieldList.keySet().iterator();
-				while(listIter.hasNext()){
-					//设置customUserInfo的各个字段
-					String temp=listIter.next();
-					customFieldList.get(temp).next();//此处可能有问题
-					customUserInfo.setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, customFieldList.get(temp).getString(1)));
+				iter=new CustomUserInfo().getKeySet().iterator();
+				while(iter.hasNext()){
+					String temp=iter.next();
+					sql="SELECT "+temp+" FROM UserInfo WHERE UserID=?";
+					PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql);
+					pstatement.setInt(1, baseResult.get(i).getID().getValue());
+					ResultSet rs=pstatement.executeQuery();
+					if(rs.next())
+						customResult.get(i).setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, rs.getString(1)));
+					rs.close();
 				}
-				userInfo.setCustomInfo(customUserInfo);
+				UserInfo userInfo=new UserInfo();
+				userInfo.setBaseInfo(baseResult.get(i));
+				userInfo.setCustomInfo(customResult.get(i));
 				result.add(userInfo);
 			}
+			connection.close();
+			
 			
 		}catch(Exception ex){
 			System.out.println(ex);
@@ -446,9 +453,48 @@ public class DataCenterImp implements DataCenter {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ReturnType importFile(String fileName) {
 		// TODO Auto-generated method stub
+		try{
+			UserInfo userInfo=new UserInfo();
+			BaseUserInfo baseUserInfo=new BaseUserInfo();
+			CustomUserInfo customUserInfo=new CustomUserInfo();
+			CSVReader reader=new CSVReader(new FileReader(fileName),'#');
+			int countBase=1;//第一个是UserID
+			int countCustom=0;
+			Iterator<String> iter=baseUserInfo.getKeySet().iterator();
+			while(iter.hasNext()){
+				iter.next();
+				countBase++;
+			}
+			iter=customUserInfo.getKeySet().iterator();
+			while(iter.hasNext()){
+				iter.next();
+				countCustom++;
+			}
+			ArrayList<String[]> field=(ArrayList<String[]>)reader.readAll();
+			String fieldName[]=field.get(0);
+			for(int i=1;i<field.size();i++){
+				baseUserInfo.setID(new ID(Integer.parseInt(field.get(i)[0])));
+				for(int j=1;j<countBase;j++){
+					baseUserInfo.setInfoField(fieldName[j], InfoFieldFactory.getFactory().makeInfoField(fieldName[j], field.get(i)[j]));
+				}
+				for(int j=countBase;j<countBase+countCustom;j++){
+					customUserInfo.setInfoField(fieldName[j], InfoFieldFactory.getFactory().makeInfoField(fieldName[j], field.get(i)[j]));
+				}
+				userInfo.setBaseInfo(baseUserInfo);
+				userInfo.setCustomInfo(customUserInfo);
+				this.setUserInfo(userInfo);
+			}
+			
+			
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+			System.exit(0);
+		}
 		return null;
 	}
 
@@ -738,6 +784,7 @@ public class DataCenterImp implements DataCenter {
 
 	@Override
 	public ReturnType setUserInfo(UserInfo b) {
+		//TODO 传入的空值即为不需要更改的
 		userInfoWriteBuffer.add(b);
 		try{
 			if(userInfoWriteBuffer.size()==1000){

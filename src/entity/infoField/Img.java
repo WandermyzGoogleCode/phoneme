@@ -1,25 +1,24 @@
 package entity.infoField;
 
-public class EmailAddr extends EmptyEmailAddr
-{
-	private String addr;
+public class Img extends EmptyImg {
+	private String url;
 
-	public EmailAddr(String email)
+	public Img(String url)
 	{
 		//检查格式
 		//TODO
-		this.addr=email;
+		this.url=url;
 	}
 	
 	public void setStringValue(String email)
 	{
 		//检查格式，然后赋值
 		//TODO
-		this.addr=email;
+		this.url=url;
 	}
 
 	@Override
 	public String getStringValue() {
-		return addr;
+		return this.url;
 	}
 }
