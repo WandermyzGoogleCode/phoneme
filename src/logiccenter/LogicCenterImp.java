@@ -29,6 +29,7 @@ import entity.VirtualResult.AddPerContactResult;
 import entity.VirtualResult.AddSynContactResult;
 import entity.VirtualResult.AdmitApplicationResult;
 import entity.VirtualResult.AdmitInvitationResult;
+import entity.VirtualResult.AllContactsBox;
 import entity.VirtualResult.ApplyJoinGroupResult;
 import entity.VirtualResult.CreateGroupResult;
 import entity.VirtualResult.EditContactInfoResult;
@@ -63,6 +64,7 @@ public class LogicCenterImp implements LogicCenter {
 	private BaseUserInfo loginUser = new BaseUserInfo();//当前登录的用户
 	private ServerLogicCenter server = null;
 	private MessageBox messageBox = null;
+	private AllContactsBox allContactsBox;
 	
 	private DataCenter dataCenter;
 	
@@ -225,9 +227,10 @@ public class LogicCenterImp implements LogicCenter {
 		 */
 	}
 	
-	public LogicCenterImp(DataCenter dataCenter)
+	private LogicCenterImp(DataCenter dataCenter)
 	{
 		this.dataCenter = dataCenter;
+		allContactsBox = new AllContactsBox(this);
 		try {
 		    Registry registry = LocateRegistry.getRegistry("Localhost");//TODO 当前只是本机网络测试
 		    server = (ServerLogicCenter) registry.lookup("logicCenterServer");
@@ -311,6 +314,11 @@ public class LogicCenterImp implements LogicCenter {
 		if (instance == null)
 			instance = new LogicCenterImp(DataCenterImp.Instance());
 		return instance;
+	}
+
+	@Override
+	public AllContactsBox getAllContactsBox() {
+		return allContactsBox;
 	}
 }
 
