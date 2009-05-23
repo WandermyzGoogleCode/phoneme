@@ -21,7 +21,7 @@ public class AllContactsBox extends VirtualResult{
 		@Override
 		public void run() {
 			contacts = center.getDataCenter().getAllUserInfo(null);
-			setPrepared();
+			setUpdateNow();
 		}
 	}
 	
@@ -35,6 +35,8 @@ public class AllContactsBox extends VirtualResult{
 	
 	public AllContactsBox(LogicCenter center){
 		this.center = center;
+		GetThread thread = new GetThread();
+		thread.run();
 	}
 	
 	public synchronized void editContact(UserInfo newInfo){
@@ -61,5 +63,10 @@ public class AllContactsBox extends VirtualResult{
 				break;
 			}
 		setUpdateNow();
+	}
+	
+	public synchronized void updateAll(){
+		GetThread thread = new GetThread();
+		thread.run();
 	}
 }
