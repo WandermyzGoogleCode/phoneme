@@ -189,7 +189,7 @@ public class SearchLocalDialog extends Dialog {
 				public void widgetSelected(SelectionEvent e) {
 					registInfo.dispose();
 					System.out.println("dispose");
-					//gatherInfo();
+					gatherInfo();
 					Group group = new Group(registDia, SWT.NONE);
 					group.setBounds(10, 58, 430, 221);
 					{
@@ -202,7 +202,45 @@ public class SearchLocalDialog extends Dialog {
 					}
 					
 				}
+				private void gatherInfo() {
+					// TODO Auto-generated method stub
+					System.out.println(name.getText());
+					nick.getText();
+					UserInfo newUser = UserInfo.getNewLocalUser();
+					InfoFieldFactory factory = InfoFieldFactory.getFactory();
+					InfoField nameInfo = factory.makeInfoField("Name", name
+							.getText());
 
+					newUser.getBaseInfo().setInfoField(nameInfo.getName(),
+							nameInfo);
+
+					InfoField emailInfo = factory.makeInfoField("EmailAddress",
+							text_3.getText());
+					newUser.getBaseInfo().setInfoField(emailInfo.getName(),
+							emailInfo);
+
+					InfoField cell = factory.makeInfoField("CellPhone",
+							cellphone.getText());
+					newUser.getBaseInfo().setInfoField(cell.getName(), cell);
+					
+					int day = dateTime.getDay(); // Calendar.DAY_OF_MONTH
+					int month = dateTime.getMonth(); // Calendar.MONTH
+					int year = dateTime.getYear(); // Calendar.YEAR
+					
+					String birth=""+year+"-"+month+"-"+day;
+
+					InfoField bir = factory.makeInfoField("BirthDay",birth);
+					newUser.getBaseInfo().setInfoField(bir.getName(), bir);
+					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
+					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
+					
+					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
+					newUser.getCustomInfo().setInfoField(nicki.getName(), nicki);
+					
+					//!TODO newUser就是组装的user
+					//MainWindow.logicCenter.editContactInfo(newUser);
+					
+				}
 				
 			});
 			yes.setFont(SWTResourceManager.getFont("微软雅黑", 8, SWT.NORMAL));
