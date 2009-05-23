@@ -56,6 +56,7 @@ import com.swtdesigner.SWTResourceManager;
 import entity.UserInfo;
 import entity.VirtualResult.AllContactsBox;
 import entity.VirtualResult.MessageBox;
+import entity.VirtualResult.VirtualState;
 import entity.message.Message;
 
 public class MainWindow {
@@ -820,6 +821,22 @@ public class MainWindow {
 		listButtonGroup.setSelection(false);
 		listButtonSearch.setSelection(false);
 		listButtonMessageBox.setSelection(false);
+		
+		//SpaceFlyer: 相关的逻辑部分从这里开始
+		RefreshObserver observer = new RefreshObserver();
+		AllContactsBox box = logicCenter.getAllContactsBox();
+		box.addObserver(observer);
+		if (box.getState() == VirtualState.PREPARED)
+			refreshContacts(box.getContacts());
+		//TODO ERRORED的处理
+		
+		//TODO 正常情况下，应该登录后获取MessageBox，当前只是测试
+		MessageBoxObserver mObserver = new MessageBoxObserver();
+		MessageBox mBox = logicCenter.getMessageBox();
+		mBox.addObserver(mObserver);
+		if (box.getState() == VirtualState.PREPARED)
+			refreshMessageBox(mBox.getMessages());
+		//TODO ERRORED的处理
 	}
 
 	/**
@@ -1439,7 +1456,7 @@ public class MainWindow {
 		Display.getDefault().syncExec(new RefreshContactTask(users));
 	}
 	
-	void refreshMessageBox(List<Message> users)
+	void refreshMessageBox(List<Message> messages)
 	{
 		//TODO LIJING
 	}
@@ -1461,11 +1478,5 @@ public class MainWindow {
 			MessageBox box = (MessageBox)o;
 			refreshMessageBox(box.getMessages());
 		}
-	}
-	
-	public MainWindow(){
-		AllContactsBox box = logicCenter.getAllContactsBox();
-		RefreshObserver observer = new RefreshObserver();
-		box.addObserver(observer);		
 	}
 }
