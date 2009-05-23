@@ -12,7 +12,7 @@ public class CellphoneNumber extends EmptyCellphone{
 	
 	boolean check(String data){
 		//TODO 更加准确的检测
-		return Pattern.matches("(+\\d{2})?\\d{11}", data);
+		return Pattern.matches("(u002B\\d{2})?\\d{11}", data);
 	}
 
 	public CellphoneNumber(String number)
