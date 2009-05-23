@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import algorithm.Matcher;
+import algorithm.SimpleUserInfoMatcher;
+
 import datacenter.DataCenter;
 
 import serverLogicCenter.ServerLogicCenter;
@@ -50,6 +53,7 @@ import entity.VirtualResult.SearchGroupResult;
 import entity.VirtualResult.SearchUserResult;
 import entity.VirtualResult.SetPermissionResult;
 import entity.VirtualResult.SetVisibilityResult;
+import entity.infoField.Birthday;
 import entity.infoField.EmailAddr;
 import entity.infoField.IdenticalInfoField;
 
@@ -271,17 +275,24 @@ public class LogicCenterImp implements LogicCenter {
 		StatResult res = new StatResult();
 		List<UserInfo> allUsers = dataCenter.getAllUserInfo(null);
 		res.setTotalCnt(allUsers.size());
-		//ArrayList<UserInfo> distrib[] = new ArrayList<UserInfo>[12]; 
-		//for(UserInfo userInfo:allUsers)
-			
-		//TODO NEXT
+		@SuppressWarnings("unchecked")
+		ArrayList<UserInfo> distrib[] = new ArrayList[12];
+		for(UserInfo userInfo:allUsers)
+			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("BirthDay")).getMonth()].add(userInfo);
+		res.setBirthDistrib(distrib);
 		return res;
 	}
 
 	@Override
 	public List<UserInfo> searchContacts(UserInfo info) {
-		// TODO Auto-generated method stub
-		return null;
+		//TODO 有空的话，加强一下搜索的智能性
+		List<UserInfo> allUsers = dataCenter.getAllUserInfo(null);
+		ArrayList<UserInfo> res = new ArrayList<UserInfo>();
+		Matcher matcher = new SimpleUserInfoMatcher();
+		for(UserInfo userInfo: allUsers)
+			if (matcher.match(info, userInfo))
+				res.add(userInfo);
+		return res;
 	}
 }
 

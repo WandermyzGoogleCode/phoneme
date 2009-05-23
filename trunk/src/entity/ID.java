@@ -1,6 +1,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Random;
 
 /**
  * 用来标识用户或者群组的唯一标志，只有系统可见，用户不可见
@@ -13,11 +15,19 @@ public class ID implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -3866497586725147310L;
+	//TODO 如果用户超过10亿的话，ID就得全部都改成LONG了，这里也要改了。
+	private static final int localThreshold = 2000000000;
+	private static final int localRange = 10000000;
+	private static final Random rand = new Random(Calendar.getInstance().getTime().hashCode());
 	private int id;
 	
 	static public ID getNullID()
 	{
 		return new ID(-1);
+	}
+	
+	static public ID getLocalRandID(){
+		return new ID(localThreshold+rand.nextInt(localRange));
 	}
 	
 	public ID(int id)

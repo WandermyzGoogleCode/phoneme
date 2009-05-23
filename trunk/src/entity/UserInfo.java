@@ -28,5 +28,21 @@ public class UserInfo {
 		this.baseInfo = baseInfo;
 	}
 	
+	public UserInfo(BaseUserInfo baseInfo, CustomUserInfo custmInfo){
+		this.baseInfo = baseInfo;
+		this.customInfo = custmInfo;
+	}
+	
 	public UserInfo(){}
+	
+	/**
+	 * 返回一个ID为本地类型的UserInfo，以便创建本地的联系人
+	 * @return
+	 */
+	public static UserInfo getNewLocalUser(){
+		BaseUserInfo baseUserInfo = new BaseUserInfo();
+		CustomUserInfo customUserInfo = new CustomUserInfo();
+		baseUserInfo.setID(ID.getLocalRandID());
+		return new UserInfo(baseUserInfo, customUserInfo);
+	}
 }
