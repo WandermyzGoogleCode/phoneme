@@ -88,7 +88,7 @@ public class MainWindow {
 	private TabItem tabItemAddressContact;
 	private TabItem tabItemAddressPermit;
 	private TabFolder tabFolderAddress;
-	private Label labelAddressSearch;
+	private Button labelAddressSearch;
 	private MenuItem toolItemAddressGroupByNone;
 	private MenuItem toolItemAddressGroupByInitial;
 	private MenuItem toolItemAddressGroupByRelation;
@@ -683,7 +683,7 @@ public class MainWindow {
 		textAddressSearch.setLayoutData(fd_textAddressSearch);
 		compositeMainStackLayout.topControl = compositeAddress;
 
-		labelAddressSearch = new Label(compositeAddress, SWT.NONE);
+		labelAddressSearch = new Button(compositeAddress, SWT.NONE);
 		final FormData fd_labelAddressSearch = new FormData();
 		fd_labelAddressSearch.right = new FormAttachment(textAddressSearch,
 				-16, SWT.LEFT);
@@ -691,7 +691,16 @@ public class MainWindow {
 				SWT.TOP);
 		labelAddressSearch.setLayoutData(fd_labelAddressSearch);
 		labelAddressSearch.setText("ËÑË÷");
-
+		labelAddressSearch.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				// MessageDialog.openInformation(shell, "hello", "regist");
+				// Shell regist=new Shell();
+				// regist.open();
+				// Dialog a=new Dialog(shell);
+				SearchLocalDialog r = new SearchLocalDialog(shell, SWT.None);
+				r.open();
+			}
+		});
 		tabFolderAddress = new TabFolder(compositeAddress, SWT.NONE);
 		final FormData fd_tabFolderAddress = new FormData();
 		fd_tabFolderAddress.bottom = new FormAttachment(100, 0);
@@ -1522,7 +1531,7 @@ public class MainWindow {
 				String cell=users.get(i).getBaseInfo().getInfoField("CellPhone").getStringValue();
 				String email=users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
 				String tag=users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
-				createTreeSubItem(item1, name, nick, "", tag, cell, email);
+				createTreeSubItem(item1, name, nick, tag, cell, email);
 				item1.setExpanded(true);				
 			}
 		}

@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,6 +38,7 @@ public class SearchLocalDialog extends Dialog {
 	private DateTime dateTime;
 	private Group registInfo;
 	private Shell registDia;
+	private Tree tree;
 	//private LogicCenter logicCenter;
 
 	public SearchLocalDialog(Shell parent, int style) {
@@ -182,7 +185,6 @@ public class SearchLocalDialog extends Dialog {
 		{
 			Button yes = new Button(registDia, SWT.NONE);
 			yes.addSelectionListener(new SelectionAdapter() {
-				private Tree tree;
 
 				public void widgetSelected(SelectionEvent e) {
 					registInfo.dispose();
@@ -228,8 +230,13 @@ public class SearchLocalDialog extends Dialog {
 		}
 		return result;
 	}
-	public void setSearchResult(){
-		
+	public void setSearchResult(List<UserInfo> contacts){
+		int n=contacts.size();
+		//txt0.setText(new Integer(n).toString());
+		tree.removeAll();
+		for(int i=0;i<n;i++){
+			new TreeItem(tree,SWT.NONE).setText(contacts.get(i).getBaseInfo().getInfoField("Name").toString());
+		}
 	}
 
 }
