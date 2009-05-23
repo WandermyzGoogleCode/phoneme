@@ -6,6 +6,10 @@ package entity.infoField;
  *
  */
 public class Birthday extends EmptyBirthday {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3884258647822327940L;
 	private String day;
 	private int y, m, d;
 	private final int yyyy=0;
