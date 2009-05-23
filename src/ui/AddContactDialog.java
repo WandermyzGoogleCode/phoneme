@@ -108,8 +108,7 @@ public class AddContactDialog extends Dialog {
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
-				label
-						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
+				label.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
 				label.setBounds(314, 115, 36, 17);
 				label.setText("E-mail");
@@ -203,14 +202,20 @@ public class AddContactDialog extends Dialog {
 					InfoField cell = factory.makeInfoField("CellPhone",
 							cellphone.getText());
 					newUser.getBaseInfo().setInfoField(cell.getName(), cell);
-					InfoField bir = factory.makeInfoField("BirthDay", dateTime
-							.toString());
+					
+					int day = dateTime.getDay(); // Calendar.DAY_OF_MONTH
+					int month = dateTime.getMonth(); // Calendar.MONTH
+					int year = dateTime.getYear(); // Calendar.YEAR
+					
+					String birth=""+year+"-"+month+"-"+day;
+
+					InfoField bir = factory.makeInfoField("BirthDay",birth);
 					newUser.getBaseInfo().setInfoField(bir.getName(), bir);
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
 					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
 					
-					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
-					newUser.getBaseInfo().setInfoField(nicki.getName(), nicki);
+				//	InfoField nicki=factory.makeInfoField("NickName", nick.getText());
+					//newUser.getBaseInfo().setInfoField(nicki.getName(), nicki);
 					
 					MainWindow.logicCenter.editContactInfo(newUser);
 

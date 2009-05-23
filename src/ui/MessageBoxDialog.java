@@ -50,10 +50,9 @@ public class MessageBoxDialog extends Composite {
 		txt0.setText(new Integer(m.getMessageCnt()).toString());
 
 		m.getMessageCnt();
-		Iterator itr = m.getMessages().iterator();
-		while (itr.hasNext()) {
-			itr.next();
-			new TreeItem(tree, SWT.NONE).setText("a");
-		}
+	//	List <Message> l=m.getMessages();
+		for(int i=0;i<m.getMessages().size();i++){   
+		      
+		   }   
 	}
 }
