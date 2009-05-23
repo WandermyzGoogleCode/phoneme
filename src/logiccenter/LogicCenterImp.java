@@ -8,202 +8,214 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import datacenter.DataCenter;
+
 import serverLogicCenter.ServerLogicCenter;
 
 import entity.BaseUserInfo;
 import entity.Group;
 import entity.ID;
+import entity.IDFactory;
 import entity.Password;
 import entity.Permission;
 import entity.ReturnType;
 import entity.StatResult;
 import entity.UserInfo;
+import entity.VirtualResult.AddPerContactResult;
+import entity.VirtualResult.AddSynContactResult;
+import entity.VirtualResult.AdmitApplicationResult;
+import entity.VirtualResult.AdmitInvitationResult;
+import entity.VirtualResult.ApplyJoinGroupResult;
+import entity.VirtualResult.CreateGroupResult;
+import entity.VirtualResult.EditContactInfoResult;
+import entity.VirtualResult.EditGroupResult;
+import entity.VirtualResult.EditMyBaseInfoResult;
+import entity.VirtualResult.ExportFileResult;
+import entity.VirtualResult.GetStatResultResult;
+import entity.VirtualResult.ImportFileResult;
+import entity.VirtualResult.InviteToGroupResult;
+import entity.VirtualResult.LocalSearchContactsResult;
+import entity.VirtualResult.LoginResult;
+import entity.VirtualResult.MessageBox;
+import entity.VirtualResult.QuitGroupResult;
+import entity.VirtualResult.RegisterResult;
+import entity.VirtualResult.RelationCubeResult;
+import entity.VirtualResult.RemoveGroupMemberResult;
+import entity.VirtualResult.RemoveGroupResult;
+import entity.VirtualResult.RemovePerContactResult;
+import entity.VirtualResult.RemoveSynContactResult;
+import entity.VirtualResult.SearchGroupResult;
+import entity.VirtualResult.SearchUserResult;
+import entity.VirtualResult.SetPermissionResult;
+import entity.VirtualResult.SetVisibilityResult;
 import entity.infoField.EmailAddr;
 import entity.infoField.IdenticalInfoField;
 
 public class LogicCenterImp implements LogicCenter {
 
 	private BaseUserInfo loginUser = new BaseUserInfo();//当前登录的用户
-	private ServerLogicCenter server;
+	private ServerLogicCenter server = null;
+	private MessageBox messageBox = null;
+	
+	private DataCenter dataCenter;
 	
 	@Override
-	public ReturnType addPerContact(IdenticalInfoField un) {
-		// TODO Auto-generated method stub
-		return null;
+	public AddPerContactResult addPerContact(IdenticalInfoField un) {
+		return new AddPerContactResult(loginUser.getID(), un, this);
 	}
 
 	@Override
-	public ReturnType addSynContact(IdenticalInfoField un) {
-		// TODO Auto-generated method stub
-		return null;
+	public AddSynContactResult addSynContact(IdenticalInfoField un) {
+		return new AddSynContactResult(loginUser.getID(), un, this);
 	}
 
 	@Override
-	public ReturnType admitApplication(ID gid, ID uid) {
-		// TODO Auto-generated method stub
-		return null;
+	public AdmitApplicationResult admitApplication(ID gID, ID uID) {
+		return new AdmitApplicationResult(gID, uID, this);
 	}
 
 	@Override
-	public ReturnType admitInvitation(ID gid) {
-		// TODO Auto-generated method stub
-		return null;
+	public AdmitInvitationResult admitInvitation(ID gid) {
+		return new AdmitInvitationResult(gid, this);
 	}
 
 	@Override
-	public ReturnType applyJoinGroup(ID gid) {
-		// TODO Auto-generated method stub
-		return null;
+	public ApplyJoinGroupResult applyJoinGroup(ID gid) {
+		return new ApplyJoinGroupResult(gid, this);
 	}
 
 	@Override
-	public ReturnType createGroup(Group g, Permission p) {
-		// TODO Auto-generated method stub
-		return null;
+	public CreateGroupResult createGroup(Group g, Permission p) {
+		return new CreateGroupResult(g, p, this);
 	}
 
 	@Override
-	public ReturnType editContactInfo(UserInfo info) {
-		// TODO Auto-generated method stub
-		return null;
+	public EditContactInfoResult editContactInfo(UserInfo info) {
+		return new EditContactInfoResult(info, this);
 	}
 
 	@Override
-	public ReturnType editGroup(Group g) {
-		// TODO Auto-generated method stub
-		return null;
+	public EditGroupResult editGroup(Group g) {
+		return new EditGroupResult(g, this);
 	}
 
 	@Override
-	public ReturnType editMyBaseInfo() {
-		// TODO Auto-generated method stub
-		return null;
+	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo) {
+		return new EditMyBaseInfoResult(baseInfo, this);
 	}
 
 	@Override
-	public ReturnType exportFile(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
+	public ExportFileResult exportFile(String fileName) {
+		return new ExportFileResult(fileName, this);
 	}
 
 	@Override
 	public BaseUserInfo getLoginUser() {
-		// TODO Auto-generated method stub
-		return null;
+		return loginUser;
 	}
 
 	@Override
-	public StatResult getStatResult() {
-		// TODO Auto-generated method stub
-		return null;
+	public GetStatResultResult getStatResult() {
+		return new GetStatResultResult(this);
 	}
 
 	@Override
-	public ReturnType importFile(String fileName) {
-		// TODO Auto-generated method stub
-		return null;
+	public ImportFileResult importFile(String fileName) {
+		return new ImportFileResult(fileName, this);
 	}
 
 	@Override
-	public ReturnType inviteToGroup(IdenticalInfoField un, Group g,
+	public InviteToGroupResult inviteToGroup(IdenticalInfoField un, Group g,
 			String inviteInfo) {
-		// TODO Auto-generated method stub
-		return null;
+		return new InviteToGroupResult(un, g, inviteInfo, this);
 	}
 
 	@Override
-	public List<UserInfo> localSearchContacts(UserInfo info) {
-		// TODO Auto-generated method stub
-		return null;
+	public LocalSearchContactsResult localSearchContacts(UserInfo info) {
+		return new LocalSearchContactsResult(info, this);
 	}
 
 	@Override
-	public ReturnType login(EmailAddr e, Password pwd) {
-		// TODO Auto-generated method stub
-		return null;
+	public LoginResult login(IdenticalInfoField identicalInfo, Password pwd) {
+		return new LoginResult(identicalInfo, pwd, this);
 	}
 
 	@Override
-	public ReturnType quitGroup(ID gid, String reason) {
-		// TODO Auto-generated method stub
-		return null;
+	public QuitGroupResult quitGroup(ID gid, String reason) {
+		return new QuitGroupResult(gid, reason, this);
 	}
 
 	@Override
-	public ReturnType register(EmailAddr e, Password pwd, BaseUserInfo b) {
-		// TODO Auto-generated method stub
-		return null;
+	public RegisterResult register(BaseUserInfo b, Password pwd) {
+		return new RegisterResult(b, pwd, this);
 	}
 
 	@Override
-	public ReturnType relationCube(IdenticalInfoField a, IdenticalInfoField b) {
-		// TODO Auto-generated method stub
-		return null;
+	public RelationCubeResult relationCube(IdenticalInfoField from, IdenticalInfoField to) {
+		return new RelationCubeResult(from, to, this);
 	}
 
 	@Override
-	public ReturnType removeGroup(Group g) {
-		// TODO Auto-generated method stub
-		return null;
+	public RemoveGroupResult removeGroup(Group g) {
+		return new RemoveGroupResult(g, this);
 	}
 
 	@Override
-	public ReturnType removeGroupMember(IdenticalInfoField un, Group g) {
-		// TODO Auto-generated method stub
-		return null;
+	public RemoveGroupMemberResult removeGroupMember(IdenticalInfoField un, Group g) {
+		return new RemoveGroupMemberResult(un, g, this);
 	}
 
 	@Override
-	public ReturnType removePerContact(IdenticalInfoField un) {
-		// TODO Auto-generated method stub
-		return null;
+	public RemovePerContactResult removePerContact(ID targetID) {
+		return new RemovePerContactResult(targetID, this);
 	}
 
 	@Override
-	public ReturnType removeSynContact(IdenticalInfoField un) {
-		// TODO Auto-generated method stub
-		return null;
+	public RemoveSynContactResult removeSynContact(ID targetID) {
+		return new RemoveSynContactResult(targetID, this);
 	}
 
 	@Override
-	public ReturnType searchGroup(Group g) {
-		// TODO Auto-generated method stub
-		return null;
+	public SearchGroupResult searchGroup(Group g) {
+		return new SearchGroupResult(g, this);
 	}
 
 	@Override
-	public ReturnType searchUser(BaseUserInfo b) {
-		// TODO Auto-generated method stub
-		return null;
+	public SearchUserResult searchUser(BaseUserInfo b) {
+		return new SearchUserResult(b, this);
 	}
 
 	@Override
-	public ReturnType setGroupPermission(Group g, Permission p) {
-		// TODO Auto-generated method stub
-		return null;
+	public SetPermissionResult setGroupPermission(Group g, Permission p) {
+		return new SetPermissionResult(g.getID(), p, this);
 	}
 
 	@Override
-	public ReturnType setPermission(ID uid, Permission p) {
-		// TODO Auto-generated method stub
-		return null;
+	public SetPermissionResult setPermission(ID uid, Permission p) {
+		return new SetPermissionResult(uid, p, this);
 	}
 
 	@Override
-	public ReturnType setVisibility(ID uid, int visibility) {
-		// TODO Auto-generated method stub
-		return null;
+	public SetVisibilityResult setVisibility(ID uid, int visibility) {
+		return new SetVisibilityResult(uid, visibility, this);
 	}
 
+	/**
+	 * 当用户没有登录的时候，或是其他状态不合法的时候，返回null。
+	 */
 	@Override
 	public MessageBox getMessageBox()
 	{
 		//TODO 当前只是测试。好的流程应该是在用户登录的时候建立一个MessageBox，而不是每GET一次就建立一个。
-		return new MessageBox(loginUser.getID(), server);
+		return new MessageBox(ID.getNullID(), this);
+		/* 实际应该是这样的
+		 * return messageBox;
+		 */
 	}
 	
-	public LogicCenterImp()
+	public LogicCenterImp(DataCenter dataCenter)
 	{
+		this.dataCenter = dataCenter;
 		try {
 		    Registry registry = LocateRegistry.getRegistry("Localhost");//TODO 当前只是本机网络测试
 		    server = (ServerLogicCenter) registry.lookup("logicCenterServer");
@@ -213,13 +225,22 @@ public class LogicCenterImp implements LogicCenter {
 		}			
 	}
 	
+	@Override
+	public DataCenter getDataCenter() {
+		return dataCenter;
+	}
+	
+	@Override
+	public ServerLogicCenter getServer() {
+		return server;
+	}
 	/**
 	 * 测试用
 	 * @param args
 	 */
 	public static void main(String args[])
 	{
-		LogicCenterImp logicCenterImp = new LogicCenterImp();
+		LogicCenterImp logicCenterImp = new LogicCenterImp(null);
 		MessageBox messageBox = logicCenterImp.getMessageBox();
 		Tester tester = new Tester();
 		messageBox.addObserver(tester);
@@ -236,6 +257,18 @@ public class LogicCenterImp implements LogicCenter {
 			catch (Exception e){}
 		}
 		System.exit(0);//当前MessageBox的线程不能自己消除。实现好了以后，该线程应该在退出登录的时候就自动消除。
+	}
+
+	@Override
+	public StatResult calcStat() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserInfo> searchContacts(UserInfo info) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

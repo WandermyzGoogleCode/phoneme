@@ -1011,4 +1011,10 @@ public class DataCenterImp implements DataCenter {
 		return result;
 	}
 
+	@Override
+	public ReturnType setVisibility(ID uid, int visibility) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -12,6 +12,11 @@ package entity.infoField;
  */
 public class EmptyAddress extends EmptyInfoField {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7546082053813891890L;
+
 	@Override
 	public String getName() {
 		return "Address";

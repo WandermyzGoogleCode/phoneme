@@ -1,10 +1,13 @@
-package logiccenter;
+package entity.VirtualResult;
 import java.util.Calendar;
 import java.util.List;
+
+import logiccenter.LogicCenter;
 
 import serverLogicCenter.ServerLogicCenter;
 
 import entity.ID;
+import entity.SimpleError;
 
 import entity.message.Message;
 
@@ -29,32 +32,22 @@ public class MessageBox extends VirtualResult {
 	
 	class MessageRetriever extends Thread
 	{
-		private ServerLogicCenter server;
+		private LogicCenter center;
 		private ID thisUser;
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			/*
-			 * 如果网络部分实现好了，代码大致如下：
-			 * getAllMessagesFromServer();
-			 * setState(PREPARED);
-			 * notifyObservers();
-			 * while (CONDITION)
-			 * {
-			 * 	result = getNewMassagesFromServer();
-			 * 	setUpdateTime(NOW);
-			 * 	notifyObservers(); 
-			 * }
-			 */
 			try
 			{
 				//TODO IMPORTANT 如何对远程调用的函数强行结束，比如在超时的时候，或者在用户指定的时候？ 
-				messages = server.getAllMessages(thisUser);
-				setState(VirtualState.PREPARED);
+				//当前的策略是，当用户退出登录的时候，服务器自动断开相关RMI的连接，从而释放该线程。
+				messages = center.getServer().getAllMessages(thisUser);
+				setPrepared();
 				while (!isInterrupted())
 				{
-					Message newMessage = server.getNewMessage(thisUser);
+					Message newMessage = center.getServer().getNewMessage(thisUser);
+					if (isInterrupted())
+						break;
 					messages.add(newMessage);
 					setUpdateTime(Calendar.getInstance().getTime());
 				}
@@ -66,18 +59,26 @@ public class MessageBox extends VirtualResult {
 			}
 		}
 		
-		public MessageRetriever(ID thisUser, ServerLogicCenter server)
+		public MessageRetriever(ID thisUser, LogicCenter center)
 		{
 			this.thisUser = thisUser;
-			this.server = server;
+			this.center = center;
 		}
 	}
 	
 	synchronized public List<Message> getMessages(){
+		if (!getState().equals(VirtualState.PREPARED)){//保护在没有准备好的时候就来索取
+			System.err.println("err: you can't getMessages when it's not PREPARED.");
+			return null;
+		}
 		return messages;
 	}
 	
 	synchronized public int getMessageCnt(){
+		if (!getState().equals(VirtualState.PREPARED)){//保护在没有准备好的时候就来索取
+			System.err.println("err: you can't getMessageCnt when it's not PREPARED.");
+			return 0;
+		}
 		return messages.size();
 	}
 	
@@ -86,17 +87,16 @@ public class MessageBox extends VirtualResult {
 	 * 信息收件箱。
 	 * @param thisUser
 	 */
-	public MessageBox(ID thisUser, ServerLogicCenter server)
+	public MessageBox(ID thisUser, LogicCenter center)
 	{
-		retrieveThread =  new MessageRetriever(thisUser, server);
+		//TODO 测试阶段，不做错误处理，因为进来的ID全是-1
+		/*
+		if (thisUser.getValue() == -1)
+		{
+			setError(new SimpleError("not login"));
+			return;
+		}*/
+		retrieveThread =  new MessageRetriever(thisUser, center);
 		retrieveThread.start();
-		//TODO some other works...
 	}
-	
-	/*obsolete
-	@Override
-	public synchronized void terminate() {
-		System.err.println(this.getClass().toString()+" terminated");
-		retrieveThread.interrupt();
-	}*/
 }

@@ -5,6 +5,6 @@ package entity;
  * @author Administrator
  *
  */
-public interface Error {
+public interface MyError {
 
 }

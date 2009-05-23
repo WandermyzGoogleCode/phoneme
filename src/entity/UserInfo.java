@@ -23,4 +23,10 @@ public class UserInfo {
 	{
 		this.customInfo = customInfo;
 	}
+	
+	public UserInfo(BaseUserInfo baseInfo){
+		this.baseInfo = baseInfo;
+	}
+	
+	public UserInfo(){}
 }

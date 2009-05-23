@@ -1,5 +1,6 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,7 +8,11 @@ import java.util.HashMap;
 import entity.infoField.*;
 import java.util.ArrayList;
 
-public class Group {
+public class Group implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4975730456812134661L;
 	private ID id;//群组的ID
 	private Map<String, InfoField> fieldMap;//群组的各种字段，比如群组名等等
 	private List<ID> users;//群组内所有的用户

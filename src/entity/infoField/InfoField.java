@@ -1,5 +1,7 @@
 package entity.infoField;
 
+import java.io.Serializable;
+
 /**
  * UserInfo中（包括BaseUserInfo和CustomUserInfo)的字段的最高层接口。
  * 接下来用户字段可能分化出两个特殊的字段：IdenticalInfoField, IndexedInfoField，具体见这两个接口的说明。
@@ -11,7 +13,7 @@ package entity.infoField;
  * @author Administrator
  *
  */
-public interface InfoField {
+public interface InfoField extends Serializable{
 	/**
 	 * 
 	 * @return 该字段的名字

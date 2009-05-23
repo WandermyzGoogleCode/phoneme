@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class CellphoneNumber extends EmptyCellphone{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7291035141898489378L;
 	private String number;
 
 	public CellphoneNumber(String number)
