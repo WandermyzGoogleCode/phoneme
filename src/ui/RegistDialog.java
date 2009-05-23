@@ -24,6 +24,7 @@ public class RegistDialog extends Dialog{
 	private Text personalStatment;
 	private Combo sex;
 	private Button cancel;
+	private Button yes;
 	
 	public RegistDialog (Shell parent, int style) {
 		super (parent, style);
@@ -143,10 +144,11 @@ public class RegistDialog extends Dialog{
 			}
 		}
 		{
-			Button yes = new Button(registDia, SWT.NONE);
+			yes = new Button(registDia, SWT.NONE);
 			yes.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					gatherInfo();
+					yes.getParent().dispose();
 				}
 
 				private void gatherInfo() {

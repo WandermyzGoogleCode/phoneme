@@ -14,7 +14,7 @@ import com.swtdesigner.SWTResourceManager;
 import entity.UserInfo;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
-
+import entity.infoField.Birthday;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 public class EditContactDialog extends Dialog{
@@ -30,6 +30,7 @@ public class EditContactDialog extends Dialog{
 	private Button cancel;
 	private DateTime dateTime;
 	private UserInfo last;
+	private Button yes;
 	
 	public EditContactDialog (UserInfo last, Shell parent, int style) {
 		super (parent, style);
@@ -148,33 +149,57 @@ public class EditContactDialog extends Dialog{
 				sex.select(0);
 				sex.setBounds(86, 71, 67, 21);
 			}
+			if(last.getBaseInfo().getInfoField("Name").toString()!=null){
+				name.setText(last.getBaseInfo().getInfoField("Name").getStringValue());
+			};
+			if(last.getCustomInfo().getInfoField("NickName").toString()!=null){
+				nick.setText(last.getCustomInfo().getInfoField("NickName").getStringValue());
+			};
+			if(last.getBaseInfo().getInfoField("BirthDay").toString()!=null){
+				//TODO birthday
+				Birthday b=(Birthday)(last.getBaseInfo().getInfoField("BirthDay"));
+				dateTime.setDay(b.getDay());
+				dateTime.setMonth(b.getMonth()-1);
+				dateTime.setYear(b.getYear());
+				//nick.setText(last.getBaseInfo().getInfoField("NickName").toString());
+			};
+			if(last.getBaseInfo().getInfoField("CellPhone").toString()!=null){
+				cellphone.setText(last.getBaseInfo().getInfoField("CellPhone").getStringValue());
+			};
+			if(last.getBaseInfo().getInfoField("EmailAddress").toString()!=null){
+				text_3.setText(last.getBaseInfo().getInfoField("EmailAddress").getStringValue());
+			};
+			if(last.getBaseInfo().getInfoField("QQNumber").toString()!=null){
+				qq.setText(last.getBaseInfo().getInfoField("QQNumber").getStringValue());
+			};
 		}
 		{
-			Button yes = new Button(registDia, SWT.NONE);
+			yes = new Button(registDia, SWT.NONE);
 			yes.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					gatherInfo();
+					yes.getParent().dispose();
 				}
 
 				private void gatherInfo() {
 					// TODO Auto-generated method stub
 					nick.getText();
-					UserInfo newUser = UserInfo.getNewLocalUser();
+				//	UserInfo newUser = UserInfo.getNewLocalUser();
 					InfoFieldFactory factory = InfoFieldFactory.getFactory();
 					InfoField nameInfo = factory.makeInfoField("Name", name
 							.getText());
 
-					newUser.getBaseInfo().setInfoField(nameInfo.getName(),
+					last.getBaseInfo().setInfoField(nameInfo.getName(),
 							nameInfo);
 
 					InfoField emailInfo = factory.makeInfoField("EmailAddress",
 							text_3.getText());
-					newUser.getBaseInfo().setInfoField(emailInfo.getName(),
+					last.getBaseInfo().setInfoField(emailInfo.getName(),
 							emailInfo);
 
 					InfoField cell = factory.makeInfoField("CellPhone",
 							cellphone.getText());
-					newUser.getBaseInfo().setInfoField(cell.getName(), cell);
+					last.getBaseInfo().setInfoField(cell.getName(), cell);
 					
 					int day = dateTime.getDay(); // Calendar.DAY_OF_MONTH
 					int month = dateTime.getMonth(); // Calendar.MONTH
@@ -183,14 +208,14 @@ public class EditContactDialog extends Dialog{
 					String birth=""+year+"-"+month+"-"+day;
 
 					InfoField bir = factory.makeInfoField("BirthDay",birth);
-					newUser.getBaseInfo().setInfoField(bir.getName(), bir);
+					last.getBaseInfo().setInfoField(bir.getName(), bir);
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
-					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
+					last.getBaseInfo().setInfoField(qqi.getName(),qqi );
 					
 					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
-					newUser.getCustomInfo().setInfoField(nicki.getName(), nicki);
+					last.getCustomInfo().setInfoField(nicki.getName(), nicki);
 					
-					MainWindow.logicCenter.editContactInfo(newUser);
+					MainWindow.logicCenter.editContactInfo(last);
 					
 				}
 			});

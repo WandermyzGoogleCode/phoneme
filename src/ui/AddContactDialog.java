@@ -32,6 +32,7 @@ public class AddContactDialog extends Dialog {
 	private Combo sex;
 	private Button cancel;
 	private DateTime dateTime;
+	private Button yes;
 	//private LogicCenter logicCenter;
 
 	public AddContactDialog(Shell parent, int style) {
@@ -176,10 +177,11 @@ public class AddContactDialog extends Dialog {
 			}
 		}
 		{
-			Button yes = new Button(registDia, SWT.NONE);
+			yes = new Button(registDia, SWT.NONE);
 			yes.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					gatherInfo();
+					yes.getParent().dispose();
 				}
 
 				private void gatherInfo() {
