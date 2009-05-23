@@ -1,6 +1,8 @@
 package ui;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -20,11 +22,13 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.UserInfo;
+import entity.VirtualResult.LocalSearchContactsResult;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 import logiccenter.*;
 
 public class SearchLocalDialog extends Dialog {
+	private MainWindow mainWindow;
 	Object result;
 	private Text name;
 	private Text nick;
@@ -41,6 +45,19 @@ public class SearchLocalDialog extends Dialog {
 	private Tree tree;
 	//private LogicCenter logicCenter;
 
+	class SearchObserver implements Observer{
+		@Override
+		public void update(Observable arg0, Object arg1) {
+			LocalSearchContactsResult o = (LocalSearchContactsResult)arg0;
+			setSearchResult(o.getContacts());
+		}
+	}
+	
+	public SearchLocalDialog(MainWindow mainWindow, Shell arg0, int arg1){
+		super(arg0, arg1);
+		this.mainWindow = mainWindow;
+	}
+	
 	public SearchLocalDialog(Shell parent, int style) {
 		super(parent, style);
 	}

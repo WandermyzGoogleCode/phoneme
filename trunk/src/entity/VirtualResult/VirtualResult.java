@@ -3,6 +3,8 @@ package entity.VirtualResult;
 import java.util.Calendar;
 import java.util.Observable;
 import java.util.Date;
+import java.util.Observer;
+
 import entity.MyError;
 import static entity.VirtualResult.VirtualState.*;
 
@@ -39,6 +41,7 @@ public abstract class VirtualResult extends Observable {
 	synchronized protected void setPrepared()
 	{
 		state = PREPARED;
+		setChanged();
 		notifyObservers();
 	}
 	
@@ -61,6 +64,17 @@ public abstract class VirtualResult extends Observable {
 	{
 		this.err = err;
 		this.state = ERRORED;
+		setChanged();
 		notifyObservers();
-	}	
+	}
+	
+	@Override
+	public void addObserver(Observer observer){
+		super.addObserver(observer);
+		if (state == PREPARED)
+		{
+			setChanged();
+			super.notifyObservers();
+		}
+	}
 }

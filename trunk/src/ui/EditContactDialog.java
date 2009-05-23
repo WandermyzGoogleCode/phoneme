@@ -29,12 +29,14 @@ public class EditContactDialog extends Dialog{
 	private Combo sex;
 	private Button cancel;
 	private DateTime dateTime;
+	private UserInfo last;
 	
-	public EditContactDialog (Shell parent, int style) {
+	public EditContactDialog (UserInfo last, Shell parent, int style) {
 		super (parent, style);
+		this.last = last;
 	}
 	public EditContactDialog (Shell parent) {
-		this (parent, 0); // your default style bits go here (not the Shell's style bits)
+		this (new UserInfo(), parent, 0); // your default style bits go here (not the Shell's style bits)
 	}
 	public Object open () {
 		Shell parent = getParent();
