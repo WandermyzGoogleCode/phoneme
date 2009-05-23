@@ -6,7 +6,7 @@ public class Birthday extends EmptyBirthday {
 	public Birthday(String birthday)
 	{
 		//ºÏ≤È∏Ò Ω
-		//TODO
+		//TODO 
 		this.day=birthday;
 	}
 	

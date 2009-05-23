@@ -6,7 +6,7 @@ public class Address extends EmptyAddress {
 	public Address(String address)
 	{
 		//ºÏ≤È∏Ò Ω
-		//TODO
+		//TODO 
 		this.addr=address;
 	}
 	
