@@ -1531,7 +1531,8 @@ public class MainWindow {
 				String cell=users.get(i).getBaseInfo().getInfoField("CellPhone").getStringValue();
 				String email=users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
 				String tag=users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
-				createTreeSubItem(item1, name, nick, tag, cell, email);
+				String bir=users.get(i).getBaseInfo().getInfoField("BirthDay").getStringValue();
+				createTreeSubItem(item1, name, nick, tag, cell, email,bir);
 				item1.setExpanded(true);				
 			}
 		}
