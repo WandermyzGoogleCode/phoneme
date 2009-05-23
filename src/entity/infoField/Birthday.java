@@ -19,13 +19,19 @@ public class Birthday extends EmptyBirthday {
 	public Birthday(String birthday)
 	{
 		//ºÏ≤È∏Ò Ω
-		System.err.println("Birthday: "+birthday);
 		//TODO 
-		String date[]=birthday.split("-");
-		this.y=Integer.parseInt(date[yyyy]);
-		this.m=Integer.parseInt(date[mm]);
-		this.d=Integer.parseInt(date[dd]);
-		this.day=birthday;
+		if(birthday!=null){
+			String date[]=birthday.split("-");
+			this.y=Integer.parseInt(date[yyyy]);
+			this.m=Integer.parseInt(date[mm]);
+			this.d=Integer.parseInt(date[dd]);
+			this.day=birthday;
+		}else{
+			this.day="0-0-0";
+			this.y=0;
+			this.m=0;
+			this.d=0;
+		}
 	}
 	
 	public void setStringValue(String birthday)
