@@ -787,21 +787,25 @@ public class DataCenterImp implements DataCenter {
 		//TODO 传入的空值即为不需要更改的
 		userInfoWriteBuffer.add(b);
 		try{
-			if(userInfoWriteBuffer.size()==1000){
+			//TODO userInfoWriteBuffer.size()的限制
+			if(userInfoWriteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
 				
 				String sql1="UPDATE UserInfo set ";
+				String sqlCustomNull="UPDATE UserInfo set ";
 				String sql2="INSERT INTO UserInfo (UserID,";
 				Iterator<String> fieldNameIter=b.getBaseInfo().getKeySet().iterator();
 				String temp=fieldNameIter.next();
 				sql1+=(temp+":=?");
+				sqlCustomNull+=(temp+":=?");//处理当传入的CustomUserInfo为空的时候用
 				sql2+=temp;
 				int count=0;
 				while(fieldNameIter.hasNext()){
 					temp=fieldNameIter.next();
 					sql1+=(","+temp+":=?");
+					sqlCustomNull+=(","+temp+":=?");
 					sql2+=(","+temp);
 					count++;
 				}
@@ -813,12 +817,15 @@ public class DataCenterImp implements DataCenter {
 					count++;
 				}
 				sql1+=" WHERE UserID=?";
+				sqlCustomNull+=" WHERE UserID=?";
 				sql2+=") VALUES (?,?";//第一个?代表UserID，从第二个开始是字段内容
 				for(int i=0;i<count;i++)
 					sql2+=",?";
 				sql2+=")";
 				
 				PreparedStatement pstatement1=(PreparedStatement) connection.prepareStatement(sql1);
+				//处理当传入的CustomUserInfo为空的时候用
+				PreparedStatement pstatementCustomNull=(PreparedStatement) connection.prepareStatement(sqlCustomNull);
 				PreparedStatement pstatement2=(PreparedStatement) connection.prepareStatement(sql2);
 				for(int i=0;i<userInfoWriteBuffer.size();i++){
 					boolean userExist=true;
@@ -837,16 +844,25 @@ public class DataCenterImp implements DataCenter {
 						int keyNum=1;
 						fieldNameIter=userInfoWriteBuffer.get(i).getBaseInfo().getKeySet().iterator();
 						while(fieldNameIter.hasNext()){
-							pstatement1.setString(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getInfoField(fieldNameIter.next()).getStringValue());	
+							String fieldName=fieldNameIter.next();
+							pstatement1.setString(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getInfoField(fieldName).getStringValue());
+							pstatementCustomNull.setString(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getInfoField(fieldName).getStringValue());
 							keyNum++;
 						}
-						fieldNameIter=userInfoWriteBuffer.get(i).getCustomInfo().getKeySet().iterator();
-						while(fieldNameIter.hasNext()){
-							pstatement1.setString(keyNum, userInfoWriteBuffer.get(i).getCustomInfo().getInfoField(fieldNameIter.next()).getStringValue());	
-							keyNum++;
+						//如果传入的CustomUserInfo不为空
+						if(userInfoWriteBuffer.get(i).getCustomInfo()!=null){
+							fieldNameIter=userInfoWriteBuffer.get(i).getCustomInfo().getKeySet().iterator();
+							while(fieldNameIter.hasNext()){
+								pstatement1.setString(keyNum, userInfoWriteBuffer.get(i).getCustomInfo().getInfoField(fieldNameIter.next()).getStringValue());	
+								keyNum++;
+							}
+							pstatement1.setInt(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
+							pstatement1.addBatch();
+						}else{//如果传入的CustomUserInfo为空
+							pstatementCustomNull.setInt(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
+							pstatementCustomNull.addBatch();
 						}
-						pstatement1.setInt(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
-						pstatement1.addBatch();
+						
 					}else{
 						fieldNameIter=userInfoWriteBuffer.get(i).getBaseInfo().getKeySet().iterator();
 						pstatement2.setInt(1, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
@@ -864,10 +880,12 @@ public class DataCenterImp implements DataCenter {
 					}
 				}
 				pstatement1.executeBatch();
+				pstatementCustomNull.executeBatch();
 				pstatement2.executeBatch();
 		 		connection.commit();
 		 		connection.close();
 		 		pstatement1.clearBatch();
+		 		pstatementCustomNull.clearBatch();
 		 		pstatement2.clearBatch();
 		 		userInfoWriteBuffer.clear();
 			}
