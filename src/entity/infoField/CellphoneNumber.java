@@ -7,23 +7,25 @@ public class CellphoneNumber extends EmptyCellphone{
 	 * 
 	 */
 	private static final long serialVersionUID = 7291035141898489378L;
+	private static final String nullNumber = "";
 	private String number;
 	
 	boolean check(String data){
-		return Pattern.matches("+?(\\d\\d)?", data);
+		//TODO 更加准确的检测
+		return Pattern.matches("(+\\d{2})?\\d{11}", data);
 	}
 
 	public CellphoneNumber(String number)
 	{
-		//检查格式
-		//TODO
+		if (number == null || !check(number))
+			number = nullNumber;
 		this.number=number;
 	}
 	
 	public void setStringValue(String number)
 	{
-		//检查格式，然后赋值
-		//TODO
+		if (number == null || !check(number))
+			number = nullNumber;
 		this.number=number;
 	}
 

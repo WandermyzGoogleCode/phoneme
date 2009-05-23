@@ -1,24 +1,31 @@
 package entity.infoField;
 
+import java.util.regex.Pattern;
+
 public class EmailAddr extends EmptyEmailAddr
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3297353199701838427L;
+	private static final String nullAddr = "";
 	private String addr;
 
+	boolean check(String data){
+		return Pattern.matches("\\w+@\\w+.\\w+", data);
+	}
+	
 	public EmailAddr(String email)
 	{
-		//检查格式
-		//TODO
+		if (email == null || !check(email))
+			email = nullAddr;
 		this.addr=email;
 	}
 	
 	public void setStringValue(String email)
 	{
-		//检查格式，然后赋值
-		//TODO
+		if (email == null || !check(email))
+			email = nullAddr;
 		this.addr=email;
 	}
 
