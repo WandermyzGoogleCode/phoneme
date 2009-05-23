@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.UserInfo;
+import entity.VirtualResult.AllContactsBox;
 import entity.VirtualResult.MessageBox;
 
 public class MainWindow {
@@ -1399,15 +1400,30 @@ public class MainWindow {
 		});
 	}
 	
-	class refreshDate implements Observer
+	void refreshContacts(List<UserInfo> users)
 	{
+		
+	}
+	
+	{
+		AllContactsBox box = logicCenter.getAllContactsBox();
+		RefreshObserver observer = new RefreshObserver(this);
+		box.addObserver(observer);
+	}
+	
+	class RefreshObserver implements Observer
+	{
+		private MainWindow mainWindow;
+		
 		@Override
 		public void update(Observable o, Object arg) 
 		{
-			MessageBox box = (MessageBox)o;
-			System.out.println("State Changed, new State: "+box.getState());
-			if (box.getUpdateTime() != null)
-				System.out.println("UpdateTime: "+box.getUpdateTime()+"\n");
+			AllContactsBox allContactsBox = (AllContactsBox)o;
+			mainWindow.refreshContacts(allContactsBox.getContacts());
+		}
+		
+		public RefreshObserver(MainWindow mainWindow){
+			this.mainWindow = mainWindow;
 		}
 	}
 }
