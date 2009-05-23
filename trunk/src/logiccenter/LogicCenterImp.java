@@ -23,7 +23,7 @@ import entity.infoField.IdenticalInfoField;
 
 public class LogicCenterImp implements LogicCenter {
 
-	private BaseUserInfo loginUser;//当前登录的用户
+	private BaseUserInfo loginUser = new BaseUserInfo();//当前登录的用户
 	private ServerLogicCenter server;
 	
 	@Override
@@ -225,15 +225,17 @@ public class LogicCenterImp implements LogicCenter {
 		messageBox.addObserver(tester);
 		String cmd = "";
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));		
-		while (cmd != "exit")
+		while (!cmd.equals("exit"))
 		{
 			System.out.println("Type something...('exit' to exit)");
 			try
 			{
 				cmd = stdin.readLine();
+				System.out.println("'"+cmd+"' read...\n");
 			}
 			catch (Exception e){}
 		}
+		System.exit(0);//当前MessageBox的线程不能自己消除。实现好了以后，该线程应该在退出登录的时候就自动消除。
 	}
 }
 

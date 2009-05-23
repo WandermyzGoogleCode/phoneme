@@ -1,5 +1,4 @@
 package logiccenter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -20,6 +19,7 @@ import entity.message.Message;
  */
 public class MessageBox extends VirtualResult {
 	private List<Message> messages;
+	private Thread retrieveThread;
 	
 	/**
 	 * 单独获取新信息的线程Task
@@ -27,7 +27,7 @@ public class MessageBox extends VirtualResult {
 	 *
 	 */
 	
-	class MessageRetriever implements Runnable
+	class MessageRetriever extends Thread
 	{
 		private ServerLogicCenter server;
 		private ID thisUser;
@@ -49,21 +49,20 @@ public class MessageBox extends VirtualResult {
 			 */
 			try
 			{
-				//TODO UNCOVER
-				//messages = server.getAllMessages(thisUser);
+				//TODO IMPORTANT 如何对远程调用的函数强行结束，比如在超时的时候，或者在用户指定的时候？ 
+				messages = server.getAllMessages(thisUser);
 				setState(VirtualState.PREPARED);
-				while (true)
+				while (!isInterrupted())
 				{
-					//TODO UNCOVER
-					//Message newMessage = server.getNewMessage(thisUser);
-					//messages.add(newMessage);
+					Message newMessage = server.getNewMessage(thisUser);
+					messages.add(newMessage);
 					setUpdateTime(Calendar.getInstance().getTime());
 				}
 			}
 			catch (Exception e)
 			{
 				System.err.println("Exception: "+e.toString());
-				e.printStackTrace();			
+				e.printStackTrace();
 			}
 		}
 		
@@ -89,8 +88,15 @@ public class MessageBox extends VirtualResult {
 	 */
 	public MessageBox(ID thisUser, ServerLogicCenter server)
 	{
-		Thread retrieveThread =  new Thread(new MessageRetriever(thisUser, server));
+		retrieveThread =  new MessageRetriever(thisUser, server);
 		retrieveThread.start();
 		//TODO some other works...
-	}	
+	}
+	
+	/*obsolete
+	@Override
+	public synchronized void terminate() {
+		System.err.println(this.getClass().toString()+" terminated");
+		retrieveThread.interrupt();
+	}*/
 }

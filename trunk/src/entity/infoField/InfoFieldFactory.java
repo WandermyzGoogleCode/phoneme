@@ -16,12 +16,11 @@ public class InfoFieldFactory {
 	
 	public InfoField makeInfoField(String name, String value)
 	{
-		//SAMPLE
 		if (name.equals("EmailAddress"))
-		{
 			return new EmailAddr(value);
-		}
-		//TODO
+		if (name.equals("CellPhone"))
+			return new CellphoneNumber(value);
+		//TODO ¸ü¶àµÄinfoField
 		return null;
 	}
 	
