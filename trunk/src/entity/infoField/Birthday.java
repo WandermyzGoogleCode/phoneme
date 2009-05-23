@@ -27,6 +27,10 @@ public class Birthday extends EmptyBirthday {
 	{
 		//检查格式，然后赋值
 		//TODO
+		String date[]=birthday.split("-");
+		this.y=Integer.parseInt(date[yyyy]);
+		this.m=Integer.parseInt(date[mm]);
+		this.d=Integer.parseInt(date[dd]);
 		this.day=birthday;
 	}
 
