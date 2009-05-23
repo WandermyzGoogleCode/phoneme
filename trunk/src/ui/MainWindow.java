@@ -153,7 +153,7 @@ public class MainWindow {
 	private Composite compositeMain;
 	private StackLayout compositeMainStackLayout;
 	private Composite compositeLeftList;
-	private Menu menuMain;
+	private Menu mainMenu;
 	private MenuItem submenuMainHelp;
 	private Menu menuMainAbout;
 	private MenuItem menuItemMainHelpAbout;
@@ -173,6 +173,10 @@ public class MainWindow {
 	private Composite renlifang;
 	private Button listButtonMessageBox;
 	private MessageBoxDialog messageCompsite;
+	private MenuItem menuFile;
+	private Menu filemenu;
+	private MenuItem export;
+	private MenuItem menuimport;
 
 	/**
 	 * Launch the application
@@ -236,11 +240,51 @@ public class MainWindow {
 		compositeLeftList.setLayoutData(fd_compositeLeftList);
 
 		// 主菜单栏
-		menuMain = new Menu(shell, SWT.BAR);
-		shell.setMenuBar(menuMain);
+		mainMenu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(mainMenu);
+		//File菜单
+		menuFile = new MenuItem(mainMenu, SWT.CASCADE);
+		menuFile.setText("文件"); //$NON-NLS-1$
 
+		filemenu = new Menu(menuFile);
+		menuFile.setMenu(filemenu);
+
+		export = new MenuItem(filemenu, SWT.NONE);
+		export.setText("导入"); //$NON-NLS-1$
+		export.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog=new FileDialog(shell);
+				dialog.setText("目录");
+				//dialog.setMessage("请选择一个文件");
+				dialog.setFilterPath("c:/");
+				dialog.setFilterExtensions(new String[]{"*.csv"});
+				String dir=dialog.open();
+				if(dir!=null){
+					logicCenter.importFile(dir);
+					System.out.println("路径："+dir);
+				}
+			}
+		});
+		
+		menuimport = new MenuItem(filemenu, SWT.NONE);
+		menuimport.setText("导出"); //$NON-NLS-1$
+		menuimport.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog=new FileDialog(shell);
+				dialog.setText("目录");
+				//dialog.setMessage("请选择一个目录");
+				dialog.setFilterExtensions(new String[]{"*.csv"});
+				dialog.setFilterPath("c:/");
+				String dir=dialog.open();
+				if(dir!=null){
+					logicCenter.exportFile(dir+".csv");
+					System.out.println("路径："+dir);
+				}
+			}
+		});
+		
 		// “帮助”菜单
-		submenuMainHelp = new MenuItem(menuMain, SWT.CASCADE);
+		submenuMainHelp = new MenuItem(mainMenu, SWT.CASCADE);
 		submenuMainHelp.setText(Messages.getString("MainWindow.Help")); //$NON-NLS-1$
 
 		menuMainAbout = new Menu(submenuMainHelp);
@@ -651,11 +695,6 @@ public class MainWindow {
 		treeAddressContactColumnNickName.setWidth(100);
 		treeAddressContactColumnNickName.setText("昵称");
 
-		treeAddressContactColumnCall = new TreeColumn(treeAddressContact,
-				SWT.NONE);
-		treeAddressContactColumnCall.setWidth(100);
-		treeAddressContactColumnCall.setText("称呼");
-
 		treeAddressContactColumnRelation = new TreeColumn(treeAddressContact,
 				SWT.NONE);
 		treeAddressContactColumnRelation.setWidth(100);
@@ -694,10 +733,6 @@ public class MainWindow {
 		treeAddressPermitColumnNickName.setWidth(100);
 		treeAddressPermitColumnNickName.setText("昵称");
 
-		treeAddressPermitColumnCall = new TreeColumn(treeAddressPermit,
-				SWT.NONE);
-		treeAddressPermitColumnCall.setWidth(100);
-		treeAddressPermitColumnCall.setText("称呼");
 
 		treeAddressPermitColumnRelation = new TreeColumn(treeAddressPermit,
 				SWT.NONE);
@@ -880,22 +915,22 @@ public class MainWindow {
 		// TODO 绘制个人信息中自定义字段的控件
 		// TODO 从数据库中读取个人信息，填入相关控件（考虑DataBinding）
 
-		treeAddressContactItemNoGroup = new TreeItem(treeAddressContact,
-				SWT.NONE);
-		treeAddressContactItemNoGroup.setText("未分组");
+//		treeAddressContactItemNoGroup = new TreeItem(treeAddressContact,SWT.NONE);
+//		treeAddressContactItemNoGroup.setText("未分组");
 
 		// TODO 从数据库中读取同步联系人，填入相关控件（考虑DataBinding）
 		// Sample Code:
 	
-		TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
+	/*	TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
 		item1.setText("March");
 		createTreeSubItem(item1, "李宇骞", "SpaceFlyer", "老大", "大学同学",
 				"13800000000", "Space@Flyer.com");
 		createTreeSubItem(item1, "刘洋", "Wander", "", "", "13900000000",
 				"Wander@Wander.com");
 		item1.setExpanded(true);
+		*/
 		// Sample Code End.
-		treeAddressContactItemNoGroup.setExpanded(true);
+		//treeAddressContactItemNoGroup.setExpanded(true);
 
 		treeAddressPermitItemNoGroup = new TreeItem(treeAddressPermit, SWT.NONE);
 		treeAddressPermitItemNoGroup.setText("未分组");
@@ -1434,6 +1469,16 @@ public class MainWindow {
 		public void run() {
 			// TODO Auto-generated method stub
 			int n=users.size();
+		//	tabItemAddressContact.
+			//treeAddressContactItemNoGroup.clearAll(true);
+			treeAddressContact.dispose();
+			treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER);
+			treeAddressContact
+					.addSelectionListener(new TreeAddressContactSelectionListener());
+			treeAddressContact.setSortColumn(null);
+			treeAddressContact.setHeaderVisible(true);
+			tabItemAddressContact.setControl(treeAddressContact);
+
 			TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
 			item1.setText("sql");
 			for(int i=0;i<n;i++){
