@@ -71,6 +71,7 @@ public class DataCenterImp implements DataCenter {
 	 	    
 	 	    boolean userInfoTableExist=true;
 	 	    boolean groupTableExist=true;
+	 	    boolean groupMemTableExist=true;
 	 	    boolean permissionTableExist=true;
 	 	    
 ///////////////！！！！！！！！！！！！（跟new BaseUserInfo()的实现有关，可能需要修改）
@@ -118,7 +119,6 @@ public class DataCenterImp implements DataCenter {
 				}
 				sql+=")";	 	    
 				statement.executeUpdate(sql);
-				connection.close();
 			}
 			
 			
@@ -127,14 +127,13 @@ public class DataCenterImp implements DataCenter {
 			try{	
 				statement.executeQuery(sql);
 			}catch(SQLException e){
-				groupTableExist=false;
+				groupMemTableExist=false;
 			}
 	 	    
 	 	//建立Group成员表
-			if(groupTableExist==false){
+			if(groupMemTableExist==false){
 				sql="CREATE TABLE GroupMember(GroupID int not null,UserID int not null)";	 	    
 				statement.executeUpdate(sql);
-				connection.close();
 			}
 			
 		//判断Permission表是否存在
@@ -146,15 +145,15 @@ public class DataCenterImp implements DataCenter {
 			}
 		//建立Permission表
 			if(permissionTableExist==false){
-				sql="CREATE TABLE Permission(UserID int not null,";
+				sql="CREATE TABLE Permission(UserID int not null";
 				fieldNameIter=(new Permission()).getKeySet().iterator();
 				while(fieldNameIter.hasNext()){
 					sql+=(","+fieldNameIter.next()+" int not null");
 				}
 				sql+=")";	 	    
-				statement.executeUpdate(sql);
-				connection.close();
+				statement.executeUpdate(sql);	
 			}
+			connection.close();
 		}catch(Exception ex){
 		      System.out.println(ex);
 		      ex.printStackTrace();
@@ -307,6 +306,7 @@ public class DataCenterImp implements DataCenter {
 				}
 				writer.writeNext(toWrite);
 			}
+			writer.close();
 			
 			//写GroupInfo
 			writer=new CSVWriter(new FileWriter(dirName+"\\GroupInfo.csv"),'#');
@@ -331,11 +331,14 @@ public class DataCenterImp implements DataCenter {
 				}
 				writer.writeNext(toWrite);
 			}
+			writer.close();
+			
 			//写GroupMember
 			writer=new CSVWriter(new FileWriter(dirName+"\\GroupMember.csv"),'#');
 			toWrite=new String[2];
 			toWrite[0]="GroupID";
 			toWrite[1]="UserID";
+			writer.writeNext(toWrite);
 			for(int i=0;i<allGroup.size();i++){
 				for(int j=0;j<allGroup.get(i).getUsersID().size();i++){
 					toWrite[0]=""+allGroup.get(i).getID().getValue();
@@ -343,6 +346,8 @@ public class DataCenterImp implements DataCenter {
 					writer.writeNext(toWrite);
 				}
 			}
+			writer.close();
+			
 			//写Permission
 			writer=new CSVWriter(new FileWriter(dirName+"\\Permission.csv"),'#');
 			HashMap<ID,Permission> allPermission=(HashMap<ID,Permission>)getAllPermission();
@@ -371,6 +376,8 @@ public class DataCenterImp implements DataCenter {
 				}
 				writer.writeNext(toWrite);
 			}
+			writer.close();
+			
 		}catch(Exception ex){
 			System.out.println(ex);
 			ex.printStackTrace();
