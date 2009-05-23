@@ -1411,32 +1411,37 @@ public class MainWindow {
 		});
 	}
 	
-	void refreshContacts(List<UserInfo> users)
-	{
-		int n=users.size();
-		TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
-		item1.setText("sql");
-		for(int i=0;i<n;i++){
-			String name=users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
-			String nick=users.get(i).getBaseInfo().getInfoField("NickName").getStringValue();
-			String cell=users.get(i).getBaseInfo().getInfoField("CellPhone").getStringValue();
-			String email=users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
-			String tag=users.get(i).getCustomInfo().getInfoField("").getStringValue();
-			createTreeSubItem(item1, name, nick, "", tag,cell, email);
-			
+	class RefreshContactTask implements Runnable{
+		private List<UserInfo> users;
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			int n=users.size();
+			TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
+			item1.setText("sql");
+			for(int i=0;i<n;i++){
+				String name=users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
+				String nick=users.get(i).getCustomInfo().getInfoField("NickName").getStringValue();
+				String cell=users.get(i).getBaseInfo().getInfoField("CellPhone").getStringValue();
+				String email=users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
+				String tag=users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
+				createTreeSubItem(item1, name, nick, "", tag, cell, email);
+				item1.setExpanded(true);				
+			}
 		}
-		item1.setExpanded(true);
+		
+		public RefreshContactTask(List<UserInfo> users){
+			this.users = users;
+		}
+	}
+	
+	void refreshContacts(List<UserInfo> users){
+		Display.getDefault().syncExec(new RefreshContactTask(users));
 	}
 	
 	void refreshMessageBox(List<Message> users)
 	{
 		//TODO LIJING
-	}
-	
-	{
-		AllContactsBox box = logicCenter.getAllContactsBox();
-		RefreshObserver observer = new RefreshObserver();
-		box.addObserver(observer);
 	}
 	
 	class RefreshObserver implements Observer
@@ -1456,5 +1461,11 @@ public class MainWindow {
 			MessageBox box = (MessageBox)o;
 			refreshMessageBox(box.getMessages());
 		}
+	}
+	
+	public MainWindow(){
+		AllContactsBox box = logicCenter.getAllContactsBox();
+		RefreshObserver observer = new RefreshObserver();
+		box.addObserver(observer);		
 	}
 }
