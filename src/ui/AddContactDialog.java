@@ -214,11 +214,11 @@ public class AddContactDialog extends Dialog {
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
 					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
 					
-				//	InfoField nicki=factory.makeInfoField("NickName", nick.getText());
-					//newUser.getBaseInfo().setInfoField(nicki.getName(), nicki);
+					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
+					newUser.getCustomInfo().setInfoField(nicki.getName(), nicki);
 					
 					MainWindow.logicCenter.editContactInfo(newUser);
-
+					
 				}
 			});
 			yes.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8, SWT.NORMAL));
