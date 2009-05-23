@@ -20,7 +20,7 @@ public class GetStatResultResult extends OneTimeVirtualResult {
 	}
 
 	public StatResult getStatResult(){
-		if (!getState().equals(VirtualState.PREPARED)){//保护在没有准备好的时候就来索取
+		if (getState() != VirtualState.PREPARED){//保护在没有准备好的时候就来索取
 			System.err.println("err: you can't getStatResult when it's not PREPARED.");
 			return null;
 		}

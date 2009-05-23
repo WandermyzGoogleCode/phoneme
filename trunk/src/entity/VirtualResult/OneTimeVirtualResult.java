@@ -2,8 +2,6 @@ package entity.VirtualResult;
 
 import static entity.VirtualResult.VirtualState.*;
 
-import java.rmi.RemoteException;
-
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
@@ -26,7 +24,7 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 	{
 		@Override
 		public void run() {
-			if (!getState().equals(LOADING))
+			if (OneTimeVirtualResult.this.getState() != LOADING)
 				return;
 			try
 			{
