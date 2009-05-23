@@ -1368,8 +1368,14 @@ public class MainWindow {
 					// Debug:
 					MessageDialog.openInformation(shell, "删除联系人", current
 							.getText());
-					int ind = current.getParent().indexOf(current);
-					//TODO NEXT
+
+					int ind = current.getParentItem().indexOf(current);
+					if (ind > -1)
+						logicCenter.removeContactInfo(allContactsBox.getContacts().get(ind).getBaseInfo().getID());
+					else
+					{
+						//TODO 报错
+					}
 				}
 			}
 		}
