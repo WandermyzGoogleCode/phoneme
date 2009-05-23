@@ -11,6 +11,8 @@ public class Name extends EmptyName {
 	{
 		//检查格式
 		//TODO
+		if (name == null || name.length() == 0)
+			name = "NoName";
 		this.name=name;
 	}
 	
@@ -18,6 +20,8 @@ public class Name extends EmptyName {
 	{
 		//检查格式，然后赋值
 		//TODO
+		if (name == null || name.length() == 0)
+			name = "NoName";
 		this.name=name;
 	}
 
