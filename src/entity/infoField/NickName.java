@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class NickName extends EmptyNickName {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3947844432005571211L;
 	private String name;
 
 	public NickName(String name)

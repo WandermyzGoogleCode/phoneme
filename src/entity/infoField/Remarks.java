@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class Remarks extends EmptyRemarks {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -222450790560309357L;
 	private String remarks;
 
 	public Remarks(String rem)

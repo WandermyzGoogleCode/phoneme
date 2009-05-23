@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class Web extends EmptyWeb {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7376365384406568419L;
 	private String addr;
 
 	public Web(String addr)

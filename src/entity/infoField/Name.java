@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class Name extends EmptyName {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3189490709293556137L;
 	private String name;
 
 	public Name(String name)

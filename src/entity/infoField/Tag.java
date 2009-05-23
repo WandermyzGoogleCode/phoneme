@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class Tag extends EmptyTag {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7120471122733906974L;
 	private String tag;
 
 	public Tag(String tag)

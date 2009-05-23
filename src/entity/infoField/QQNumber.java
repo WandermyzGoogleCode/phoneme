@@ -1,6 +1,10 @@
 package entity.infoField;
 
 public class QQNumber extends EmptyQQNumber {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3633220370059662405L;
 	private String number;
 
 	public QQNumber(String qnum)

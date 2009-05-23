@@ -5,7 +5,7 @@ package entity.infoField;
  * @author Administrator
  *
  */
-public class EmptyImg extends EmptyInfoField {
+public class EmptyImg extends EmptyInfoField implements MultimediaInfoField {
 
 	/**
 	 * 

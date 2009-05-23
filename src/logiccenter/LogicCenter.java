@@ -4,6 +4,8 @@ import entity.*;
 
 import java.util.List;
 
+import algorithm.Matcher;
+
 import serverLogicCenter.ServerLogicCenter;
 
 import entity.VirtualResult.AddPerContactResult;
@@ -217,7 +219,7 @@ public interface LogicCenter {
 	 * @param uInfo
 	 * @return
 	 */
-	public LocalSearchContactsResult localSearchContacts(UserInfo uInfo);
+	public LocalSearchContactsResult localSearchContacts(UserInfo uInfo, Matcher userMatcher);
 	
 	/**
 	 * 返回统计信息
@@ -267,7 +269,7 @@ public interface LogicCenter {
 	 * 获取本地搜索结果，该方法是单线程的，可能造成阻塞
 	 * @return
 	 */
-	public List<UserInfo> searchContacts(UserInfo info);
+	public List<UserInfo> searchContacts(UserInfo info, Matcher matcher);
 	
 	/**
 	 * 删除联系人
