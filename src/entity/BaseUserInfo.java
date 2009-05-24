@@ -46,4 +46,11 @@ public class BaseUserInfo {
 	public boolean isNull(){
 		return (id.isNull());
 	}
+	
+	public String getStringValue(){
+		String res = "";
+		for(String key: getKeySet())
+			res += "<"+key+": "+getInfoField(key).getStringValue()+">  |";
+		return res;
+	}
 }

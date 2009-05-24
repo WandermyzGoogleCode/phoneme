@@ -30,6 +30,8 @@ public class SimpleUserInfoMatcherUsingLCST implements Matcher{
 					if(patInfo.getBaseInfo().getInfoField(field)!=null){
 						String p = patInfo.getBaseInfo().getInfoField(field).getStringValue();
 						String t = tarInfo.getBaseInfo().getInfoField(field).getStringValue();
+						p = p.toLowerCase();
+						t = t.toLowerCase();
 						totalCnt += p.length();
 						matchCnt += StringFunc.lcst(p, t);
 					}
@@ -40,6 +42,8 @@ public class SimpleUserInfoMatcherUsingLCST implements Matcher{
 					if(patInfo.getCustomInfo().getInfoField(field)!=null){
 						String p = patInfo.getCustomInfo().getInfoField(field).getStringValue();
 						String t = tarInfo.getCustomInfo().getInfoField(field).getStringValue();
+						p = p.toLowerCase();
+						t = t.toLowerCase();
 						totalCnt += p.length();
 						matchCnt += StringFunc.lcst(p, t);
 					}
