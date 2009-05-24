@@ -9,6 +9,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -45,6 +46,10 @@ public class SearchLocalDialog extends Dialog {
 	private Group registInfo;
 	private Shell registDia;
 	private Tree tree;
+	private Label labelpolcy;
+	private Combo combo;
+	private Button yes;
+	private Button yes1;
 	//private LogicCenter logicCenter;
 
 	class SetResultTask implements Runnable{
@@ -99,23 +104,23 @@ public class SearchLocalDialog extends Dialog {
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(38, 34, 24, 17);
+				label.setBounds(38, 84, 24, 17);
 				label.setText("\u59D3\u540D");
 			}
 			{
 				name = new Text(registInfo, SWT.BORDER);
-				name.setBounds(86, 34, 142, 23);
+				name.setBounds(86, 84, 142, 23);
 			}
 			{
 				nick = new Text(registInfo, SWT.BORDER);
-				nick.setBounds(363, 34, 142, 23);
+				nick.setBounds(363, 84, 142, 23);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(314, 34, 24, 17);
+				label.setBounds(314, 84, 24, 17);
 				label.setText("\u6635\u79F0");
 			}
 			{
@@ -123,82 +128,82 @@ public class SearchLocalDialog extends Dialog {
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(38, 115, 24, 17);
+				label.setBounds(38, 165, 24, 17);
 				label.setText("\u624B\u673A");
 			}
 			{
 				cellphone = new Text(registInfo, SWT.BORDER);
-				cellphone.setBounds(86, 112, 142, 23);
+				cellphone.setBounds(86, 162, 142, 23);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(314, 74, 24, 17);
+				label.setBounds(314, 124, 24, 17);
 				label.setText("\u751F\u65E5");
 			}
 			{
 				dateTime = new DateTime(registInfo, SWT.NONE);
 				dateTime.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 						SWT.NORMAL));
-				dateTime.setBounds(362, 72, 93, 24);
+				dateTime.setBounds(362, 122, 93, 24);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(314, 115, 36, 17);
+				label.setBounds(314, 165, 36, 17);
 				label.setText("E-mail");
 			}
 			{
 				text_3 = new Text(registInfo, SWT.BORDER);
-				text_3.setBounds(363, 112, 142, 23);
+				text_3.setBounds(363, 162, 142, 23);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(38, 150, 24, 23);
+				label.setBounds(38, 200, 24, 23);
 				label.setText("QQ");
 			}
 			{
 				qq = new Text(registInfo, SWT.BORDER);
-				qq.setBounds(86, 150, 142, 23);
+				qq.setBounds(86, 200, 142, 23);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(314, 150, 36, 17);
+				label.setBounds(314, 200, 36, 17);
 				label.setText("MSN");
 			}
 			{
 				msn = new Text(registInfo, SWT.BORDER);
-				msn.setBounds(362, 150, 142, 23);
+				msn.setBounds(362, 200, 142, 23);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(38, 197, 48, 23);
+				label.setBounds(38, 247, 48, 23);
 				label.setText("\u4E2A\u4EBA\u63CF\u8FF0");
 			}
 			{
 				personalStatment = new Text(registInfo, SWT.BORDER);
 				personalStatment.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 						SWT.NORMAL));
-				personalStatment.setBounds(98, 197, 427, 80);
+				personalStatment.setBounds(98, 247, 427, 80);
 			}
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label
 						.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8,
 								SWT.NORMAL));
-				label.setBounds(38, 74, 24, 17);
+				label.setBounds(38, 124, 24, 17);
 				label.setText("\u6027\u522B");
 			}
 			{
@@ -210,16 +215,36 @@ public class SearchLocalDialog extends Dialog {
 				sex.setData("ÄÐ", 1);
 				sex.setData("Å®", 2);
 				sex.select(0);
-				sex.setBounds(86, 71, 67, 21);
+				sex.setBounds(86, 121, 67, 21);
+			}
+			{
+				labelpolcy = new Label(registInfo, SWT.NONE);
+				labelpolcy.setBounds(27, 36, 48, 17);
+				labelpolcy.setText("\u9009\u62E9\u7B56\u7565");
+			}
+			{
+				combo = new Combo(registInfo, SWT.NONE);
+				combo.add("²ßÂÔ1");
+				combo.add("²ßÂÔ2");
+				combo.add("²ßÂÔ3");
+				combo.setData("²ßÂÔ1", 0);
+				combo.setData("²ßÂÔ2", 1);
+				combo.setData("²ßÂÔ3", 2);
+				combo.select(0);
+				combo.setBounds(86, 36, 89, 21);
 			}
 		}
 		{
-			Button yes = new Button(registDia, SWT.NONE);
+			yes = new Button(registDia, SWT.NONE);
 			yes.addSelectionListener(new SelectionAdapter() {
 
 				public void widgetSelected(SelectionEvent e) {
 					gatherInfo();
+					//!TODO combo.getSelectionIndex() ¾ÍÊÇÄãÒªµÄ²ßÂÔ
+					System.out.println(combo.getSelectionIndex());
 					registInfo.dispose();
+					yes.dispose();
+					cancel.dispose();
 					System.out.println("dispose");
 					Group group = new Group(registDia, SWT.NONE);
 					group.setBounds(10, 58, 430, 221);
@@ -230,13 +255,21 @@ public class SearchLocalDialog extends Dialog {
 							TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 							treeItem.setText("New TreeItem");
 						}
+						yes1=new Button(registDia, SWT.NONE);
+						yes1.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8, SWT.NORMAL));
+						yes1.setBounds(404, 420, 68, 23);
+						yes1.setText("È·¶¨");
+						yes1.addSelectionListener(new SelectionAdapter() {
+
+							public void widgetSelected(SelectionEvent e) {
+								yes1.getParent().dispose();
+							}
+						});
 					}
 					
 				}
 				private void gatherInfo() {
 					// TODO Auto-generated method stub
-					System.out.println(name.getText());
-					nick.getText();
 					UserInfo newUser = UserInfo.getNewLocalUser();
 					InfoFieldFactory factory = InfoFieldFactory.getFactory();
 					InfoField nameInfo = factory.makeInfoField("Name", name
@@ -308,5 +341,4 @@ public class SearchLocalDialog extends Dialog {
 			new TreeItem(tree,SWT.NONE).setText(contacts.get(i).getStringValue());
 		}
 	}
-
 }
