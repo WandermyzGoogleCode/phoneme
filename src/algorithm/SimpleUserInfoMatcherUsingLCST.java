@@ -3,6 +3,7 @@ package algorithm;
 import java.util.Iterator;
 
 import entity.UserInfo;
+import entity.infoField.InfoField;
 
 public class SimpleUserInfoMatcherUsingLCST implements Matcher{
 	/**
@@ -27,7 +28,8 @@ public class SimpleUserInfoMatcherUsingLCST implements Matcher{
 				Iterator<String> iter=patInfo.getBaseInfo().getKeySet().iterator();
 				while(iter.hasNext()){
 					String field=iter.next();
-					if(patInfo.getBaseInfo().getInfoField(field)!=null){
+					InfoField infoFiled = patInfo.getBaseInfo().getInfoField(field);
+					if(infoFiled !=null && infoFiled.isValid()){
 						String p = patInfo.getBaseInfo().getInfoField(field).getStringValue();
 						String t = tarInfo.getBaseInfo().getInfoField(field).getStringValue();
 						p = p.toLowerCase();
@@ -39,7 +41,8 @@ public class SimpleUserInfoMatcherUsingLCST implements Matcher{
 				iter=patInfo.getCustomInfo().getKeySet().iterator();
 				while(iter.hasNext()){
 					String field=iter.next();
-					if(patInfo.getCustomInfo().getInfoField(field)!=null){
+					InfoField infoFiled = patInfo.getCustomInfo().getInfoField(field);
+					if(infoFiled !=null && infoFiled.isValid()){
 						String p = patInfo.getCustomInfo().getInfoField(field).getStringValue();
 						String t = tarInfo.getCustomInfo().getInfoField(field).getStringValue();
 						p = p.toLowerCase();
@@ -49,7 +52,7 @@ public class SimpleUserInfoMatcherUsingLCST implements Matcher{
 					}
 				}
 				totalCnt = Math.max(totalCnt, 1);
-				double matchRate=(double)(matchCnt/totalCnt);
+				double matchRate=(double)matchCnt/totalCnt;
 				if(matchRate>=0.5)
 					return true;
 				else

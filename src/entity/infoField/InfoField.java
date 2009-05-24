@@ -25,4 +25,6 @@ public interface InfoField extends Serializable{
 	 * @return ¸Ã×Ö¶ÎµÄÖµ
 	 */
 	public String getStringValue();
+	
+	public boolean isValid();
 }

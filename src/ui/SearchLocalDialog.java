@@ -20,6 +20,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import algorithm.Matcher;
+import algorithm.SimpleUserInfoMatcher;
+import algorithm.SimpleUserInfoMatcherUsingLCSQ;
 import algorithm.SimpleUserInfoMatcherUsingLCST;
 
 import com.swtdesigner.SWTResourceManager;
@@ -302,7 +305,15 @@ public class SearchLocalDialog extends Dialog {
 					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
 					newUser.getCustomInfo().setInfoField(nicki.getName(), nicki);
 					
-					LocalSearchContactsResult res = mainWindow.logicCenter.localSearchContacts(newUser, new SimpleUserInfoMatcherUsingLCST());
+					Matcher matcher = null;
+					switch (combo.getSelectionIndex()){
+					case 0: matcher = new SimpleUserInfoMatcherUsingLCSQ();
+						break;
+					case 1: matcher = new SimpleUserInfoMatcherUsingLCST();
+						break;
+					case 2: matcher = new SimpleUserInfoMatcher();
+					}
+					LocalSearchContactsResult res = mainWindow.logicCenter.localSearchContacts(newUser, matcher);
 					SearchObserver observer = new SearchObserver();
 					res.addObserver(observer);
 				}

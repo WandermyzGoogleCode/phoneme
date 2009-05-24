@@ -3,6 +3,7 @@ package algorithm;
 import java.util.Iterator;
 
 import entity.UserInfo;
+import entity.infoField.InfoField;
 
 public class SimpleUserInfoMatcherUsingLCSQ implements Matcher {
 
@@ -24,19 +25,21 @@ public class SimpleUserInfoMatcherUsingLCSQ implements Matcher {
 				Iterator<String> iter=patInfo.getBaseInfo().getKeySet().iterator();
 				while(iter.hasNext()){
 					String field=iter.next();
-					if(patInfo.getBaseInfo().getInfoField(field)!=null){
+					InfoField infoFiled = patInfo.getBaseInfo().getInfoField(field);
+					if(infoFiled !=null && infoFiled.isValid()){
 						String p = patInfo.getBaseInfo().getInfoField(field).getStringValue();
 						String t = tarInfo.getBaseInfo().getInfoField(field).getStringValue();
 						p = p.toLowerCase();
 						t = t.toLowerCase();
 						totalCnt += p.length();
-						matchCnt += StringFunc.lcst(p, t);
+						matchCnt += StringFunc.lcsq(p, t);
 					}
 				}
 				iter=patInfo.getCustomInfo().getKeySet().iterator();
 				while(iter.hasNext()){
 					String field=iter.next();
-					if(patInfo.getCustomInfo().getInfoField(field)!=null){
+					InfoField infoFiled = patInfo.getCustomInfo().getInfoField(field);
+					if(infoFiled !=null && infoFiled.isValid()){
 						String p = patInfo.getCustomInfo().getInfoField(field).getStringValue();
 						String t = tarInfo.getCustomInfo().getInfoField(field).getStringValue();
 						p = p.toLowerCase();
@@ -45,8 +48,11 @@ public class SimpleUserInfoMatcherUsingLCSQ implements Matcher {
 						matchCnt += StringFunc.lcst(p, t);
 					}
 				}
+				System.out.println(matchCnt);
+				System.out.println(totalCnt);
 				totalCnt = Math.max(totalCnt, 1);
-				double matchRate=(double)(matchCnt/totalCnt);
+				double matchRate=(double)matchCnt/totalCnt;
+				System.out.println(matchRate);
 				if(matchRate>=0.5)
 					return true;
 				else

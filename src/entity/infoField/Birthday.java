@@ -75,4 +75,9 @@ public class Birthday extends EmptyBirthday {
 	public int getDay(){
 		return d;
 	}
+	
+	@Override
+	public boolean isValid(){
+		return (y != 1111 || m != 11 || d != 11);
+	}
 }

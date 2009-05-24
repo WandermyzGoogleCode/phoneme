@@ -29,4 +29,9 @@ public class Name extends EmptyName {
 	public String getStringValue() {
 		return this.name;
 	}
+	
+	@Override
+	public boolean isValid(){
+		return (!name.equals("NoName"));
+	}
 }

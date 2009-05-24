@@ -45,7 +45,10 @@ public class SimpleUserInfoMatcher implements Matcher {
 							matchField++;
 					}
 				}
-				double matchRate=(double)(matchField/totalField);
+				double matchRate=(double)matchField/totalField;
+				System.out.println(matchField);
+				System.out.println(totalField);
+				System.out.println(matchRate);
 				if(matchRate>=0.5)
 					return true;
 				else
