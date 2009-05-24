@@ -38,6 +38,8 @@ public class DataCenterImp implements DataCenter {
 	private List<ID> userIDDeleteBuffer;
 	private Map<Group,ID> deleteFromGroupBuffer;
 	
+	private boolean forceToWrite;
+	
 	//数据库用户名
 	private String userName="root";
 	//密码
@@ -64,6 +66,7 @@ public class DataCenterImp implements DataCenter {
 		perIDDeleteBuffer=new ArrayList<ID>();
 		userIDDeleteBuffer=new ArrayList<ID>();
 		deleteFromGroupBuffer=new HashMap<Group,ID>();
+
 		
 		//建表
 		try{
@@ -180,7 +183,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType addPerRelationship(ID uid) {
 		perIDWriteBuffer.add(uid);
 		try{
-			if(perIDWriteBuffer.size()==1000){
+			if(perIDWriteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
@@ -209,7 +212,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType addSynRelationship(ID uid) {
 		syncIDWriteBuffer.add(uid);
 		try{
-			if(syncIDWriteBuffer.size()==1000){
+			if(syncIDWriteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
@@ -237,7 +240,7 @@ public class DataCenterImp implements DataCenter {
 	@Override
 	public ReturnType addToGroup(Group g, ID uid) {
 		addToGroupBuffer.put(g, uid);
-		if(addToGroupBuffer.size()==1000){
+		if(addToGroupBuffer.size()>0){
 			try{
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
@@ -501,7 +504,7 @@ public class DataCenterImp implements DataCenter {
 	@Override
 	public ReturnType removeFromGroup(Group g, ID uid) {
 		deleteFromGroupBuffer.put(g, uid);
-		if(deleteFromGroupBuffer.size()==1000){
+		if(deleteFromGroupBuffer.size()>0){
 			try{
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
@@ -533,7 +536,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType removeGroup(Group g) {
 		groupDeleteBuffer.add(g);
 		try{
-			if(groupDeleteBuffer.size()==1000){
+			if(groupDeleteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
@@ -567,7 +570,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType removePerRelationship(ID uid) {
 		perIDDeleteBuffer.add(uid);
 		try{
-			if(perIDDeleteBuffer.size()==1000){
+			if(perIDDeleteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
@@ -596,7 +599,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType removeSynRelationship(ID uid) {
 		syncIDDeleteBuffer.add(uid);
 		try{
-			if(syncIDDeleteBuffer.size()==1000){
+			if(syncIDDeleteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
@@ -625,7 +628,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType setGroup(Group g) {
 		groupWriteBuffer.add(g);
 		try{
-			if(groupWriteBuffer.size()==1000){
+			if(groupWriteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);   
@@ -704,7 +707,7 @@ public class DataCenterImp implements DataCenter {
 	public ReturnType setPermission(ID uid, Permission p) {
 		permissionWriteBuffer.add(p);
 		try{
-			if(permissionWriteBuffer.size()==1000){
+			if(permissionWriteBuffer.size()>0){
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
 				connection.setAutoCommit(false);
@@ -796,7 +799,7 @@ public class DataCenterImp implements DataCenter {
 				String sql1="UPDATE UserInfo set ";
 				String sqlCustomNull="UPDATE UserInfo set ";
 				String sql2="INSERT INTO UserInfo (UserID,";
-				Iterator<String> fieldNameIter=b.getBaseInfo().getKeySet().iterator();
+				Iterator<String> fieldNameIter=UserInfo.getNewLocalUser().getBaseInfo().getKeySet().iterator();
 				String temp=fieldNameIter.next();
 				sql1+=(temp+":=?");
 				sqlCustomNull+=(temp+":=?");//处理当传入的CustomUserInfo为空的时候用
@@ -809,7 +812,7 @@ public class DataCenterImp implements DataCenter {
 					sql2+=(","+temp);
 					count++;
 				}
-				fieldNameIter=b.getCustomInfo().getKeySet().iterator();
+				fieldNameIter=UserInfo.getNewLocalUser().getCustomInfo().getKeySet().iterator();
 				while(fieldNameIter.hasNext()){
 					temp=fieldNameIter.next();
 					sql1+=(","+temp+":=?");
@@ -898,9 +901,8 @@ public class DataCenterImp implements DataCenter {
 	}
 	
 	public ReturnType removeUserInfo(ID uid){
-		//TODO 貌似缺少RemoveUserInfo方法
 		userIDDeleteBuffer.add(uid);
-		if(userIDDeleteBuffer.size()==1000){
+		if(userIDDeleteBuffer.size()>0){
 			try{
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				Connection connection=(Connection) DriverManager.getConnection(url);
