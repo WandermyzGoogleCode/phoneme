@@ -202,7 +202,7 @@ public class EditContactDialog extends Dialog{
 					last.getBaseInfo().setInfoField(cell.getName(), cell);
 					
 					int day = dateTime.getDay(); // Calendar.DAY_OF_MONTH
-					int month = dateTime.getMonth(); // Calendar.MONTH
+					int month = dateTime.getMonth()+1; // Calendar.MONTH
 					int year = dateTime.getYear(); // Calendar.YEAR
 					
 					String birth=""+year+"-"+month+"-"+day;

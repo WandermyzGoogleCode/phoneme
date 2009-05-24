@@ -16,4 +16,13 @@ public abstract class EmptyInfoField implements InfoField {
 	public String getStringValue() {
 		return "";
 	}
+	
+	/**
+	 * 默认为真，某些特殊情况下才为假，比如NoName, 1111-11-11。这些东西
+	 * 虽然看起来不为空，但是其实是无效的。
+	 */
+	@Override
+	public boolean isValid() {
+		return true;
+	}
 }
