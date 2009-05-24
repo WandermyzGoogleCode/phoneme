@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import algorithm.SimpleUserInfoMatcherUsingLCST;
+
 import com.swtdesigner.SWTResourceManager;
 
 import entity.UserInfo;
@@ -45,11 +47,23 @@ public class SearchLocalDialog extends Dialog {
 	private Tree tree;
 	//private LogicCenter logicCenter;
 
+	class SetResultTask implements Runnable{
+		private List<UserInfo> users;
+		@Override
+		public void run() {
+			setSearchResult(users);
+		}
+		
+		public SetResultTask(List<UserInfo> users){
+			this.users = users;
+		}
+	}
+	
 	class SearchObserver implements Observer{
 		@Override
 		public void update(Observable arg0, Object arg1) {
 			LocalSearchContactsResult o = (LocalSearchContactsResult)arg0;
-			setSearchResult(o.getContacts());
+			Display.getDefault().syncExec(new SetResultTask(o.getContacts()));
 		}
 	}
 	
@@ -204,9 +218,9 @@ public class SearchLocalDialog extends Dialog {
 			yes.addSelectionListener(new SelectionAdapter() {
 
 				public void widgetSelected(SelectionEvent e) {
+					gatherInfo();
 					registInfo.dispose();
 					System.out.println("dispose");
-					gatherInfo();
 					Group group = new Group(registDia, SWT.NONE);
 					group.setBounds(10, 58, 430, 221);
 					{
@@ -254,9 +268,9 @@ public class SearchLocalDialog extends Dialog {
 					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
 					newUser.getCustomInfo().setInfoField(nicki.getName(), nicki);
 					
-					//!TODO newUser就是组装的user
-					//MainWindow.logicCenter.editContactInfo(newUser);
-					
+					LocalSearchContactsResult res = mainWindow.logicCenter.localSearchContacts(newUser, new SimpleUserInfoMatcherUsingLCST());
+					SearchObserver observer = new SearchObserver();
+					res.addObserver(observer);
 				}
 				
 			});
@@ -290,7 +304,7 @@ public class SearchLocalDialog extends Dialog {
 		//txt0.setText(new Integer(n).toString());
 		tree.removeAll();
 		for(int i=0;i<n;i++){
-			new TreeItem(tree,SWT.NONE).setText(contacts.get(i).getBaseInfo().getInfoField("Name").toString());
+			new TreeItem(tree,SWT.NONE).setText(contacts.get(i).getStringValue());
 		}
 	}
 

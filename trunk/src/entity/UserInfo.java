@@ -45,4 +45,13 @@ public class UserInfo {
 		baseUserInfo.setID(ID.getLocalRandID());
 		return new UserInfo(baseUserInfo, customUserInfo);
 	}
+	
+	public String getStringValue(){
+		String res = "";
+		if (baseInfo != null)
+			res += baseInfo.getStringValue();
+		if (customInfo != null)
+			res += customInfo.getStringValue();
+		return res;
+	}
 }

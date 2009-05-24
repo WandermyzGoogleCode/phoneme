@@ -26,7 +26,15 @@ public class CustomUserInfo {
 		for(EmptyInfoField field: fields)
 			fieldMap.put(field.getName(), field);		
 	}
+
 	public void setInfoField(String name, InfoField info){
 		fieldMap.put(name, info);
+	}
+
+	public String getStringValue(){
+		String res = "";
+		for(String key: getKeySet())
+			res += "<"+key+": "+getInfoField(key).getStringValue()+">  |  ";
+		return res;
 	}
 }
