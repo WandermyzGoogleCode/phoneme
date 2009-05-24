@@ -34,7 +34,8 @@ public class CustomUserInfo {
 	public String getStringValue(){
 		String res = "";
 		for(String key: getKeySet())
-			res += "<"+key+": "+getInfoField(key).getStringValue()+">  |  ";
+			if (getInfoField(key).getStringValue().length() > 0)
+				res += "<"+key+": "+getInfoField(key).getStringValue()+">  |";
 		return res;
 	}
 }
