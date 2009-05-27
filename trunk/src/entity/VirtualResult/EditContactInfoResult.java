@@ -3,6 +3,7 @@ package entity.VirtualResult;
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.SimpleError;
 import entity.UserInfo;
 
@@ -13,7 +14,7 @@ public class EditContactInfoResult extends OneTimeVirtualResult {
 		super(center);
 		this.info = info;
 		if (info.getBaseInfo().isNull())
-			setError(new SimpleError("null user can't be edited"));
+			setError(ErrorType.EDIT_NULL_USER);
 		else
 			thread.start();
 	}

@@ -2,6 +2,7 @@ package entity.VirtualResult;
 
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.ID;
 import entity.SimpleError;
 
@@ -12,7 +13,7 @@ public class RemoveSynContactResult extends OneTimeVirtualResult {
 		super(center);
 		this.targetID = targetID;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}

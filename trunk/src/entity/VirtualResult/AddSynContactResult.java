@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.ID;
 import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
@@ -37,7 +38,7 @@ public class AddSynContactResult extends OneTimeVirtualResult {
 		this.thisUser = thisUser;
 		this.targetUser = targetUser;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}

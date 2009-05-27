@@ -6,6 +6,7 @@ import logiccenter.LogicCenter;
 
 import entity.BaseUserInfo;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.SimpleError;
 import entity.UserInfo;
 
@@ -17,9 +18,9 @@ public class EditMyBaseInfoResult extends OneTimeVirtualResult {
 		super(center);
 		this.baseInfo = baseInfo;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else if (!center.getLoginUser().getID().equals(baseInfo.getID()))
-			setError(new SimpleError("ID not matched"));
+			setError(ErrorType.ID_NOT_MATCHED);
 		else
 			thread.start();
 	}

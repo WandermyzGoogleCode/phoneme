@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.Group;
 import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
@@ -20,9 +21,9 @@ public class InviteToGroupResult extends OneTimeVirtualResult {
 		this.g = g;
 		this.inviteInfo = inviteInfo;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else if (!center.getLoginUser().getID().equals(g.getAdminUserID()))
-			setError(new SimpleError("admin ID not matched"));
+			setError(ErrorType.ID_NOT_MATCHED);
 		else
 			thread.start();
 	}

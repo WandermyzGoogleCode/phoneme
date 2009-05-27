@@ -16,6 +16,18 @@ public class BoolInfo implements Serializable{
 	private boolean bool = true;
 	private String info = "Default is true";
 	
+	public BoolInfo(MyError err) {
+		bool = false;
+		this.info = err.toString();
+	}
+	
+	public BoolInfo(String errInfo){
+		bool = false;
+		this.info = errInfo;
+	}
+	
+	public BoolInfo(){}
+	
 	public boolean isTrue(){
 		return bool;
 	}

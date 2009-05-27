@@ -9,7 +9,7 @@ public class NickName extends EmptyNickName {
 	private String name;
 
 	public static boolean check(String data){
-		return data.length() <= maxLength;
+		return (data != null && data.length() <= maxLength);
 	}
 	
 	public NickName(String name)

@@ -9,11 +9,16 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import serverdatacenter.ServerDataCenter;
 
 import entity.BaseUserInfo;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.Group;
 import entity.ID;
+import entity.MyRemoteException;
 import entity.Password;
 import entity.Permission;
 import entity.infoField.IdenticalInfoField;
@@ -21,11 +26,14 @@ import entity.message.Message;
 import entity.message.SimpleStringMessage;
 
 public class ServerLogicCenterImp implements ServerLogicCenter {
+	private ServerDataCenter dataCenter;
+	private Set<ID> onlineUsers;
 
 	@Override
-	public List<Message> getAllMessages(ID user){
-		// TODO 现在只是测试
-		return new ArrayList<Message>();
+	public List<Message> getAllMessages(ID user) throws MyRemoteException{
+		if (!onlineUsers.contains(user))
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
+		return dataCenter.getMessageBuffer(user);
 	}
 
 	/**
@@ -33,7 +41,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 * 很多多线程的操作。
 	 */
 	@Override
-	public Message getNewMessage(ID user) {
+	public Message getNewMessage(ID user) throws MyRemoteException{
 		// TODO 现在只是测试
 		System.out.println("Waiting for next message...");
 		//远程调用到底是多线程还是单线程的？如何不synchronized而进行WAIT？
@@ -147,8 +155,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	@Override
 	public BoolInfo register(BaseUserInfo b, Password pwd)
 			throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		dataCenter.register(b, pwd);
+		// TODO 当前没有处理dataCenter可能的错误
+		return new BoolInfo();
 	}
 
 	@Override

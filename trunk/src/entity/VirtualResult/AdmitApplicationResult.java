@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.ID;
 import entity.SimpleError;
 
@@ -29,7 +30,7 @@ public class AdmitApplicationResult extends OneTimeVirtualResult {
 		this.gid = gid;
 		this.uid = uid;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}
