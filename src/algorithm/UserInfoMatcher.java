@@ -26,7 +26,7 @@ public abstract class UserInfoMatcher implements Matcher {
 		while(iter.hasNext()){
 			String field=iter.next();
 			InfoField infoFiled = patInfo.getBaseInfo().getInfoField(field);
-			if(infoFiled !=null && infoFiled.isValid()){
+			if(infoFiled !=null && !infoFiled.isEmpty()){
 				String p = patInfo.getBaseInfo().getInfoField(field).getStringValue();
 				String t = tarInfo.getBaseInfo().getInfoField(field).getStringValue();
 				p = p.toLowerCase();
@@ -39,7 +39,7 @@ public abstract class UserInfoMatcher implements Matcher {
 		while(iter.hasNext()){
 			String field=iter.next();
 			InfoField infoFiled = patInfo.getCustomInfo().getInfoField(field);
-			if(infoFiled !=null && infoFiled.isValid()){
+			if(infoFiled !=null && !infoFiled.isEmpty()){
 				String p = patInfo.getCustomInfo().getInfoField(field).getStringValue();
 				String t = tarInfo.getCustomInfo().getInfoField(field).getStringValue();
 				p = p.toLowerCase();

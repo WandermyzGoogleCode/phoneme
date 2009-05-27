@@ -10,4 +10,11 @@ public class SimpleUserInfoMatcher extends UserInfoMatcher {
 	int weight(String a, String b) {
 		return 1;
 	}
+	
+	public SimpleUserInfoMatcher(double threshold){
+		super(threshold);
+	}
+	
+	public SimpleUserInfoMatcher() {
+	}
 }
