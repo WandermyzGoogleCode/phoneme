@@ -195,7 +195,7 @@ public class MainWindow
 	private StaticDialog statDialog;
 
 	// [end]
-
+ 
 	// [start] ×Ô¶¨ÒåProperties
 	private AllContactsBox allContactsBox;
 	//private MessageBox messageBox;
