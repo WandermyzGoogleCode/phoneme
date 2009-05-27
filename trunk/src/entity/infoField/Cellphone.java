@@ -2,7 +2,7 @@ package entity.infoField;
 
 import java.util.regex.Pattern;
 
-public class CellphoneNumber extends EmptyCellphone{
+public class Cellphone extends EmptyCellphone{
 	/**
 	 * 
 	 */
@@ -15,7 +15,7 @@ public class CellphoneNumber extends EmptyCellphone{
 		return Pattern.matches("(\\+\\d{2})?\\d{11}", data);
 	}
 
-	public CellphoneNumber(String number)
+	public Cellphone(String number)
 	{
 		if (number == null || !check(number))
 			number = nullNumber;

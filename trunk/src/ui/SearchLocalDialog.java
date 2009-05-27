@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import algorithm.Matcher;
 import algorithm.SimpleUserInfoMatcher;
-import algorithm.SimpleUserInfoMatcherUsingLCSQ;
-import algorithm.SimpleUserInfoMatcherUsingLCST;
+import algorithm.LCSQUserInfoMatcher;
+import algorithm.LCSTUserInfoMatcher;
 
 import com.swtdesigner.SWTResourceManager;
 
@@ -286,7 +286,7 @@ public class SearchLocalDialog extends Dialog {
 					newUser.getBaseInfo().setInfoField(emailInfo.getName(),
 							emailInfo);
 
-					InfoField cell = factory.makeInfoField("CellPhone",
+					InfoField cell = factory.makeInfoField("Cellphone",
 							cellphone.getText());
 					newUser.getBaseInfo().setInfoField(cell.getName(), cell);
 					
@@ -297,7 +297,7 @@ public class SearchLocalDialog extends Dialog {
 					
 					String birth=""+year+"-"+month+"-"+day;
 
-					InfoField bir = factory.makeInfoField("BirthDay",birth);
+					InfoField bir = factory.makeInfoField("Birthday",birth);
 					newUser.getBaseInfo().setInfoField(bir.getName(), bir);
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
 					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
@@ -307,9 +307,9 @@ public class SearchLocalDialog extends Dialog {
 					
 					Matcher matcher = null;
 					switch (combo.getSelectionIndex()){
-					case 0: matcher = new SimpleUserInfoMatcherUsingLCSQ();
+					case 0: matcher = new LCSQUserInfoMatcher();
 						break;
-					case 1: matcher = new SimpleUserInfoMatcherUsingLCST();
+					case 1: matcher = new LCSTUserInfoMatcher();
 						break;
 					case 2: matcher = new SimpleUserInfoMatcher();
 					}

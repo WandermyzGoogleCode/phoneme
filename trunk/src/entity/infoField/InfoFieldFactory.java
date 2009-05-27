@@ -14,24 +14,35 @@ import java.util.List;
 public class InfoFieldFactory {
 	private static InfoFieldFactory factory = new InfoFieldFactory();
 	
+	/**
+	 * 为了方便新建InfoField的时候输入名字，并保证安全性，
+	 * 创建了该函数以代替直接用String输入名字。旧的代码依旧适用。
+	 * @param name
+	 * @param value
+	 * @return
+	 */
+	public InfoField makeInfoField(InfoFieldName name, String value){
+		return makeInfoField(name.name(), value);
+	}
+	
 	public InfoField makeInfoField(String name, String value)
 	{
 		if (name.equals("EmailAddress"))
 			return new EmailAddr(value);
-		if (name.equals("CellPhone"))
-			return new CellphoneNumber(value);
+		if (name.equals("Cellphone"))
+			return new Cellphone(value);
 		//TODO 更多的infoField
 		if (name.equals("Address"))
 		{
 			return new Address(value);
 		}
-		if (name.equals("BirthDay"))
+		if (name.equals("Birthday"))
 		{
 			return new Birthday(value);
 		}
-		if (name.equals("CellPhone"))
+		if (name.equals("Cellphone"))
 		{
-			return new CellphoneNumber(value);
+			return new Cellphone(value);
 		}		
 		if (name.equals("Company"))
 		{

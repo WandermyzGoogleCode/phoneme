@@ -296,7 +296,7 @@ public class LogicCenterImp implements LogicCenter {
 		for(int i=0; i<12; i++)
 			distrib[i] = new ArrayList<UserInfo>();
 		for(UserInfo userInfo:allUsers)
-			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("BirthDay")).getMonth()-1].add(userInfo);
+			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("Birthday")).getMonth()-1].add(userInfo);
 		res.setBirthDistrib(distrib);
 		return res;
 	}
