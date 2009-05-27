@@ -22,7 +22,7 @@ public abstract class EmptyInfoField implements InfoField {
 	 * 虽然看起来不为空，但是其实是无效的。
 	 */
 	@Override
-	public boolean isValid() {
+	public boolean isEmpty() {
 		return true;
 	}
 }

@@ -26,5 +26,5 @@ public interface InfoField extends Serializable{
 	 */
 	public String getStringValue();
 	
-	public boolean isValid();
+	public boolean isEmpty();
 }
