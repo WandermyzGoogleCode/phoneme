@@ -5,17 +5,30 @@ import java.rmi.RemoteException;
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.Password;
+import entity.SimpleError;
+import entity.infoField.IdenticalInfoField;
+import entity.infoField.InfoField;
 
 public class RegisterResult extends OneTimeVirtualResult {
 	private BaseUserInfo b;
 	private Password pwd;
 
-	public RegisterResult(BaseUserInfo b, Password pwd,
-			LogicCenter center) {
+	public RegisterResult(BaseUserInfo b, Password pwd, LogicCenter center) {
 		super(center);
-		//TODO 检测b的是否满足条件
-		thread.start();
+		boolean hasIdentical = false;
+		for (String is : b.getKeySet()) {
+			InfoField infoField = b.getInfoField(is);
+			if (infoField instanceof IdenticalInfoField && !infoField.isEmpty()) {
+				hasIdentical = true;
+				break;
+			}
+		}
+		if (!hasIdentical)
+			setError(ErrorType.NO_IDENTICAL_FIELD);
+		else
+			thread.start();
 	}
 
 	@Override

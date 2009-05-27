@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.Group;
 import entity.Permission;
 import entity.SimpleError;
@@ -19,7 +20,7 @@ public class CreateGroupResult extends OneTimeVirtualResult {
 		this.g = g;
 		this.p = p;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}

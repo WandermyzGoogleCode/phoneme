@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.ID;
 import entity.SimpleError;
 
@@ -16,7 +17,7 @@ public class QuitGroupResult extends OneTimeVirtualResult {
 		this.gid = gid;
 		this.reason = reason;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}

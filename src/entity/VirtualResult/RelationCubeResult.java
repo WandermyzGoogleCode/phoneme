@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
 
@@ -16,7 +17,7 @@ public class RelationCubeResult extends OneTimeVirtualResult {
 		this.from = from;
 		this.to = to;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}

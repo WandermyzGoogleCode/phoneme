@@ -6,5 +6,4 @@ package entity;
  *
  */
 public interface MyError {
-
 }

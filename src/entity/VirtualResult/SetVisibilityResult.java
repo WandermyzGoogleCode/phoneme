@@ -2,6 +2,7 @@ package entity.VirtualResult;
 
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.ID;
 import entity.SimpleError;
 
@@ -15,7 +16,7 @@ public class SetVisibilityResult extends OneTimeVirtualResult {
 		this.visibility = visibility;
 		this.targetID = targetID;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 		// TODO Auto-generated constructor stub

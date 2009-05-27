@@ -5,6 +5,8 @@ import java.util.List;
 import logiccenter.LogicCenter;
 
 import entity.ID;
+import entity.MyRemoteException;
+import entity.SimpleError;
 
 import entity.message.Message;
 
@@ -49,6 +51,10 @@ public class MessageBox extends VirtualResult {
 					setUpdateTime(Calendar.getInstance().getTime());
 				}
 			}
+			catch (MyRemoteException e)
+			{
+				setError(new SimpleError(e.getBoolInfo().getInfo()));
+			}
 			catch (Exception e)
 			{
 				System.err.println("Exception: "+e.toString());
@@ -86,13 +92,6 @@ public class MessageBox extends VirtualResult {
 	 */
 	public MessageBox(ID thisUser, LogicCenter center)
 	{
-		//TODO 测试阶段，不做错误处理，因为进来的ID全是-1
-		/*
-		if (thisUser.getValue() == -1)
-		{
-			setError(new SimpleError("not login"));
-			return;
-		}*/
 		retrieveThread =  new MessageRetriever(thisUser, center);
 		retrieveThread.start();
 	}

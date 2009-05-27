@@ -1,6 +1,7 @@
 package entity.VirtualResult;
 
 import logiccenter.LogicCenter;
+import entity.ErrorType;
 import entity.ID;
 import entity.BoolInfo;
 import entity.Permission;
@@ -22,7 +23,7 @@ public class SetPermissionResult extends OneTimeVirtualResult {
 		this.targetID = targetID;
 		this.p = p;
 		if (noLoginUser())
-			setError(new SimpleError("not login"));
+			setError(ErrorType.NOT_LOGIN);
 		else
 			thread.start();
 	}

@@ -4,6 +4,7 @@ import entity.BaseUserInfo;
 import entity.BoolInfo;
 import entity.Group;
 import entity.ID;
+import entity.MyRemoteException;
 import entity.Password;
 import entity.Permission;
 import entity.infoField.IdenticalInfoField;
@@ -19,13 +20,13 @@ public interface ServerLogicCenter extends Remote{
 	 * @param user
 	 * @return
 	 */
-	public List<Message> getAllMessages(ID user) throws RemoteException;
+	public List<Message> getAllMessages(ID user) throws RemoteException, MyRemoteException;
 	/**
 	 * 返回用户user最新更新的信息
 	 * @param user
 	 * @return
 	 */
-	public Message getNewMessage(ID user) throws RemoteException;
+	public Message getNewMessage(ID user) throws RemoteException, MyRemoteException;
 	
 	public BoolInfo addPerContact(ID thisUser, IdenticalInfoField targetUser) throws RemoteException;
 	
