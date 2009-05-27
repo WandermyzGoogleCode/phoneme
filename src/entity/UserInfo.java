@@ -11,56 +11,54 @@ import entity.infoField.InfoFieldName;
 public class UserInfo {
 	private BaseUserInfo baseInfo = null;
 	private CustomUserInfo customInfo = null;
-	
-	public BaseUserInfo getBaseInfo()
-	{
+
+	public BaseUserInfo getBaseInfo() {
 		return baseInfo;
 	}
-	
-	public CustomUserInfo getCustomInfo()
-	{
+
+	public CustomUserInfo getCustomInfo() {
 		return customInfo;
 	}
-	
-	public void setBaseInfo(BaseUserInfo baseInfo)
-	{
+
+	public void setBaseInfo(BaseUserInfo baseInfo) {
 		this.baseInfo = baseInfo;
 	}
-	
-	public void setCustomInfo(CustomUserInfo customInfo)
-	{
+
+	public void setCustomInfo(CustomUserInfo customInfo) {
 		this.customInfo = customInfo;
 	}
-	
-	public UserInfo(BaseUserInfo baseInfo){
+
+	public UserInfo(BaseUserInfo baseInfo) {
 		this.baseInfo = baseInfo;
 	}
-	
-	public UserInfo(BaseUserInfo baseInfo, CustomUserInfo custmInfo){
+
+	public UserInfo(BaseUserInfo baseInfo, CustomUserInfo custmInfo) {
 		this.baseInfo = baseInfo;
 		this.customInfo = custmInfo;
 	}
-	
-	public UserInfo(){
+
+	public UserInfo() {
 		baseInfo = new BaseUserInfo();
 	}
-	
+
 	/**
 	 * 返回一个ID为本地类型的UserInfo，以便创建本地的联系人
+	 * 
 	 * @return
 	 */
-	public static UserInfo getNewLocalUser(){
+	public static UserInfo getNewLocalUser() {
 		BaseUserInfo baseUserInfo = new BaseUserInfo();
 		CustomUserInfo customUserInfo = new CustomUserInfo();
 		baseUserInfo.setID(ID.getLocalRandID());
 		return new UserInfo(baseUserInfo, customUserInfo);
 	}
-	
+
 	/**
 	 * 调试输出用……
+	 * 
 	 * @return
 	 */
-	public String getStringValue(){
+	public String getStringValue() {
 		String res = "";
 		if (baseInfo != null)
 			res += baseInfo.getStringValue();
@@ -68,44 +66,43 @@ public class UserInfo {
 			res += customInfo.getStringValue();
 		return res;
 	}
-	
+
 	/**
-	 * 用这个来操作对UserInfo字段的修改，
-	 * 避免不知道字段应该放在BaseUserInfo还是CustomUserInfo
-	 * 返回操作是否成功
+	 * 用这个来操作对UserInfo字段的修改， 避免不知道字段应该放在BaseUserInfo还是CustomUserInfo 返回操作是否成功
+	 * 
 	 * @param name
 	 * @param value
 	 */
-	public boolean setInfoField(InfoFieldName name, InfoField info){
-		if (BaseInfoFieldName.contains(name.name())){
+	public boolean setInfoField(InfoFieldName name, InfoField info) {
+		if (BaseInfoFieldName.contains(name.name())) {
 			baseInfo.setInfoField(name.name(), info);
 			return true;
-		}
-		else if (CustomInfoFieldName.contains(name.name())){
+		} else if (CustomInfoFieldName.contains(name.name())) {
 			if (customInfo == null)
 				customInfo = new CustomUserInfo();
 			customInfo.setInfoField(name.name(), info);
 			return true;
-		}
-		else
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * 用该函数来获取字段
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public InfoField getInfoField(InfoFieldName name){
+	public InfoField getInfoField(InfoFieldName name) {
 		if (BaseInfoFieldName.contains(name.name()))
 			return baseInfo.getInfoField(name.name());
-		else if (CustomInfoFieldName.contains(name.name()) && customInfo != null)
+		else if (CustomInfoFieldName.contains(name.name())
+				&& customInfo != null)
 			return customInfo.getInfoField(name.name());
 		else
 			return null;
 	}
-	
-	public Set<String> getKeySet(){
+
+	public Set<String> getKeySet() {
 		Set<String> res = baseInfo.getKeySet();
 		if (customInfo != null)
 			res.addAll(customInfo.getKeySet());
