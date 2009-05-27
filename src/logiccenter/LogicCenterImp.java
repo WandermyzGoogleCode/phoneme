@@ -57,6 +57,7 @@ import entity.VirtualResult.SetVisibilityResult;
 import entity.VirtualResult.VirtualState;
 import entity.infoField.Birthday;
 import entity.infoField.IdenticalInfoField;
+import entity.infoField.InfoFieldName;
 
 public class LogicCenterImp implements LogicCenter {
 	private static LogicCenterImp instance = null;
@@ -220,11 +221,7 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public MessageBox getMessageBox()
 	{
-		//TODO 当前只是测试。好的流程应该是在用户登录的时候建立一个MessageBox，而不是每GET一次就建立一个。
-		return new MessageBox(ID.getNullID(), this);
-		/* 实际应该是这样的
-		 * return messageBox;
-		 */
+		return messageBox;
 	}
 	
 	private LogicCenterImp(DataCenter dataCenter)
@@ -295,8 +292,12 @@ public class LogicCenterImp implements LogicCenter {
 		ArrayList<UserInfo> distrib[] = new ArrayList[12];
 		for(int i=0; i<12; i++)
 			distrib[i] = new ArrayList<UserInfo>();
-		for(UserInfo userInfo:allUsers)
-			distrib[((Birthday)userInfo.getBaseInfo().getInfoField("Birthday")).getMonth()-1].add(userInfo);
+		for(UserInfo userInfo:allUsers){
+			Birthday birthday = (Birthday)userInfo.getInfoField(InfoFieldName.Birthday);
+			if (birthday.isEmpty())
+				continue;
+			distrib[birthday.getMonth()-1].add(userInfo);
+		}
 		res.setBirthDistrib(distrib);
 		return res;
 	}
@@ -321,6 +322,14 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public AllContactsBox getAllContactsBox() {
 		return allContactsBox;
+	}
+
+	@Override
+	public void setLoginUser(BaseUserInfo loginUser) {
+		this.loginUser = loginUser;
+		if (messageBox != null)
+			messageBox.close();
+		messageBox = new MessageBox(loginUser.getID(), this);
 	}
 }
 

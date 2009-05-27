@@ -190,8 +190,7 @@ public interface LogicCenter {
 	 */
 	public SetPermissionResult setPermission(ID uid, Permission p);
 	
-	//TODO 这个是干嘛的来着。。
-	//ANSWER: 如果B是A的同步联系人，那么就说明图中A到B有边。这条边的可见性定义为
+	//如果B是A的同步联系人，那么就说明图中A到B有边。这条边的可见性定义为
 	//visibility，也就是说到达A的最短距离小于等于visibility的人才能通过这条边来扩展更多
 	//的人立方关系
 	/**
@@ -280,5 +279,15 @@ public interface LogicCenter {
 	 */
 	public RemoveContactInfoResult removeContactInfo(ID id);
 	
+	/**
+	 * 获取所有的用户信息的Virtual Proxy类
+	 * @return
+	 */
 	public AllContactsBox getAllContactsBox();
+	
+	/**
+	 * 设置当前登录的用户
+	 * @param loginUser
+	 */
+	public void setLoginUser(BaseUserInfo loginUser);
 }
