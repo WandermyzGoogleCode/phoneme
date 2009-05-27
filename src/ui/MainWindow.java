@@ -72,14 +72,14 @@ public class MainWindow {
 	private ToolItem toolItemAddressAddGroup;
 	private ToolItem toolItemAddressAddContact;
 	private TreeColumn treeAddressPermitColumnEmail;
-	private TreeColumn treeAddressPermitColumnCellPhone;
+	private TreeColumn treeAddressPermitColumnCellphone;
 	private TreeColumn treeAddressPermitColumnRelation;
 	private TreeColumn treeAddressPermitColumnCall;
 	private TreeColumn treeAddressPermitColumnNickName;
 	private TreeColumn treeAddressPermitColumnName;
 	private Tree treeAddressPermit;
 	private TreeColumn treeAddressContactColumnEmail;
-	private TreeColumn treeAddressContactColumnCellPhone;
+	private TreeColumn treeAddressContactColumnCellphone;
 	private TreeColumn treeAddressContactColumnRelation;
 	private TreeColumn treeAddressContactColumnCall;
 	private TreeColumn treeAddressContactColumnNickName;
@@ -140,8 +140,8 @@ public class MainWindow {
 	private Label labelInfoEmail;
 	private DateTime dateTimeBirthday;
 	private Label labelInfoBirthday;
-	private Text textInfoCellPhone;
-	private Label labelInfoCellPhone;
+	private Text textInfoCellphone;
+	private Label labelInfoCellphone;
 	private Label labelInfoNickName;
 	private Text textInfoNickName;
 	private Text textInfoName;
@@ -381,14 +381,14 @@ public class MainWindow {
 		labelInfoNickName.setBounds(314, 34, 24, 17);
 		labelInfoNickName.setText("昵称");
 
-		labelInfoCellPhone = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoCellPhone.setBounds(38, 115, 24, 17);
-		labelInfoCellPhone.setText("手机");
+		labelInfoCellphone = new Label(groupInfoPersonal, SWT.NONE);
+		labelInfoCellphone.setBounds(38, 115, 24, 17);
+		labelInfoCellphone.setText("手机");
 
-		textInfoCellPhone = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoCellPhone.setBounds(86, 112, 142, 23);
-		textInfoCellPhone
-				.addFocusListener(new TextInfoCellPhoneFocusListener());
+		textInfoCellphone = new Text(groupInfoPersonal, SWT.BORDER);
+		textInfoCellphone.setBounds(86, 112, 142, 23);
+		textInfoCellphone
+				.addFocusListener(new TextInfoCellphoneFocusListener());
 
 		labelInfoBirthday = new Label(groupInfoPersonal, SWT.NONE);
 		labelInfoBirthday.setBounds(314, 74, 24, 17);
@@ -739,10 +739,10 @@ public class MainWindow {
 		treeAddressContactColumnRelation.setWidth(100);
 		treeAddressContactColumnRelation.setText("关系");
 
-		treeAddressContactColumnCellPhone = new TreeColumn(treeAddressContact,
+		treeAddressContactColumnCellphone = new TreeColumn(treeAddressContact,
 				SWT.NONE);
-		treeAddressContactColumnCellPhone.setWidth(100);
-		treeAddressContactColumnCellPhone.setText("手机");
+		treeAddressContactColumnCellphone.setWidth(100);
+		treeAddressContactColumnCellphone.setText("手机");
 
 		treeAddressContactColumnEmail = new TreeColumn(treeAddressContact,
 				SWT.NONE);
@@ -778,10 +778,10 @@ public class MainWindow {
 		treeAddressPermitColumnRelation.setWidth(100);
 		treeAddressPermitColumnRelation.setText("关系");
 
-		treeAddressPermitColumnCellPhone = new TreeColumn(treeAddressPermit,
+		treeAddressPermitColumnCellphone = new TreeColumn(treeAddressPermit,
 				SWT.NONE);
-		treeAddressPermitColumnCellPhone.setWidth(100);
-		treeAddressPermitColumnCellPhone.setText("手机");
+		treeAddressPermitColumnCellphone.setWidth(100);
+		treeAddressPermitColumnCellphone.setText("手机");
 
 		treeAddressPermitColumnEmail = new TreeColumn(treeAddressPermit,
 				SWT.NONE);
@@ -1127,7 +1127,7 @@ public class MainWindow {
 	 * @author Wander
 	 * 
 	 */
-	private class TextInfoCellPhoneFocusListener extends FocusAdapter {
+	private class TextInfoCellphoneFocusListener extends FocusAdapter {
 		public void focusLost(final FocusEvent e) {
 			// TODO: 检查手机号合法性
 		}
@@ -1529,10 +1529,10 @@ public class MainWindow {
 			for(int i=0;i<n;i++){
 				String name=users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
 				String nick=users.get(i).getCustomInfo().getInfoField("NickName").getStringValue();
-				String cell=users.get(i).getBaseInfo().getInfoField("CellPhone").getStringValue();
+				String cell=users.get(i).getBaseInfo().getInfoField("Cellphone").getStringValue();
 				String email=users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
 				String tag=users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
-				String bir=users.get(i).getBaseInfo().getInfoField("BirthDay").getStringValue();
+				String bir=users.get(i).getBaseInfo().getInfoField("Birthday").getStringValue();
 				createTreeSubItem(item1, name, nick, tag, cell, email,bir);
 				item1.setExpanded(true);				
 			}

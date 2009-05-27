@@ -155,16 +155,16 @@ public class EditContactDialog extends Dialog{
 			if(last.getCustomInfo().getInfoField("NickName").toString()!=null){
 				nick.setText(last.getCustomInfo().getInfoField("NickName").getStringValue());
 			};
-			if(last.getBaseInfo().getInfoField("BirthDay").toString()!=null){
+			if(last.getBaseInfo().getInfoField("Birthday").toString()!=null){
 				//TODO birthday
-				Birthday b=(Birthday)(last.getBaseInfo().getInfoField("BirthDay"));
+				Birthday b=(Birthday)(last.getBaseInfo().getInfoField("Birthday"));
 				dateTime.setDay(b.getDay());
 				dateTime.setMonth(b.getMonth()-1);
 				dateTime.setYear(b.getYear());
 				//nick.setText(last.getBaseInfo().getInfoField("NickName").toString());
 			};
-			if(last.getBaseInfo().getInfoField("CellPhone").toString()!=null){
-				cellphone.setText(last.getBaseInfo().getInfoField("CellPhone").getStringValue());
+			if(last.getBaseInfo().getInfoField("Cellphone").toString()!=null){
+				cellphone.setText(last.getBaseInfo().getInfoField("Cellphone").getStringValue());
 			};
 			if(last.getBaseInfo().getInfoField("EmailAddress").toString()!=null){
 				text_3.setText(last.getBaseInfo().getInfoField("EmailAddress").getStringValue());
@@ -197,7 +197,7 @@ public class EditContactDialog extends Dialog{
 					last.getBaseInfo().setInfoField(emailInfo.getName(),
 							emailInfo);
 
-					InfoField cell = factory.makeInfoField("CellPhone",
+					InfoField cell = factory.makeInfoField("Cellphone",
 							cellphone.getText());
 					last.getBaseInfo().setInfoField(cell.getName(), cell);
 					
@@ -207,7 +207,7 @@ public class EditContactDialog extends Dialog{
 					
 					String birth=""+year+"-"+month+"-"+day;
 
-					InfoField bir = factory.makeInfoField("BirthDay",birth);
+					InfoField bir = factory.makeInfoField("Birthday",birth);
 					last.getBaseInfo().setInfoField(bir.getName(), bir);
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
 					last.getBaseInfo().setInfoField(qqi.getName(),qqi );

@@ -201,7 +201,7 @@ public class AddContactDialog extends Dialog {
 					newUser.getBaseInfo().setInfoField(emailInfo.getName(),
 							emailInfo);
 
-					InfoField cell = factory.makeInfoField("CellPhone",
+					InfoField cell = factory.makeInfoField("Cellphone",
 							cellphone.getText());
 					newUser.getBaseInfo().setInfoField(cell.getName(), cell);
 					
@@ -211,7 +211,7 @@ public class AddContactDialog extends Dialog {
 					
 					String birth=""+year+"-"+month+"-"+day;
 
-					InfoField bir = factory.makeInfoField("BirthDay",birth);
+					InfoField bir = factory.makeInfoField("Birthday",birth);
 					newUser.getBaseInfo().setInfoField(bir.getName(), bir);
 					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
 					newUser.getBaseInfo().setInfoField(qqi.getName(),qqi );
