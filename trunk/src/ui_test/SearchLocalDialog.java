@@ -1,4 +1,4 @@
-package uiwander;
+package ui_test;
 
 import java.util.List;
 import java.util.Observable;

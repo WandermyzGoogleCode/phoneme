@@ -1,4 +1,4 @@
-package uiwander;
+package ui_test;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

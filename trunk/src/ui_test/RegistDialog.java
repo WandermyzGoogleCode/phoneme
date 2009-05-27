@@ -1,4 +1,4 @@
-package uiwander;
+package ui_test;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -8,16 +8,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import com.swtdesigner.SWTResourceManager;
-
-import entity.UserInfo;
-import entity.infoField.InfoField;
-import entity.infoField.InfoFieldFactory;
-import entity.infoField.Birthday;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-public class EditContactDialog extends Dialog{
+public class RegistDialog extends Dialog{
 	Object result;
 	private Text name;
 	private Text nick;
@@ -28,28 +24,25 @@ public class EditContactDialog extends Dialog{
 	private Text personalStatment;
 	private Combo sex;
 	private Button cancel;
-	private DateTime dateTime;
-	private UserInfo last;
 	private Button yes;
 	
-	public EditContactDialog (UserInfo last, Shell parent, int style) {
+	public RegistDialog (Shell parent, int style) {
 		super (parent, style);
-		this.last = last;
 	}
-	public EditContactDialog (Shell parent) {
-		this (new UserInfo(), parent, 0); // your default style bits go here (not the Shell's style bits)
+	public RegistDialog (Shell parent) {
+		this (parent, 0); // your default style bits go here (not the Shell's style bits)
 	}
 	public Object open () {
 		Shell parent = getParent();
 		Shell registDia = new Shell(parent, SWT.DIALOG_TRIM | SWT.MIN | SWT.APPLICATION_MODAL);
 		registDia.setLayout(null);
-		registDia.setText("\u7F16\u8F91");
+		registDia.setText("\u6CE8\u518C");
 		{
 			Group registInfo = new Group(registDia, SWT.NONE);
 			registInfo.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8, SWT.NORMAL));
 			registInfo.setLayout(null);
 			registInfo.setBounds(10, 24, 574, 348);
-			registInfo.setText("\u7F16\u8F91\u8054\u7CFB\u4EBA\u4FE1\u606F");
+			registInfo.setText("\u6CE8\u518C\u4FE1\u606F");
 			{
 				Label label = new Label(registInfo, SWT.NONE);
 				label.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8, SWT.NORMAL));
@@ -87,7 +80,7 @@ public class EditContactDialog extends Dialog{
 				label.setText("\u751F\u65E5");
 			}
 			{
-				dateTime = new DateTime(registInfo, SWT.NONE);
+				DateTime dateTime = new DateTime(registInfo, SWT.NONE);
 				dateTime.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 8, SWT.NORMAL));
 				dateTime.setBounds(362, 72, 93, 24);
 			}
@@ -149,29 +142,6 @@ public class EditContactDialog extends Dialog{
 				sex.select(0);
 				sex.setBounds(86, 71, 67, 21);
 			}
-			if(last.getBaseInfo().getInfoField("Name").toString()!=null){
-				name.setText(last.getBaseInfo().getInfoField("Name").getStringValue());
-			};
-			if(last.getCustomInfo().getInfoField("NickName").toString()!=null){
-				nick.setText(last.getCustomInfo().getInfoField("NickName").getStringValue());
-			};
-			if(last.getBaseInfo().getInfoField("Birthday").toString()!=null){
-				//TODO birthday
-				Birthday b=(Birthday)(last.getBaseInfo().getInfoField("Birthday"));
-				dateTime.setDay(b.getDay());
-				dateTime.setMonth(b.getMonth()-1);
-				dateTime.setYear(b.getYear());
-				//nick.setText(last.getBaseInfo().getInfoField("NickName").toString());
-			};
-			if(last.getBaseInfo().getInfoField("Cellphone").toString()!=null){
-				cellphone.setText(last.getBaseInfo().getInfoField("Cellphone").getStringValue());
-			};
-			if(last.getBaseInfo().getInfoField("EmailAddress").toString()!=null){
-				text_3.setText(last.getBaseInfo().getInfoField("EmailAddress").getStringValue());
-			};
-			if(last.getBaseInfo().getInfoField("QQNumber").toString()!=null){
-				qq.setText(last.getBaseInfo().getInfoField("QQNumber").getStringValue());
-			};
 		}
 		{
 			yes = new Button(registDia, SWT.NONE);
@@ -183,39 +153,11 @@ public class EditContactDialog extends Dialog{
 
 				private void gatherInfo() {
 					// TODO Auto-generated method stub
+					System.out.println(name.getText());
 					nick.getText();
-				//	UserInfo newUser = UserInfo.getNewLocalUser();
-					InfoFieldFactory factory = InfoFieldFactory.getFactory();
-					InfoField nameInfo = factory.makeInfoField("Name", name
-							.getText());
-
-					last.getBaseInfo().setInfoField(nameInfo.getName(),
-							nameInfo);
-
-					InfoField emailInfo = factory.makeInfoField("EmailAddress",
-							text_3.getText());
-					last.getBaseInfo().setInfoField(emailInfo.getName(),
-							emailInfo);
-
-					InfoField cell = factory.makeInfoField("Cellphone",
-							cellphone.getText());
-					last.getBaseInfo().setInfoField(cell.getName(), cell);
-					
-					int day = dateTime.getDay(); // Calendar.DAY_OF_MONTH
-					int month = dateTime.getMonth()+1; // Calendar.MONTH
-					int year = dateTime.getYear(); // Calendar.YEAR
-					
-					String birth=""+year+"-"+month+"-"+day;
-
-					InfoField bir = factory.makeInfoField("Birthday",birth);
-					last.getBaseInfo().setInfoField(bir.getName(), bir);
-					InfoField qqi=factory.makeInfoField("QQNumber", qq.getText());
-					last.getBaseInfo().setInfoField(qqi.getName(),qqi );
-					
-					InfoField nicki=factory.makeInfoField("NickName", nick.getText());
-					last.getCustomInfo().setInfoField(nicki.getName(), nicki);
-					
-					MainWindow.logicCenter.editContactInfo(last);
+				
+					System.out.println(sex.getText());
+					cellphone.getText();
 					
 				}
 			});
