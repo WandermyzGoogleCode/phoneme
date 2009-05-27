@@ -96,4 +96,11 @@ public class MessageBox extends VirtualResult {
 		retrieveThread =  new MessageRetriever(thisUser, center);
 		retrieveThread.start();
 	}
+	
+	/**
+	 * 当MessageBox不再使用，要调用该函数来关闭获取线程。
+	 */
+	public void close(){
+		retrieveThread.interrupt();
+	}
 }

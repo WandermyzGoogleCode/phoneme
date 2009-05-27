@@ -18,7 +18,7 @@ public class BaseUserInfo {
 	{
 		return fieldMap.get(name);
 	}
-	
+
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
 	}

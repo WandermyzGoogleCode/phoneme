@@ -12,19 +12,21 @@ public class EmailAddr extends EmptyEmailAddr
 	private String addr;
 
 	public static boolean check(String data){
+		if (data == null)
+			return false;
 		return Pattern.matches("\\w+@\\w+.\\w+", data);
 	}
 	
 	public EmailAddr(String email)
 	{
-		if (email == null || !check(email))
+		if (!check(email))
 			email = nullAddr;
 		this.addr=email;
 	}
 	
 	public void setStringValue(String email)
 	{
-		if (email == null || !check(email))
+		if (!check(email))
 			email = nullAddr;
 		this.addr=email;
 	}
@@ -32,5 +34,10 @@ public class EmailAddr extends EmptyEmailAddr
 	@Override
 	public String getStringValue() {
 		return addr;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return !addr.equals(nullAddr);
 	}
 }

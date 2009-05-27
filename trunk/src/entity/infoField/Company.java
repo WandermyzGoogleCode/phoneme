@@ -1,24 +1,42 @@
 package entity.infoField;
 
 public class Company extends EmptyCompany {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9079041943593432133L;
+
+	private static int maxLength = 500;
+
 	private String company;
 
+	static public boolean check(String company){
+		if (company == null)
+			return false;
+		return company.length() <= maxLength;
+	}
+	
 	public Company(String company)
 	{
-		//检查格式
-		//TODO
+		if (!check(company))
+			company = "";
 		this.company=company;
 	}
 	
 	public void setStringValue(String company)
 	{
-		//检查格式，然后赋值
-		//TODO
+		if (!check(company))
+			company = "";
 		this.company=company;
 	}
 
 	@Override
 	public String getStringValue() {
 		return company;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return !company.equals("");
 	}
 }

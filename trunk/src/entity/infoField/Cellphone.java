@@ -11,7 +11,9 @@ public class Cellphone extends EmptyCellphone{
 	private String number;
 	
 	public static boolean check(String data){
-		//TODO 更加准确的检测
+		//TODO 有空的话，更加准确的检测
+		if (data == null)
+			return false;
 		return Pattern.matches("(\\+\\d{2})?\\d{11}", data);
 	}
 
@@ -32,5 +34,10 @@ public class Cellphone extends EmptyCellphone{
 	@Override
 	public String getStringValue() {
 		return number;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return !number.equals(nullNumber);
 	}
 }
