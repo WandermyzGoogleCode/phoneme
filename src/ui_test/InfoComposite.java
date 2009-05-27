@@ -1,4 +1,4 @@
-package uiwander;
+package ui_test;
 
 import org.eclipse.swt.widgets.Composite;
 
