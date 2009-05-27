@@ -1551,6 +1551,7 @@ public class MainWindow {
 	{
 		Display.getDefault().syncExec(new RefreshMessageTask(messages));
 	}
+	
 	class RefreshMessageTask implements Runnable{
 		private List<Message> messages;
 		@Override
@@ -1562,6 +1563,7 @@ public class MainWindow {
 			this.messages = messages;
 		}
 	}
+	
 	class RefreshObserver implements Observer
 	{
 		@Override
