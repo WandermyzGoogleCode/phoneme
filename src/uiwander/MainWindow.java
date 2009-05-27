@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.ibm.icu.impl.ICUService.Factory;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.StatResult;
@@ -645,6 +646,7 @@ public class MainWindow
 		toolItemAddressGroupByInitial.setText("按姓名首字母");
 
 		textAddressSearch = new Text(compositeAddress, SWT.BORDER);
+		textAddressSearch.setEnabled(false);
 		textAddressSearch.addModifyListener(new TextAddressSearchModifyListener());
 		textAddressSearch.setToolTipText(Messages.getString("MainWindow.SearchContacts")); //$NON-NLS-1$
 		final FormData fd_textAddressSearch = new FormData();
@@ -717,6 +719,7 @@ public class MainWindow
 		tabItemAddressPermit.setText("被授权联系人");
 
 		treeAddressPermit = new Tree(tabFolderAddress, SWT.BORDER);
+		treeAddressPermit.setEnabled(false);
 		treeAddressPermit.addSelectionListener(new TreeAddressContactSelectionListener());
 		treeAddressPermit.setHeaderVisible(true);
 		tabItemAddressPermit.setControl(treeAddressPermit);
@@ -1220,6 +1223,7 @@ public class MainWindow
 
 				toolItemAddressPermission.setToolTipText("");
 				toolItemAddressCustomGroup.setToolTipText("");
+				
 				toolItemAddressEdit.setToolTipText(String.format("重命名分组\"%s\"", current.getText(0)));
 				toolItemAddressDel.setToolTipText(String.format("删除分组\"%s\"", current.getText(0)));
 			} else
@@ -1304,10 +1308,25 @@ public class MainWindow
 			{
 				if (current.getParentItem() == null)
 				{
-					// TODO: 重命名分组
-					// Debug:
-					MessageDialog.openInformation(shell, "重命名分组", current.getText());
-				} else
+					if (current != treeAddressContactItemNoGroup)
+					{
+						InfoFieldFactory factory = InfoFieldFactory.getFactory();
+						EditGroupDialog editGroupDialog = new EditGroupDialog(shell);
+						editGroupDialog.SetCategoryName(current.getText());
+						if (editGroupDialog.open() == 0)
+						{
+							for (TreeItem item : current.getItems())
+							{
+								UserInfo user = (UserInfo) item.getData();
+								InfoField field = factory.makeInfoField("Category", editGroupDialog.GetCategoryName());
+								user.getCustomInfo().setInfoField("Category", field);
+
+								logicCenter.editContactInfo(user);
+							}
+						}
+					}
+				}
+				else
 				{
 					// TODO: 编辑联系人
 					// Debug:
@@ -1433,7 +1452,20 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			// TODO: 新建分组
+				TreeItem current = getCurrentTreeItem();
+				
+				EditGroupDialog editGroupDialog = new EditGroupDialog(shell);
+				if(editGroupDialog.open() == 0)
+				{
+					InfoFieldFactory factory = InfoFieldFactory.getFactory();
+					UserInfo user = (UserInfo)current.getData();
+					user.getCustomInfo().setInfoField("Category",
+							factory.makeInfoField("Category", editGroupDialog.GetCategoryName())
+							);
+					
+					logicCenter.editContactInfo(user);
+				}
+			
 		}
 	}
 
@@ -1570,6 +1602,7 @@ public class MainWindow
 			 */
 					
 			treeAddressContact.removeAll();
+			contactsCategory.clear();
 
 			List<TreeItem> cateList = new ArrayList<TreeItem>();
 			// TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
@@ -1602,7 +1635,6 @@ public class MainWindow
 				{
 					parentItem = new TreeItem(treeAddressContact, SWT.NONE);
 					cateList.add(parentItem);
-					parentItem.setExpanded(true);
 					parentItem.setText(tag);
 					contactsCategory.put(tag, cateList.size()-1);
 				}
@@ -1610,13 +1642,18 @@ public class MainWindow
 				current.setData(users.get(i));
 			}
 			
+			for(TreeItem item : treeAddressContact.getItems())
+			{
+				item.setExpanded(true);
+			}
+
 			
+			// [start] 自定义分组
 			for(MenuItem item : toolItemAddressCustomGroupMenu.getItems())
 			{
 				item.dispose();
 			}
 			
-			// [start] 自定义分组
 			toolItemAddressCustomGroupNone = new MenuItem(toolItemAddressCustomGroupMenu, SWT.RADIO);
 			toolItemAddressCustomGroupNone.addSelectionListener(new ToolItemAddressCustomGroupSelectionListener());
 			toolItemAddressCustomGroupNone.setText("未分组");
@@ -1717,4 +1754,6 @@ public class MainWindow
 			displayStat(ro.getStatResult());
 		}
 	}
+	
+	//[end]
 }
