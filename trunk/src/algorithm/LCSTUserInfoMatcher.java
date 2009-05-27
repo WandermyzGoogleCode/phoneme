@@ -10,5 +10,12 @@ public class LCSTUserInfoMatcher extends UserInfoMatcher {
 	int weight(String p, String t) {
 		return p.length();
 	}
+
+	public LCSTUserInfoMatcher(double threshold){
+		super(threshold);
+	}
+	
+	public LCSTUserInfoMatcher() {
+	}
 }
 
