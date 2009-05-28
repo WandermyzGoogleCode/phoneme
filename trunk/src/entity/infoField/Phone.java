@@ -35,6 +35,6 @@ public class Phone extends EmptyPhone {
 	
 	@Override
 	public boolean isEmpty() {
-		return !number.equals("");
+		return number.equals("");
 	}
 }

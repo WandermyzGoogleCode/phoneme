@@ -44,12 +44,12 @@ import logiccenter.VirtualResult.VirtualState;
 import static java.lang.System.*;
 
 import algorithm.Matcher;
-import algorithm.SimpleUserInfoMatcher;
 
 import datacenter.DataCenter;
 import datacenter.DataCenterImp;
 
 import serverLogicCenter.ServerLogicCenter;
+import ui.Gui;
 
 import entity.BaseUserInfo;
 import entity.Group;
@@ -70,6 +70,7 @@ public class LogicCenterImp implements LogicCenter {
 	private ServerLogicCenter server = null;
 	private MessageBox messageBox = null;
 	private AllContactsBox allContactsBox;
+	private Gui ui = null;
 	
 	private DataCenter dataCenter;
 	
@@ -338,6 +339,16 @@ public class LogicCenterImp implements LogicCenter {
 	
 	public IgnoreMessageResult ignoreMessage(Message message) {
 		return new IgnoreMessageResult(message, this);
+	}
+
+	@Override
+	public Gui getUI() {
+		return ui;
+	}
+
+	@Override
+	public void setUI(Gui ui) {
+		this.ui = ui;
 	}
 }
 

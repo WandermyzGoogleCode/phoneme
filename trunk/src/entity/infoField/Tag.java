@@ -33,6 +33,6 @@ public class Tag extends EmptyTag {
 	
 	@Override
 	public boolean isEmpty() {
-		return !tag.equals("");
+		return tag.equals("");
 	}
 }

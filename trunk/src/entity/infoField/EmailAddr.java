@@ -38,6 +38,6 @@ public class EmailAddr extends EmptyEmailAddr
 	
 	@Override
 	public boolean isEmpty() {
-		return !addr.equals(nullAddr);
+		return addr.equals(nullAddr);
 	}
 }

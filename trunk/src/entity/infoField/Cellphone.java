@@ -38,6 +38,6 @@ public class Cellphone extends EmptyCellphone{
 	
 	@Override
 	public boolean isEmpty() {
-		return !number.equals(nullNumber);
+		return number.equals(nullNumber);
 	}
 }

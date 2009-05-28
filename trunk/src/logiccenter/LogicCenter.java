@@ -9,6 +9,7 @@ import logiccenter.VirtualResult.*;
 import algorithm.Matcher;
 
 import serverLogicCenter.ServerLogicCenter;
+import ui.Gui;
 
 import entity.infoField.*;
 import entity.message.Message;
@@ -236,6 +237,15 @@ public interface LogicCenter {
 	public MessageBox getMessageBox();
 	
 	public ServerLogicCenter getServer();
+	
+	public Gui getUI();
+	
+	/**
+	 * GUI在获得LogicCenter之后，应该调用该函数来
+	 * 让LogicCenter知道GUI
+	 * @param ui
+	 */
+	public void setUI(Gui ui);
 	
 	public DataCenter getDataCenter();
 	

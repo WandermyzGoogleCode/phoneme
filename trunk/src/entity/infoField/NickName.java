@@ -33,6 +33,6 @@ public class NickName extends EmptyNickName {
 	
 	@Override
 	public boolean isEmpty() {
-		return !name.equals("");
+		return name.equals("");
 	}
 }

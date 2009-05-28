@@ -35,6 +35,6 @@ public class GroupDescription extends EmptyGroupDescription {
 	
 	@Override
 	public boolean isEmpty() {
-		return !description.equals("");
+		return description.equals("");
 	}
 }
