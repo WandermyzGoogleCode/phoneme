@@ -28,8 +28,12 @@ public class Password implements Serializable {
 		return encodedValue;
 	}
 
-	public boolean equals(Password obj) {
-		return encodedValue.equals(obj.encodedValue);
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Password)
+			return encodedValue.equals(((Password)obj).encodedValue);
+		else
+			return false;
 	}
 	
 	public void setNewPassword(String value) {

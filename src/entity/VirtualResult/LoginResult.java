@@ -3,8 +3,9 @@ package entity.VirtualResult;
 import java.rmi.RemoteException;
 
 import logiccenter.LogicCenter;
-import logiccenter.LogicCenterImp;
+import entity.BaseUserInfo;
 import entity.BoolInfo;
+import entity.MyRemoteException;
 import entity.Password;
 import entity.infoField.IdenticalInfoField;
 
@@ -21,9 +22,9 @@ public class LoginResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws RemoteException {
-		// TODO Auto-generated method stub
-		// TODO IMPORTANT ÍêÉÆµÇÂ¼ÏµÍ³
+	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
+		BaseUserInfo loginUser = center.getServer().login(identicalInfo, pwd);
+		center.setLoginUser(loginUser);
 		return new BoolInfo();
 	}
 }

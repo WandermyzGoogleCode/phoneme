@@ -6,6 +6,7 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.ID;
+import entity.Permission;
 import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
 
@@ -18,11 +19,12 @@ import entity.infoField.IdenticalInfoField;
  */
 public class AddPerContactResult extends OneTimeVirtualResult {
 	private ID thisUser;
-	IdenticalInfoField targetUser;
+	private IdenticalInfoField targetUser;
+	private Permission permission;
 	
 	@Override
 	protected BoolInfo getResult() throws RemoteException{
-		BoolInfo res = center.getServer().addPerContact(thisUser, targetUser);
+		BoolInfo res = center.getServer().addPerContact(thisUser, targetUser, permission);
 		ID targetUserID = center.getServer().getUID(targetUser);
 		if (res.isTrue())
 			center.getDataCenter().addPerRelationship(targetUserID);
@@ -36,9 +38,10 @@ public class AddPerContactResult extends OneTimeVirtualResult {
 	 * @param un
 	 * @param center
 	 */
-	public AddPerContactResult(ID thisUser, IdenticalInfoField un, LogicCenter center){
+	public AddPerContactResult(IdenticalInfoField un, Permission permission, LogicCenter center){
 		super(center);
-		this.thisUser = thisUser;
+		thisUser = center.getLoginUser().getID();
+		this.permission = permission;
 		this.targetUser = un;
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);

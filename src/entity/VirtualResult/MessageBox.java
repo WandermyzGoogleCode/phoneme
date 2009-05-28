@@ -53,7 +53,7 @@ public class MessageBox extends VirtualResult {
 			}
 			catch (MyRemoteException e)
 			{
-				setError(new SimpleError(e.getBoolInfo().getInfo()));
+				setError(e.getErr());
 			}
 			catch (Exception e)
 			{

@@ -2,6 +2,7 @@ package logiccenter;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import entity.VirtualResult.EditGroupResult;
 import entity.VirtualResult.EditMyBaseInfoResult;
 import entity.VirtualResult.ExportFileResult;
 import entity.VirtualResult.GetStatResultResult;
+import entity.VirtualResult.IgnoreMessageResult;
 import entity.VirtualResult.ImportFileResult;
 import entity.VirtualResult.InviteToGroupResult;
 import entity.VirtualResult.LocalSearchContactsResult;
@@ -58,6 +60,7 @@ import entity.VirtualResult.VirtualState;
 import entity.infoField.Birthday;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.InfoFieldName;
+import entity.message.Message;
 
 public class LogicCenterImp implements LogicCenter {
 	private static LogicCenterImp instance = null;
@@ -70,8 +73,8 @@ public class LogicCenterImp implements LogicCenter {
 	private DataCenter dataCenter;
 	
 	@Override
-	public AddPerContactResult addPerContact(IdenticalInfoField un) {
-		return new AddPerContactResult(loginUser.getID(), un, this);
+	public AddPerContactResult addPerContact(IdenticalInfoField un, Permission permission) {
+		return new AddPerContactResult(un, permission, this);
 	}
 
 	@Override
@@ -330,6 +333,10 @@ public class LogicCenterImp implements LogicCenter {
 		if (messageBox != null)
 			messageBox.close();
 		messageBox = new MessageBox(loginUser.getID(), this);
+	}
+	
+	public IgnoreMessageResult ignoreMessage(Message message) {
+		return new IgnoreMessageResult(message, this);
 	}
 }
 
