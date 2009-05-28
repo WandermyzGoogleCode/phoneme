@@ -38,4 +38,5 @@ public interface ServerLogicCenter extends Remote{
 	public BoolInfo setVisibility(ID thisUser, ID targetID, int visibility) throws RemoteException;
 	public BaseUserInfo login(IdenticalInfoField identicalInfo, Password pwd) throws RemoteException, MyRemoteException;
 	public BoolInfo ignoreMessage(ID thisUser, Message msg) throws RemoteException;
+	public List<BaseUserInfo> getContactsInfo(ID thisUser, List<ID> idList) throws RemoteException, MyRemoteException;
 }
