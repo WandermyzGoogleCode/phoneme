@@ -2,6 +2,8 @@ package ui_test;
 
 import java.util.List;
 
+import logiccenter.VirtualResult.MessageBox;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -10,7 +12,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import entity.VirtualResult.MessageBox;
 import entity.message.Message;
 
 public class MessageBoxDialog extends Composite {

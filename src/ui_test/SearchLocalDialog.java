@@ -28,10 +28,10 @@ import algorithm.LCSTUserInfoMatcher;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.UserInfo;
-import entity.VirtualResult.LocalSearchContactsResult;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 import logiccenter.*;
+import logiccenter.VirtualResult.LocalSearchContactsResult;
 
 public class SearchLocalDialog extends Dialog {
 	private MainWindow mainWindow;
