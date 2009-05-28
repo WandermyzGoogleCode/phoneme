@@ -40,10 +40,10 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 			}
 			catch (Exception e)
 			{
+				//TODO 写入具体的错误到error中
 				setError(null);
 				System.err.println("Exception: "+e.toString());
 				e.printStackTrace();
-				//TODO 写入相应的错误到error中
 			}
 		}
 	}

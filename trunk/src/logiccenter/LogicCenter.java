@@ -275,6 +275,12 @@ public interface LogicCenter {
 	public AllContactsBox getAllContactsBox();
 	
 	/**
+	 * 获取所有被授权联系人的信息
+	 * @return
+	 */
+	public AllPerContactsBox getAllPerContatcsBox();
+	
+	/**
 	 * 设置当前登录的用户
 	 * @param loginUser
 	 */

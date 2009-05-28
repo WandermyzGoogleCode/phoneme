@@ -39,6 +39,11 @@ public class AllContactsBox extends VirtualResult{
 		thread.run();
 	}
 	
+	/**
+	 * 该方法应该是LogicCenter在修改以后调用的，
+	 * GUI不用这个来修改，而是用LogicCenter的接口来修改
+	 * @param newInfo
+	 */
 	public synchronized void editContact(UserInfo newInfo){
 		boolean found = false;
 		for(UserInfo userInfo: contacts)
