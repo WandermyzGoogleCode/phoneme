@@ -1019,4 +1019,16 @@ public class DataCenterImp implements DataCenter {
 		return null;
 	}
 
+	@Override
+	public List<ID> getAllPerContactsID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ID> getAllSynContactsID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
