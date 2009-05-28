@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import logiccenter.VirtualResult.AddSynContactResult;
+
 import serverdatacenter.ServerDataCenter;
 
 import entity.BaseUserInfo;
@@ -23,7 +25,6 @@ import entity.IDFactory;
 import entity.MyRemoteException;
 import entity.Password;
 import entity.Permission;
-import entity.VirtualResult.AddSynContactResult;
 import entity.infoField.IdenticalInfoField;
 import entity.message.ApplySynContactMessage;
 import entity.message.Message;
@@ -33,12 +34,12 @@ import entity.message.SimpleStringMessage;
 public class ServerLogicCenterImp implements ServerLogicCenter {
 	private static ServerLogicCenterImp instance = null;
 	
-	private ServerDataCenter dataCenter;
-	private Set<ID> onlineUsers;
-	private Map<ID, MessageSender> senders;
-	private IDFactory idFactory;
+	protected ServerDataCenter dataCenter;
+	protected Set<ID> onlineUsers;
+	protected Map<ID, MessageSender> senders;
+	protected IDFactory idFactory;
 	
-	private ServerLogicCenterImp(){
+	protected ServerLogicCenterImp(){
 		//TODO 各种初始化
 		idFactory = IDFactory.getInstance();
 	}
@@ -69,22 +70,22 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 */
 	@Override
 	public Message getNewMessage(ID user) throws MyRemoteException{
-		// TODO 现在只是测试
-		System.out.println("Waiting for next message...");
-		//远程调用到底是多线程还是单线程的？如何不synchronized而进行WAIT？
-		String line = "";
-		try
-		{
-			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-			line = stdin.readLine();
+		MessageSender sender = senders.get(user);
+		synchronized (sender) {
+			while (sender.isAlive() && !sender.hasMessage()){
+				try{
+					sender.wait();
+				}
+				catch (Exception e) {
+					System.err.println("Exception: " + e.toString());
+					e.printStackTrace();
+					break;
+				}
+			}
+			if (sender.isAlive() && sender.hasMessage())
+				return sender.getMessage();
 		}
-		catch (Exception e)
-		{
-			System.err.println("Exception: "+e.toString());
-			e.printStackTrace();
-		}
-		System.out.println("New message send...");
-		return new SimpleStringMessage(line, idFactory.getNewMessageID());
+		return null;
 	}
 
 	@Override

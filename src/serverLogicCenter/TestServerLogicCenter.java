@@ -18,6 +18,7 @@ import entity.BoolInfo;
 import entity.ErrorType;
 import entity.Group;
 import entity.ID;
+import entity.IDFactory;
 import entity.MyRemoteException;
 import entity.Password;
 import entity.Permission;
@@ -53,7 +54,7 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 			e.printStackTrace();
 		}
 		System.out.println("New message send...");
-		return new SimpleStringMessage(line);
+		return new SimpleStringMessage(line, idFactory.getNewMessageID());
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 	{
 		try
 		{
-			ServerLogicCenterImp obj = new ServerLogicCenterImp();
+			ServerLogicCenter obj = ServerLogicCenterImp.getInstance();
 			ServerLogicCenter stub = (ServerLogicCenter) UnicastRemoteObject.exportObject(obj, 0);
 
 		    // Bind the remote object's stub in the registry
