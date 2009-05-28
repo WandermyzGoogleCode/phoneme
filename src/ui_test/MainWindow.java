@@ -60,6 +60,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
+import ui_test.UserInfoTable.UserInfoTableType;
+
 import com.ibm.icu.impl.ICUService.Factory;
 import com.swtdesigner.SWTResourceManager;
 
@@ -80,7 +82,6 @@ public class MainWindow
 	private MenuItem toolItemAddressCustomGroupNew;
 	private MenuItem toolItemAddressCustomGroupNone;
 	private ToolItem toolItemAddressSep2;
-	private ToolItem toolItemAddressAddGroup;
 	private ToolItem toolItemAddressAddContact;
 	private TreeColumn treeAddressPermitColumnEmail;
 	private TreeColumn treeAddressPermitColumnCellphone;
@@ -99,16 +100,9 @@ public class MainWindow
 	private TabItem tabItemAddressPermit;
 	private TabFolder tabFolderAddress;
 	private Button labelAddressSearch;
-	private MenuItem toolItemAddressGroupByNone;
-	private MenuItem toolItemAddressGroupByInitial;
-	private MenuItem toolItemAddressGroupByRelation;
-	private MenuItem toolItemAddressGroupByGroup;
-	private MenuItem toolItemAddressGroupByCustomGroup;
 	private ToolItem toolItemAddressSep1;
 	private Menu toolItemAddressCustomGroupMenu;
 	private ToolItem toolItemAddressCustomGroup;
-	private Menu toolItemAddressGroupByMenu;
-	private ToolItem toolItemAddressGroupBy;
 	private ToolItem toolItemAddressDel;
 	private ToolItem toolItemAddressPermission;
 	private ToolItem toolItemAddressEdit;
@@ -161,7 +155,6 @@ public class MainWindow
 	private Canvas canvasInfoAvatar;
 	protected Shell shell;
 
-	private Text textAddressSearch;
 	private Composite compositeMain;
 	private StackLayout compositeMainStackLayout;
 	private Composite compositeLeftList;
@@ -576,11 +569,6 @@ public class MainWindow
 		toolItemAddressAddContact.setToolTipText("添加联系人");
 		toolItemAddressAddContact.setText("添人");
 
-		toolItemAddressAddGroup = new ToolItem(toolBarAddress, SWT.PUSH);
-		toolItemAddressAddGroup.addSelectionListener(new ToolItemAddressAddGroupSelectionListener());
-		toolItemAddressAddGroup.setToolTipText("添加自定义分组");
-		toolItemAddressAddGroup.setText("添组");
-
 		toolItemAddressSep2 = new ToolItem(toolBarAddress, SWT.SEPARATOR);
 		toolItemAddressSep2.setText("New item");
 
@@ -622,45 +610,11 @@ public class MainWindow
 		toolItemAddressSyncRemote.addSelectionListener(new ToolItemAddressSyncRemoteSelectionListener());
 		toolItemAddressSyncRemote.setToolTipText("与服务器进行远程同步");
 		toolItemAddressSyncRemote.setText(Messages.getString("MainWindow.SyncRemote")); //$NON-NLS-1$
-
-		toolItemAddressGroupBy = new ToolItem(toolBarAddress, SWT.DROP_DOWN);
-		toolItemAddressGroupBy.setToolTipText("选择联系人的分组");
-		toolItemAddressGroupBy.setText("分组显示");
-
-		toolItemAddressGroupByMenu = new Menu(toolBarAddress);
-		addDropDown(toolItemAddressGroupBy, toolItemAddressGroupByMenu);
-
-		toolItemAddressGroupByNone = new MenuItem(toolItemAddressGroupByMenu, SWT.RADIO);
-		toolItemAddressGroupByNone.setText("不分组显示");
-
-		toolItemAddressGroupByCustomGroup = new MenuItem(toolItemAddressGroupByMenu, SWT.RADIO);
-		toolItemAddressGroupByCustomGroup.setText("按分组");
-
-		toolItemAddressGroupByGroup = new MenuItem(toolItemAddressGroupByMenu, SWT.RADIO);
-		toolItemAddressGroupByGroup.setText("按群组");
-
-		toolItemAddressGroupByRelation = new MenuItem(toolItemAddressGroupByMenu, SWT.RADIO);
-		toolItemAddressGroupByRelation.setText("按关系");
-
-		toolItemAddressGroupByInitial = new MenuItem(toolItemAddressGroupByMenu, SWT.RADIO);
-		toolItemAddressGroupByInitial.setText("按姓名首字母");
-
-		textAddressSearch = new Text(compositeAddress, SWT.BORDER);
-		textAddressSearch.setEnabled(false);
-		textAddressSearch.addModifyListener(new TextAddressSearchModifyListener());
-		textAddressSearch.setToolTipText(Messages.getString("MainWindow.SearchContacts")); //$NON-NLS-1$
-		final FormData fd_textAddressSearch = new FormData();
-		fd_textAddressSearch.left = new FormAttachment(100, -118);
-		fd_textAddressSearch.right = new FormAttachment(100, -9);
-		fd_textAddressSearch.bottom = new FormAttachment(0, 33);
-		fd_textAddressSearch.top = new FormAttachment(0, 10);
-		textAddressSearch.setLayoutData(fd_textAddressSearch);
 		compositeMainStackLayout.topControl = compositeAddress;
 
 		labelAddressSearch = new Button(compositeAddress, SWT.NONE);
 		final FormData fd_labelAddressSearch = new FormData();
-		fd_labelAddressSearch.right = new FormAttachment(textAddressSearch, -16, SWT.LEFT);
-		fd_labelAddressSearch.top = new FormAttachment(textAddressSearch, 0, SWT.TOP);
+		fd_labelAddressSearch.top = new FormAttachment(toolBarAddress, 0, SWT.TOP);
 		labelAddressSearch.setLayoutData(fd_labelAddressSearch);
 		labelAddressSearch.setText("搜索");
 		labelAddressSearch.addSelectionListener(new SelectionAdapter()
@@ -676,6 +630,7 @@ public class MainWindow
 			}
 		});
 		tabFolderAddress = new TabFolder(compositeAddress, SWT.NONE);
+		fd_labelAddressSearch.right = new FormAttachment(tabFolderAddress, 0, SWT.RIGHT);
 		final FormData fd_tabFolderAddress = new FormData();
 		fd_tabFolderAddress.bottom = new FormAttachment(100, 0);
 		fd_tabFolderAddress.right = new FormAttachment(100, 0);
@@ -684,7 +639,7 @@ public class MainWindow
 		tabFolderAddress.setLayoutData(fd_tabFolderAddress);
 
 		tabItemAddressContact = new TabItem(tabFolderAddress, SWT.NONE);
-		tabItemAddressContact.setText("联系人");
+		tabItemAddressContact.setText("同步联系人");
 
 		treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER);
 		treeAddressContact.addSelectionListener(new TreeAddressContactSelectionListener());
@@ -719,7 +674,6 @@ public class MainWindow
 		tabItemAddressPermit.setText("被授权联系人");
 
 		treeAddressPermit = new Tree(tabFolderAddress, SWT.BORDER);
-		treeAddressPermit.setEnabled(false);
 		treeAddressPermit.addSelectionListener(new TreeAddressContactSelectionListener());
 		treeAddressPermit.setHeaderVisible(true);
 		tabItemAddressPermit.setControl(treeAddressPermit);
@@ -900,6 +854,7 @@ public class MainWindow
 		// [end]
 
 		// [start] 同步联系人
+		
 		ContactRefreshObserver observer = new ContactRefreshObserver();
 		allContactsBox = logicCenter.getAllContactsBox();
 		allContactsBox.addObserver(observer);
@@ -1243,7 +1198,6 @@ public class MainWindow
 					item.setSelection(false);
 				}
 
-				// Sample Code:
 				String cate = ((UserInfo)current.getData()).getCustomInfo().getInfoField("Category").getStringValue();
 				if(cate != null && !cate.isEmpty())
 				{
@@ -1329,11 +1283,21 @@ public class MainWindow
 				else
 				{
 					// TODO: 编辑联系人
-					// Debug:
-					int ind = current.getParentItem().indexOf(current);
-					EditContactDialog editContac = new EditContactDialog(allContactsBox.getContacts().get(ind), shell,
-							SWT.None);
-					editContac.open();
+					UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
+							(tabFolderAddress.getSelection()[0] == tabItemAddressContact) ? 
+									UserInfoTableType.Synchronization : UserInfoTableType.Permission,
+							(UserInfo)current.getData());
+					if(userInfoDialog.open()==0)
+					{
+						userInfoDialog.modifyUser();
+						logicCenter.editContactInfo((UserInfo)current.getData());
+					}
+					
+//					// Debug:
+//					int ind = current.getParentItem().indexOf(current);
+//					EditContactDialog editContac = new EditContactDialog(allContactsBox.getContacts().get(ind), shell,
+//							SWT.None);
+//					editContac.open();
 
 					// MessageDialog.openInformation(shell, "编辑联系人", current
 					// .getText());
@@ -1377,23 +1341,24 @@ public class MainWindow
 
 			if (current != null)
 			{
-				if (current.getParentItem() == null)
+				if (current.getParentItem() == null && 
+						MessageDialog.openConfirm(shell, "确认删除", String.format("你确实要删除分组\"%s\"吗？", current.getText()))
+						)
 				{
-					// TODO: 删除分组
-					// Debug:
-					MessageDialog.openInformation(shell, "删除分组", current.getText());
-				} else
+					for(TreeItem item : current.getItems())
+					{
+						UserInfo user = (UserInfo)item.getData();
+						user.getCustomInfo().setInfoField("Category",
+								InfoFieldFactory.getFactory().makeInfoField("Category", null));
+						logicCenter.editContactInfo(user);
+					}
+				}
+				else
 				{
-					// TODO: 删除联系人
 					if (MessageDialog.openConfirm(shell, "确认删除", String.format("你确实要删除联系人\"%s\"吗？", current.getText())))
 					{
-						int ind = current.getParentItem().indexOf(current);
-						if (ind > -1)
-							logicCenter.removeContactInfo(allContactsBox.getContacts().get(ind).getBaseInfo().getID());
-						else
-						{
-							System.err.println("删除联系人失败！");
-						}
+						UserInfo user = (UserInfo)current.getData();
+						logicCenter.removeContactInfo(user.getBaseInfo().getID());
 					}
 				}
 			}
@@ -1608,7 +1573,7 @@ public class MainWindow
 			// TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
 			// item1.setText("sql");
 			for (int i = 0; i < n; i++)
-			{
+			{							
 				String name = users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
 				String nick = users.get(i).getCustomInfo().getInfoField("NickName").getStringValue();
 				String cell = users.get(i).getBaseInfo().getInfoField("Cellphone").getStringValue();
