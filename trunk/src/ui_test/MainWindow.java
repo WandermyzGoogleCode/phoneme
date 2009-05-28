@@ -12,6 +12,10 @@ import java.util.Map.Entry;
 
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
+import logiccenter.VirtualResult.AllContactsBox;
+import logiccenter.VirtualResult.GetStatResultResult;
+import logiccenter.VirtualResult.MessageBox;
+import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -61,10 +65,6 @@ import com.swtdesigner.SWTResourceManager;
 
 import entity.StatResult;
 import entity.UserInfo;
-import entity.VirtualResult.AllContactsBox;
-import entity.VirtualResult.GetStatResultResult;
-import entity.VirtualResult.MessageBox;
-import entity.VirtualResult.VirtualState;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 import entity.message.Message;
