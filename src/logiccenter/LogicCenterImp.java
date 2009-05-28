@@ -15,6 +15,7 @@ import logiccenter.VirtualResult.AddSynContactResult;
 import logiccenter.VirtualResult.AdmitApplicationResult;
 import logiccenter.VirtualResult.AdmitInvitationResult;
 import logiccenter.VirtualResult.AllContactsBox;
+import logiccenter.VirtualResult.AllPerContactsBox;
 import logiccenter.VirtualResult.ApplyJoinGroupResult;
 import logiccenter.VirtualResult.CreateGroupResult;
 import logiccenter.VirtualResult.EditContactInfoResult;
@@ -349,6 +350,11 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public void setUI(Gui ui) {
 		this.ui = ui;
+	}
+
+	@Override
+	public AllPerContactsBox getAllPerContatcsBox() {
+		return new AllPerContactsBox(this);
 	}
 }
 
