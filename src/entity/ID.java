@@ -30,6 +30,8 @@ public class ID implements Serializable{
 	private static final long messageStart = groupStart+groupRange;
 	private static final long messageRange = 5000000000000000000L;
 	
+	public static final ID GLOBAL_ID = new ID(messageStart+messageRange);
+	
 	private static final Random rand = new Random(Calendar.getInstance().getTime().hashCode());
 	private long id;
 	int hash;
