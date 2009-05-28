@@ -8,6 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -260,5 +261,65 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		dataCenter.removeMessageBuffer(thisUser, msg);
 		return new BoolInfo();
+	}
+
+	protected Permission getGlobalPermission(ID thisUser){
+		List<ID> idList = new ArrayList<ID>();
+		idList.add(ID.GLOBAL_ID);
+		List<Permission> res = dataCenter.getPermissions(thisUser, idList);
+		return res.get(0);
+	}
+	
+	/**
+	 * 合成得到最终thisUser给targetUser的权限
+	 * @param thisUser
+	 * @param targetUser
+	 * @param groups thisUser加入的所有群组
+	 * @param gPs thisUser对应的对于所有群组的权限设置
+	 * @param p2pPermission thisUser给targetUser设定的单独权限
+	 * @return
+	 */
+	protected Permission getFinalPermision(ID thisUser, ID targetUser, Permission p2pPermission, List<Group> groups, List<Permission> gPs){
+		Permission res = p2pPermission.clone();
+		List<Group> gList2 = dataCenter.getGroups(targetUser);
+		Set<ID> gidSet = new HashSet<ID>();
+		for(Group g: gList2)
+			gidSet.add(g.getID());
+		for(int i=0; i<groups.size(); i++){
+			Group g = groups.get(i);
+			if (gidSet.contains(g.getID()))
+				res.union(gPs.get(i));
+		}
+		return res;
+	}
+	
+	//根据权限p来过滤info的信息
+	protected BaseUserInfo filter(BaseUserInfo info, Permission p){
+		BaseUserInfo res = new BaseUserInfo();
+		res.setID(info.getID());
+		for(String key: info.getKeySet())
+			if (p.getField(key).booleanValue())
+				res.setInfoField(key, info.getInfoField(key));
+		return res;
+	}
+	
+	@Override
+	public List<BaseUserInfo> getContactsInfo(ID thisUser, List<ID> idList)
+			throws RemoteException, MyRemoteException {
+		List<BaseUserInfo> contacts = dataCenter.getUsersInfo(idList);
+		List<Group> gList1 = dataCenter.getGroups(thisUser);
+		List<ID> gidList = new ArrayList<ID>();
+		for(Group g: gList1)
+			gidList.add(g.getID());
+		List<Permission> gPs = dataCenter.getPermissions(thisUser, gidList);
+		List<Permission> p2pPermissions = dataCenter.getPermissions(thisUser, idList);
+		
+		List<Permission> finalPermissions = new ArrayList<Permission>();
+		for(int i=0; i<idList.size(); i++)
+			finalPermissions.add(getFinalPermision(thisUser, idList.get(i), p2pPermissions.get(i), gList1, gPs));
+		
+		for(int i=0; i<contacts.size(); i++)
+			contacts.set(i, filter(contacts.get(i), finalPermissions.get(i)));
+		return contacts;
 	}
 }
