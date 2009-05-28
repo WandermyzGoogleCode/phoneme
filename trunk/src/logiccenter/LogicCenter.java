@@ -4,11 +4,12 @@ import entity.*;
 
 import java.util.List;
 
+import logiccenter.VirtualResult.*;
+
 import algorithm.Matcher;
 
 import serverLogicCenter.ServerLogicCenter;
 
-import entity.VirtualResult.*;
 import entity.infoField.*;
 import entity.message.Message;
 
