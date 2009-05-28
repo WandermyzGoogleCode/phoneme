@@ -36,6 +36,6 @@ public class Address extends EmptyAddress {
 	
 	@Override
 	public boolean isEmpty() {
-		return !(addr.equals(""));
+		return (addr.equals(""));
 	}
 }

@@ -34,6 +34,6 @@ public class Img extends EmptyImg {
 	
 	@Override
 	public boolean isEmpty() {
-		return !url.equals(url);
+		return url.equals(url);
 	}
 }

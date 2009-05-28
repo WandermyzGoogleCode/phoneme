@@ -78,6 +78,6 @@ public class Birthday extends EmptyBirthday {
 	
 	@Override
 	public boolean isEmpty(){
-		return (!day.equals(nullData));
+		return (day.equals(nullData));
 	}
 }

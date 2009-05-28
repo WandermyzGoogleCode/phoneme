@@ -2,8 +2,6 @@ package entity.message;
 
 import java.io.Serializable;
 
-import serverLogicCenter.ServerLogicCenter;
-
 import entity.ID;
 
 import logiccenter.LogicCenter;

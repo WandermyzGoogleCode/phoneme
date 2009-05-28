@@ -6,6 +6,10 @@ import entity.ID;
 import entity.infoField.InfoFieldName;
 
 public class ApplySynContactMessage extends Message {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6760010094612097372L;
 	private BaseUserInfo applyUser;//申请者，
 	private ID targetUser;//批准加入者（即该信息的目标发送人）
 
@@ -17,7 +21,7 @@ public class ApplySynContactMessage extends Message {
 	
 	@Override
 	public void proceed(LogicCenter center) {
-		// TODO Auto-generated method stub
+		center.getUI().addPerContact(applyUser);
 	}
 
 	@Override

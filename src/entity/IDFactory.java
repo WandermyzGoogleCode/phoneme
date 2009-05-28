@@ -1,22 +1,26 @@
 package entity;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * SINGLETON
+ * 
+ * 服务器启动时，一定要先用setUsedID把使用过的ID给填掉
+ * 不填的话，出错的概率很小，但是非0概率会ID冲突。
+ * 本地使用FACTORY的时候，ID就不用填了。
+ * 
  * @author Administrator
  *
  */
 public class IDFactory {
 	static private IDFactory instance = null;
 	
-	Set<Long> usedMessageID, usedUserID, usedGroupID;
+	Set<ID> usedID;
 	
 	private IDFactory(){
-		usedMessageID = new HashSet<Long>();
-		usedUserID = new HashSet<Long>();
-		usedGroupID = new HashSet<Long>();
+		usedID = new HashSet<ID>();
 	}
 	
 	synchronized public static IDFactory getInstance()
@@ -40,13 +44,18 @@ public class IDFactory {
 	
 	public ID getNewMessageID(){
 		ID res = ID.getMessageRandID();
-		while (usedMessageID.contains(new Long(res.getValue())))
+		while (usedID.contains(res))
 			res = ID.getMessageRandID();
-		usedMessageID.add(new Long(res.getValue()));
+		usedID.add(res);
 		return res;
 	}
 	
-	public void putbackMessageID(ID id){
-		usedMessageID.remove(new Long(id.getValue()));
+	public void putbackID(ID id){
+		usedID.remove(id);
+	}
+	
+	public void setUsedID(List<ID> idList){
+		for(ID id: idList)
+			usedID.add(id);
 	}
 }

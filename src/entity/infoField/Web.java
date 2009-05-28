@@ -33,6 +33,6 @@ public class Web extends EmptyWeb {
 	
 	@Override
 	public boolean isEmpty() {
-		return !web.equals("");
+		return web.equals("");
 	}
 }

@@ -33,6 +33,6 @@ public class Remarks extends EmptyRemarks {
 	
 	@Override
 	public boolean isEmpty() {
-		return !remarks.equals("");
+		return remarks.equals("");
 	}
 }

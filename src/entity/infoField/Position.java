@@ -33,6 +33,6 @@ public class Position extends EmptyPosition {
 	
 	@Override
 	public boolean isEmpty() {
-		return !position.equals("");
+		return position.equals("");
 	}
 }

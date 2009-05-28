@@ -37,6 +37,6 @@ public class Company extends EmptyCompany {
 	
 	@Override
 	public boolean isEmpty() {
-		return !company.equals("");
+		return company.equals("");
 	}
 }

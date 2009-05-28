@@ -35,6 +35,6 @@ public class Name extends EmptyName {
 
 	@Override
 	public boolean isEmpty() {
-		return !name.equals(nullName);
+		return name.equals(nullName);
 	}
 }

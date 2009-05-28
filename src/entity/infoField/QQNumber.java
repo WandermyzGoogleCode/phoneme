@@ -34,6 +34,6 @@ public class QQNumber extends EmptyQQNumber {
 	
 	@Override
 	public boolean isEmpty() {
-		return !number.equals("");
+		return number.equals("");
 	}
 }

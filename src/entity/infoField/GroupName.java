@@ -34,6 +34,6 @@ public class GroupName extends EmptyGroupName {
 	
 	@Override
 	public boolean isEmpty() {
-		return !name.equals(nullName);
+		return name.equals(nullName);
 	}
 }
