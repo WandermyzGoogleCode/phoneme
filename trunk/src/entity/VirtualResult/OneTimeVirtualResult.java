@@ -5,6 +5,7 @@ import static entity.VirtualResult.VirtualState.*;
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
+import entity.MyRemoteException;
 import entity.SimpleError;
 
 /**
@@ -33,6 +34,9 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 					setPrepared();
 				else
 					setError(new SimpleError(boolInfo.getInfo()));
+			}
+			catch (MyRemoteException e){
+				setError(e.getErr());
 			}
 			catch (Exception e)
 			{

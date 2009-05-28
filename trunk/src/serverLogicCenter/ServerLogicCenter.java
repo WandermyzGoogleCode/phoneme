@@ -15,23 +15,10 @@ import java.rmi.Remote;
 import java.util.List;
 
 public interface ServerLogicCenter extends Remote{
-	/**
-	 * 返回用户user所有未处理的信息
-	 * @param user
-	 * @return
-	 */
 	public List<Message> getAllMessages(ID user) throws RemoteException, MyRemoteException;
-	/**
-	 * 返回用户user最新更新的信息
-	 * @param user
-	 * @return
-	 */
-	public Message getNewMessage(ID user) throws RemoteException, MyRemoteException;
-	
-	public BoolInfo addPerContact(ID thisUser, IdenticalInfoField targetUser) throws RemoteException;
-	
+	public Message getNewMessage(ID user) throws RemoteException, MyRemoteException;	
+	public BoolInfo addPerContact(ID thisUser, IdenticalInfoField targetUser, Permission permission) throws RemoteException;	
 	public BoolInfo addSynContact(ID thisUser, IdenticalInfoField targetUser) throws RemoteException;
-
 	public BoolInfo admitApplication(ID thisUser, ID gid, ID uid) throws RemoteException;
 	public BoolInfo admitInvitation(ID thisUser, ID gid) throws RemoteException;
 	public BoolInfo applyJoinGroup(ID thisUser, ID gid) throws RemoteException;
@@ -49,4 +36,6 @@ public interface ServerLogicCenter extends Remote{
 	public BoolInfo removeSynContact(ID thisUser, ID targetID) throws RemoteException;
 	public BoolInfo setGroupPermission(ID thisUser, ID targetID, Permission p) throws RemoteException;
 	public BoolInfo setVisibility(ID thisUser, ID targetID, int visibility) throws RemoteException;
+	public BaseUserInfo login(IdenticalInfoField identicalInfo, Password pwd) throws RemoteException, MyRemoteException;
+	public BoolInfo ignoreMessage(ID thisUser, Message msg) throws RemoteException;
 }

@@ -5,13 +5,13 @@ public class MyRemoteException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -7685970957635942577L;
-	private BoolInfo boolInfo;
+	private MyError err;
 	
-	public BoolInfo getBoolInfo(){
-		return boolInfo;
+	public MyError getErr(){
+		return err;
 	}
 	
 	public MyRemoteException(MyError err){
-		boolInfo = new BoolInfo(err);
+		this.err = err;
 	}
 }

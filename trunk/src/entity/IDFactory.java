@@ -1,5 +1,8 @@
 package entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * SINGLETON
  * @author Administrator
@@ -8,7 +11,12 @@ package entity;
 public class IDFactory {
 	static private IDFactory instance = null;
 	
+	Set<Long> usedMessageID, usedUserID, usedGroupID;
+	
 	private IDFactory(){
+		usedMessageID = new HashSet<Long>();
+		usedUserID = new HashSet<Long>();
+		usedGroupID = new HashSet<Long>();
 	}
 	
 	synchronized public static IDFactory getInstance()
@@ -28,5 +36,17 @@ public class IDFactory {
 	{
 		//TODO
 		return null;
+	}
+	
+	public ID getNewMessageID(){
+		ID res = ID.getMessageRandID();
+		while (usedMessageID.contains(new Long(res.getValue())))
+			res = ID.getMessageRandID();
+		usedMessageID.add(new Long(res.getValue()));
+		return res;
+	}
+	
+	public void putbackMessageID(ID id){
+		usedMessageID.remove(new Long(id.getValue()));
 	}
 }

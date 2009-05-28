@@ -191,7 +191,7 @@ public class DataCenterImp implements DataCenter {
 				PreparedStatement pstatement=(PreparedStatement) connection.prepareStatement(sql);
 				for(int i=0;i<perIDWriteBuffer.size();i++){
 					pstatement.setInt(1, 1);
-					pstatement.setInt(2, perIDWriteBuffer.get(i).getValue());
+					pstatement.setLong(2, perIDWriteBuffer.get(i).getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -220,7 +220,7 @@ public class DataCenterImp implements DataCenter {
 				PreparedStatement pstatement=(PreparedStatement) connection.prepareStatement(sql);
 				for(int i=0;i<syncIDWriteBuffer.size();i++){
 					pstatement.setInt(1, 1);
-					pstatement.setInt(2, syncIDWriteBuffer.get(i).getValue());
+					pstatement.setLong(2, syncIDWriteBuffer.get(i).getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -250,8 +250,8 @@ public class DataCenterImp implements DataCenter {
 				Iterator<Group> groupIter=addToGroupBuffer.keySet().iterator();
 				for(int i=0;i<addToGroupBuffer.size();i++){
 					Group temp=groupIter.next();
-					pstatement.setInt(1, temp.getID().getValue());
-					pstatement.setInt(2, addToGroupBuffer.get(temp).getValue());
+					pstatement.setLong(1, temp.getID().getValue());
+					pstatement.setLong(2, addToGroupBuffer.get(temp).getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -422,7 +422,7 @@ public class DataCenterImp implements DataCenter {
 					String temp=iter.next();
 					sql="SELECT "+temp+" FROM UserInfo WHERE UserID=?";
 					PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql);
-					pstatement.setInt(1, baseResult.get(i).getID().getValue());
+					pstatement.setLong(1, baseResult.get(i).getID().getValue());
 					ResultSet rs=pstatement.executeQuery();
 					
 					if(rs.next())
@@ -434,7 +434,7 @@ public class DataCenterImp implements DataCenter {
 					String temp=iter.next();
 					sql="SELECT "+temp+" FROM UserInfo WHERE UserID=?";
 					PreparedStatement pstatement=(PreparedStatement)connection.prepareStatement(sql);
-					pstatement.setInt(1, baseResult.get(i).getID().getValue());
+					pstatement.setLong(1, baseResult.get(i).getID().getValue());
 					ResultSet rs=pstatement.executeQuery();
 					if(rs.next())
 						customResult.get(i).setInfoField(temp, InfoFieldFactory.getFactory().makeInfoField(temp, rs.getString(1)));
@@ -514,8 +514,8 @@ public class DataCenterImp implements DataCenter {
 				Iterator<Group> groupIter=deleteFromGroupBuffer.keySet().iterator();
 				for(int i=0;i<deleteFromGroupBuffer.size();i++){
 					Group temp=groupIter.next();
-					pstatement.setInt(1, temp.getID().getValue());
-					pstatement.setInt(2, deleteFromGroupBuffer.get(temp).getValue());
+					pstatement.setLong(1, temp.getID().getValue());
+					pstatement.setLong(2, deleteFromGroupBuffer.get(temp).getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -545,8 +545,8 @@ public class DataCenterImp implements DataCenter {
 				PreparedStatement pstatement1=(PreparedStatement) connection.prepareStatement(sql1);
 				PreparedStatement pstatement2=(PreparedStatement) connection.prepareStatement(sql2);
 				for(int i=0;i<groupDeleteBuffer.size();i++){
-					pstatement1.setInt(1, groupDeleteBuffer.get(i).getID().getValue());
-					pstatement2.setInt(1, groupDeleteBuffer.get(i).getID().getValue());
+					pstatement1.setLong(1, groupDeleteBuffer.get(i).getID().getValue());
+					pstatement2.setLong(1, groupDeleteBuffer.get(i).getID().getValue());
 					pstatement1.addBatch();
 					pstatement2.addBatch();
 				}
@@ -578,7 +578,7 @@ public class DataCenterImp implements DataCenter {
 				PreparedStatement pstatement=(PreparedStatement) connection.prepareStatement(sql);
 				for(int i=0;i<perIDDeleteBuffer.size();i++){
 					pstatement.setInt(1, 0);
-					pstatement.setInt(2, perIDDeleteBuffer.get(i).getValue());
+					pstatement.setLong(2, perIDDeleteBuffer.get(i).getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -607,7 +607,7 @@ public class DataCenterImp implements DataCenter {
 				PreparedStatement pstatement=(PreparedStatement) connection.prepareStatement(sql);
 				for(int i=0;i<syncIDDeleteBuffer.size();i++){
 					pstatement.setInt(1, 0);
-					pstatement.setInt(2, syncIDDeleteBuffer.get(i).getValue());
+					pstatement.setLong(2, syncIDDeleteBuffer.get(i).getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -674,11 +674,11 @@ public class DataCenterImp implements DataCenter {
 							pstatement1.setString(keyNum, groupWriteBuffer.get(i).getInfoField(fieldNameIter.next()).getStringValue());	
 							keyNum++;
 						}
-						pstatement1.setInt(keyNum, groupWriteBuffer.get(i).getID().getValue());
+						pstatement1.setLong(keyNum, groupWriteBuffer.get(i).getID().getValue());
 						pstatement1.addBatch();
 					}else{
 						fieldNameIter=groupWriteBuffer.get(i).getKeySet().iterator();
-						pstatement1.setInt(1, groupWriteBuffer.get(i).getID().getValue());
+						pstatement1.setLong(1, groupWriteBuffer.get(i).getID().getValue());
 						int keyNum=2;
 						while(fieldNameIter.hasNext()){
 							pstatement2.setString(keyNum, groupWriteBuffer.get(i).getInfoField(fieldNameIter.next()).getStringValue());
@@ -753,11 +753,11 @@ public class DataCenterImp implements DataCenter {
 								pstatement1.setInt(keyNum, 0);
 							keyNum++;
 						}
-						pstatement1.setInt(keyNum, uid.getValue());
+						pstatement1.setLong(keyNum, uid.getValue());
 						pstatement1.addBatch();
 					}else{
 						fieldNameIter=permissionWriteBuffer.get(i).getKeySet().iterator();
-						pstatement2.setInt(1, uid.getValue());
+						pstatement2.setLong(1, uid.getValue());
 						int keyNum=2;
 						while(fieldNameIter.hasNext()){
 							if( permissionWriteBuffer.get(i).getField(fieldNameIter.next())==true)
@@ -859,16 +859,16 @@ public class DataCenterImp implements DataCenter {
 								pstatement1.setString(keyNum, userInfoWriteBuffer.get(i).getCustomInfo().getInfoField(fieldNameIter.next()).getStringValue());	
 								keyNum++;
 							}
-							pstatement1.setInt(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
+							pstatement1.setLong(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
 							pstatement1.addBatch();
 						}else{//如果传入的CustomUserInfo为空
-							pstatementCustomNull.setInt(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
+							pstatementCustomNull.setLong(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
 							pstatementCustomNull.addBatch();
 						}
 						
 					}else{
 						fieldNameIter=userInfoWriteBuffer.get(i).getBaseInfo().getKeySet().iterator();
-						pstatement2.setInt(1, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
+						pstatement2.setLong(1, userInfoWriteBuffer.get(i).getBaseInfo().getID().getValue());
 						int keyNum=2;
 						while(fieldNameIter.hasNext()){
 							pstatement2.setString(keyNum, userInfoWriteBuffer.get(i).getBaseInfo().getInfoField(fieldNameIter.next()).getStringValue());
@@ -910,7 +910,7 @@ public class DataCenterImp implements DataCenter {
 				String sql="DELETE FROM UserInfo WHERE UserID=?";
 				PreparedStatement pstatement=(PreparedStatement) connection.prepareStatement(sql);
 				for(int i=0;i<userIDDeleteBuffer.size();i++){
-					pstatement.setInt(1, uid.getValue());
+					pstatement.setLong(1, uid.getValue());
 					pstatement.addBatch();
 				}
 				pstatement.executeBatch();
@@ -991,7 +991,7 @@ public class DataCenterImp implements DataCenter {
 			while(allUserID.next()){
 				ID id=new ID(allUserID.getInt(1));
 				Permission per=new Permission();
-				pstatement.setInt(2, id.getValue());
+				pstatement.setLong(2, id.getValue());
 				while(iter.hasNext()){
 					String temp=iter.next();
 					pstatement.setString(1, temp);

@@ -8,38 +8,16 @@ import algorithm.Matcher;
 
 import serverLogicCenter.ServerLogicCenter;
 
-import entity.VirtualResult.AddPerContactResult;
-import entity.VirtualResult.AddSynContactResult;
-import entity.VirtualResult.AdmitApplicationResult;
-import entity.VirtualResult.AdmitInvitationResult;
-import entity.VirtualResult.AllContactsBox;
-import entity.VirtualResult.ApplyJoinGroupResult;
-import entity.VirtualResult.CreateGroupResult;
-import entity.VirtualResult.EditContactInfoResult;
-import entity.VirtualResult.EditGroupResult;
-import entity.VirtualResult.EditMyBaseInfoResult;
-import entity.VirtualResult.ExportFileResult;
-import entity.VirtualResult.GetStatResultResult;
-import entity.VirtualResult.ImportFileResult;
-import entity.VirtualResult.InviteToGroupResult;
-import entity.VirtualResult.LocalSearchContactsResult;
-import entity.VirtualResult.LoginResult;
-import entity.VirtualResult.MessageBox;
-import entity.VirtualResult.QuitGroupResult;
-import entity.VirtualResult.RegisterResult;
-import entity.VirtualResult.RelationCubeResult;
-import entity.VirtualResult.RemoveContactInfoResult;
-import entity.VirtualResult.RemoveGroupMemberResult;
-import entity.VirtualResult.RemoveGroupResult;
-import entity.VirtualResult.RemovePerContactResult;
-import entity.VirtualResult.RemoveSynContactResult;
-import entity.VirtualResult.SearchGroupResult;
-import entity.VirtualResult.SearchUserResult;
-import entity.VirtualResult.SetPermissionResult;
-import entity.VirtualResult.SetVisibilityResult;
+import entity.VirtualResult.*;
 import entity.infoField.*;
+import entity.message.Message;
 
 public interface LogicCenter {
+	/**
+	 * 忽略消息，将消息从服务器以及MessageBox中删除。
+	 */
+	public IgnoreMessageResult ignoreMessage(Message message);
+	
 	/**
 	 * Return the login user, null if not login yet
 	 * 
@@ -104,7 +82,7 @@ public interface LogicCenter {
 	 * @param un
 	 * @return
 	 */
-	public AddPerContactResult addPerContact(IdenticalInfoField un);
+	public AddPerContactResult addPerContact(IdenticalInfoField un, Permission permission);
 	
 	/**
 	 * 删除被授权联系人
