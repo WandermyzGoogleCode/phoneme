@@ -52,4 +52,21 @@ public class Permission implements Serializable{
 	public Set<String> getKeySet(){
 		return fields.keySet();
 	}
+	
+	/**
+	 * 将p中为真的授权合并过来，使得当前权限能获得更多的信息
+	 * @param p
+	 */
+	public void union(Permission p){
+		for(String key: p.getKeySet())
+			if (p.getField(key).booleanValue())
+				setField(key, Boolean.TRUE);
+	}
+	
+	@Override
+	public Permission clone(){
+		Permission res = new Permission();
+		res.union(this);
+		return res;
+	}
 }
