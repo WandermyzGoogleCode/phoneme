@@ -105,4 +105,18 @@ public interface DataCenter {
 	public List<UserInfo> getAllUserInfo(LocalSynSource source);
 	
 	public ReturnType removeUserInfo(ID uid);
+	
+	//TODO 尽快完成
+	/**
+	 * 获取所有被授权联系人的ID
+	 * @return
+	 */
+	public List<ID> getAllPerContactsID();
+	
+	//TODO 尽快完成
+	/**
+	 * 获取所有同步联系人的ID
+	 * @return
+	 */
+	public List<ID> getAllSynContactsID();
 }
