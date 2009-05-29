@@ -4,11 +4,9 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * 用来标识用户或者群组的唯一标志，只有系统可见，用户不可见
@@ -42,19 +40,19 @@ public class ID implements Serializable{
 	}
 	
 	static public ID getLocalRandID(){
-		return new ID(localStart+rand.nextLong()%localRange);
+		return new ID(localStart+Math.abs(rand.nextLong())%localRange);
 	}
 	
 	static public ID getUserRandID(){
-		return new ID(userStart+rand.nextLong()%userRange);
+		return new ID(userStart+Math.abs(rand.nextLong())%userRange);
 	}
 	
 	static public ID getGroupRandID(){
-		return new ID(groupStart+rand.nextLong()%groupRange);
+		return new ID(groupStart+Math.abs(rand.nextLong())%groupRange);
 	}
 	
 	static public ID getMessageRandID(){
-		return new ID(messageStart+rand.nextLong()%messageRange);
+		return new ID(messageStart+Math.abs(rand.nextLong())%messageRange);
 	}
 	
 	public ID(long id)

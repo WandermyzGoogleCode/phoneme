@@ -12,6 +12,7 @@ public class ApplySynContactMessage extends Message {
 	private static final long serialVersionUID = -6760010094612097372L;
 	private BaseUserInfo applyUser;//申请者，
 	private ID targetUser;//批准加入者（即该信息的目标发送人）
+	private boolean proceeded = false;
 
 	public ApplySynContactMessage(BaseUserInfo applyUser, ID targetUser, ID mID){
 		super(mID);
@@ -22,6 +23,7 @@ public class ApplySynContactMessage extends Message {
 	@Override
 	public void proceed(LogicCenter center) {
 		center.getUI().addPerContact(applyUser);
+		proceeded = true;
 	}
 
 	@Override
@@ -35,7 +37,12 @@ public class ApplySynContactMessage extends Message {
 	}
 
 	@Override
-	public void ignore(LogicCenter center) {
-		// TODO Auto-generated method stub
+	public boolean autoProceed() {
+		return false;
+	}
+
+	@Override
+	public boolean proceeded() {
+		return this.proceeded;
 	}
 }

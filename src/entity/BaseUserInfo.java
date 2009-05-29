@@ -1,11 +1,16 @@
 package entity;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import entity.infoField.*;
 
-public class BaseUserInfo {
+public class BaseUserInfo implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -784064690264146991L;
 	ID id;
 	private Map<String, InfoField> fieldMap;
 	

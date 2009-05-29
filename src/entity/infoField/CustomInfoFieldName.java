@@ -1,7 +1,7 @@
 package entity.infoField;
 
 public enum CustomInfoFieldName {
-	NickName, Remarks, Category;
+	NickName, Remarks, Category, Relation;
 	
 	static public boolean contains(String name){
 		for(CustomInfoFieldName i: values())
