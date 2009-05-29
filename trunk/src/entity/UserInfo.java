@@ -1,6 +1,5 @@
 package entity;
 
-import java.util.List;
 import java.util.Set;
 
 import entity.infoField.BaseInfoFieldName;
@@ -30,6 +29,7 @@ public class UserInfo {
 
 	public UserInfo(BaseUserInfo baseInfo) {
 		this.baseInfo = baseInfo;
+		customInfo = new CustomUserInfo();
 	}
 
 	public UserInfo(BaseUserInfo baseInfo, CustomUserInfo custmInfo) {
@@ -39,6 +39,7 @@ public class UserInfo {
 
 	public UserInfo() {
 		baseInfo = new BaseUserInfo();
+		customInfo = new CustomUserInfo();
 	}
 
 	/**
@@ -84,6 +85,15 @@ public class UserInfo {
 			return true;
 		} else
 			return false;
+	}
+	
+	/**
+	 * 其实只需要如此简单……
+	 * @param info
+	 * @return
+	 */
+	public boolean setInfoField(InfoField info) {
+		return setInfoField(InfoFieldName.get(info.getName()), info);
 	}
 
 	/**

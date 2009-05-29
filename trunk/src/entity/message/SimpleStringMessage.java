@@ -26,7 +26,6 @@ public class SimpleStringMessage extends Message {
 	
 	@Override
 	public void proceed(LogicCenter center) {
-		// TODO Auto-generated method stub	
 	}
 	
 	@Override
@@ -37,5 +36,15 @@ public class SimpleStringMessage extends Message {
 	@Override
 	public String detail() {
 		return str;
+	}
+
+	@Override
+	public boolean autoProceed() {
+		return false;
+	}
+
+	@Override
+	public boolean proceeded() {
+		return true;
 	}
 }

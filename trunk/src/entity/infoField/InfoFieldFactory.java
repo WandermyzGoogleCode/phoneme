@@ -92,6 +92,8 @@ public class InfoFieldFactory {
 		{
 			return new Web(value);
 		}
+		if (name.equals("Relation"))
+			return new Relation();
 		return null;
 	}
 	
@@ -121,6 +123,7 @@ public class InfoFieldFactory {
 		res.add(new EmptyNickName());
 		res.add(new EmptyRemarks());
 		res.add(new EmptyTag());
+		res.add(new Relation());
 		return res;		
 	}
 	

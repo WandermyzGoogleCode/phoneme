@@ -32,14 +32,20 @@ public class IDFactory {
 	
 	public ID getNewUserID()
 	{
-		//TODO
-		return null;
+		ID res = ID.getUserRandID();
+		while (usedID.contains(res))
+			res = ID.getUserRandID();
+		usedID.add(res);
+		return res;
 	}
 	
 	public ID getNewGroupID()
 	{
-		//TODO
-		return null;
+		ID res = ID.getGroupRandID();
+		while (usedID.contains(res))
+			res = ID.getGroupRandID();
+		usedID.add(res);
+		return res;
 	}
 	
 	public ID getNewMessageID(){
@@ -57,5 +63,10 @@ public class IDFactory {
 	public void setUsedID(List<ID> idList){
 		for(ID id: idList)
 			usedID.add(id);
+	}
+	
+	public static void main(String args[]){
+		IDFactory factory = IDFactory.getInstance();
+		System.out.println(factory.getNewUserID().getValue());
 	}
 }
