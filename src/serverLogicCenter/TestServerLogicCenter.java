@@ -9,6 +9,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import serverdatacenter.ServerDataCenter;
@@ -37,9 +38,10 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 	@Override
 	public BaseUserInfo login(IdenticalInfoField identicalInfo, Password pwd) throws RemoteException ,MyRemoteException{
 		BaseUserInfo thisUser = new BaseUserInfo();
-		thisUser.setID(idFactory.getNewUserID());
-		onlineUsers.add(thisUser.getID());
-		senders.put(thisUser.getID(), new MessageSender(thisUser.getID()));
+		ID thisID = idFactory.getNewUserID();
+		thisUser.setID(thisID);
+		onlineUsers.add(thisID);
+		senders.put(thisID, new MessageSender(thisID));
 
 		return thisUser;
 	}
@@ -48,7 +50,7 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 	{
 		try
 		{
-			ServerLogicCenter obj = ServerLogicCenterImp.getInstance();
+			TestServerLogicCenter obj = new TestServerLogicCenter();
 			ServerLogicCenter stub = (ServerLogicCenter) UnicastRemoteObject.exportObject(obj, 0);
 
 		    // Bind the remote object's stub in the registry
@@ -56,11 +58,30 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 		    registry.bind("logicCenterServer", stub);
 
 		    System.err.println("Server ready");
+
+			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+			while (true){
+				System.out.println("f-fresh, now users:");
+				for(ID id: obj.onlineUsers)
+					System.out.println(id.getValue());
+				String command = stdin.readLine();
+				if (command.equals("f"))
+					continue;
+				Long idValue = Long.valueOf(command);
+				MessageSender sender = obj.senders.get(new ID(idValue));
+				if (sender == null){					
+					System.out.println("Wrong ID:"+idValue);
+					continue;
+				}
+				System.out.println("input a message:");
+				String msg = stdin.readLine();
+				sender.addMessage(new SimpleStringMessage(msg, obj.idFactory.getNewMessageID()));
+			}
 		}
 		catch (Exception e)
 		{
 			System.err.println("Exception: "+e.toString());
 			e.printStackTrace();
-		}
+		}		
 	}
 }

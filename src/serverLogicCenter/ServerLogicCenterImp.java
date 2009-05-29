@@ -8,6 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	protected ServerLogicCenterImp(){
 		//TODO 各种初始化
 		idFactory = IDFactory.getInstance();
+		senders = new HashMap<ID, MessageSender>();
+		onlineUsers = new HashSet<ID>();
 	}
 	
 	synchronized static public ServerLogicCenter getInstance(){
@@ -104,6 +107,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	@Override
 	public BoolInfo addSynContact(ID thisUser, IdenticalInfoField targetUser)
 			throws RemoteException {
+		//TODO 已经授权的处理
 		if (!onlineUsers.contains(thisUser))
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		ID targetID = dataCenter.searchUserID(targetUser);
@@ -293,7 +297,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		return res;
 	}
 	
-	//根据权限p来过滤info的信息
+	/**
+	 * 根据权限p来过滤info的信息
+	 * @param info
+	 * @param p
+	 * @return
+	 */
 	protected BaseUserInfo filter(BaseUserInfo info, Permission p){
 		BaseUserInfo res = new BaseUserInfo();
 		res.setID(info.getID());
