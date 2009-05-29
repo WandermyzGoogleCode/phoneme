@@ -1031,4 +1031,10 @@ public class DataCenterImp implements DataCenter {
 		return null;
 	}
 
+	@Override
+	public List<Group> getAllGroups() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
