@@ -1,10 +1,10 @@
 package logiccenter.VirtualResult;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 import logiccenter.LogicCenter;
-import logiccenter.VirtualResult.AllContactsBox.GetThread;
 import entity.BaseUserInfo;
 import entity.ErrorType;
 import entity.ID;
@@ -19,14 +19,17 @@ import entity.UserInfo;
  */
 public class AllPerContactsBox extends VirtualResult {
 	private LogicCenter center;
-	private List<BaseUserInfo> contacts;
+	private List<UserInfo> contacts;
 
 	class GetThread extends Thread {
 		@Override
 		public void run() {
 			List<ID> idList = center.getDataCenter().getAllPerContactsID();
 			try {
-				contacts = center.getServer().getContactsInfo(center.getLoginUser().getID(), idList);
+				List<BaseUserInfo> temp = center.getServer().getContactsInfo(center.getLoginUser().getID(), idList);
+				contacts = new ArrayList<UserInfo>();
+				for(BaseUserInfo baseInfo: temp)
+					contacts.add(new UserInfo(baseInfo));
 			} catch (MyRemoteException e) {
 				setError(e.getErr());
 			} catch (RemoteException e) {
@@ -41,7 +44,7 @@ public class AllPerContactsBox extends VirtualResult {
 		return contacts.size();
 	}
 
-	public List<BaseUserInfo> getContacts() {
+	public List<UserInfo> getContacts() {
 		return contacts;
 	}
 
@@ -56,8 +59,8 @@ public class AllPerContactsBox extends VirtualResult {
 	}
 
 	public synchronized void removeContact(ID uid) {
-		for (BaseUserInfo userInfo : contacts)
-			if (userInfo.getID().equals(uid)) {
+		for (UserInfo userInfo : contacts)
+			if (userInfo.getBaseInfo().getID().equals(uid)) {
 				contacts.remove(userInfo);
 				break;
 			}

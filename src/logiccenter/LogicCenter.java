@@ -16,9 +16,9 @@ import entity.message.Message;
 
 public interface LogicCenter {
 	/**
-	 * 忽略消息，将消息从服务器以及MessageBox中删除。
+	 * 将消息从服务器以及MessageBox中删除。
 	 */
-	public IgnoreMessageResult ignoreMessage(Message message);
+	public RemoveMessageResult removeMessage(Message message);
 	
 	/**
 	 * Return the login user, null if not login yet
@@ -279,6 +279,12 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public AllPerContactsBox getAllPerContatcsBox();
+	
+	/**
+	 * 获取所有加入的群组
+	 * @return
+	 */
+	public AllGroupsBox getAllGroupsBox();
 	
 	/**
 	 * 设置当前登录的用户

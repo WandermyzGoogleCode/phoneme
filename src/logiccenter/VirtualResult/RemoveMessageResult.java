@@ -5,7 +5,7 @@ import entity.BoolInfo;
 import entity.ErrorType;
 import entity.message.Message;
 
-public class IgnoreMessageResult extends OneTimeVirtualResult {
+public class RemoveMessageResult extends OneTimeVirtualResult {
 	private Message msg;
 
 	@Override
@@ -13,7 +13,7 @@ public class IgnoreMessageResult extends OneTimeVirtualResult {
 		return center.getServer().ignoreMessage(center.getLoginUser().getID(), msg);
 	}
 
-	public IgnoreMessageResult(Message msg, LogicCenter center){
+	public RemoveMessageResult(Message msg, LogicCenter center){
 		super(center);
 		this.msg = msg;
 		if (noLoginUser())
