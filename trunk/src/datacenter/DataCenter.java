@@ -119,4 +119,10 @@ public interface DataCenter {
 	 * @return
 	 */
 	public List<ID> getAllSynContactsID();
+	
+	//TODO 尽快完成
+	/**
+	 * 获取所有已经加入的群组
+	 */
+	public List<Group> getAllGroups();
 }
