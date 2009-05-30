@@ -24,8 +24,10 @@ public class EditGroupResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
 		BoolInfo res = center.getServer().editGroup(center.getLoginUser().getID(), g);
-		if (res.isTrue())
+		if (res.isTrue()){
 			center.getDataCenter().setGroup(g);
+			center.getAllGroupsBox().editGroup(g);
+		}
 		return res;
 	}
 

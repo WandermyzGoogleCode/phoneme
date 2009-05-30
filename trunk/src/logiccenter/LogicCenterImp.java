@@ -53,28 +53,28 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public AddSynContactResult addSynContact(IdenticalInfoField un) {
-		return new AddSynContactResult(loginUser.getID(), un, this);
+	public AddSynContactResult addSynContact(IdenticalInfoField un, int visibility) {
+		return new AddSynContactResult(loginUser.getID(), un, visibility, this);
 	}
 
 	@Override
-	public AdmitApplicationResult admitApplication(ID gID, ID uID) {
-		return new AdmitApplicationResult(gID, uID, this);
+	public AdmitApplicationResult admitApplication(ID gID, ID uID, Permission p, int visibility) {
+		return new AdmitApplicationResult(gID, uID, p, visibility, this);
 	}
 
 	@Override
-	public AdmitInvitationResult admitInvitation(ID gid) {
-		return new AdmitInvitationResult(gid, this);
+	public AdmitInvitationResult admitInvitation(ID gid, Permission p, int visibility) {
+		return new AdmitInvitationResult(gid, p, visibility, this);
 	}
 
 	@Override
-	public ApplyJoinGroupResult applyJoinGroup(ID gid) {
-		return new ApplyJoinGroupResult(gid, this);
+	public ApplyJoinGroupResult applyJoinGroup(ID gid, Permission p, int visibility) {
+		return new ApplyJoinGroupResult(gid, p, visibility, this);
 	}
 
 	@Override
-	public CreateGroupResult createGroup(Group g, Permission p) {
-		return new CreateGroupResult(g, p, this);
+	public CreateGroupResult createGroup(Group g, Permission p, int visibility) {
+		return new CreateGroupResult(g, p, visibility, this);
 	}
 
 	@Override
@@ -206,8 +206,9 @@ public class LogicCenterImp implements LogicCenter {
 
 	private LogicCenterImp(DataCenter dataCenter) {
 		this.dataCenter = dataCenter;
-		allPerContactsBox = new AllPerContactsBox(this);
-		allGroupBox = new AllGroupsBox(this);
+		//TODO TEST
+		//allPerContactsBox = new AllPerContactsBox(this);
+		//allGroupBox = new AllGroupsBox(this);
 		allContactsBox = new AllContactsBox(this);//必须放在allGroupBox后面，因为他会调用allGroupBox
 		try {
 			Registry registry = LocateRegistry.getRegistry("Localhost");// TODO
@@ -236,7 +237,7 @@ public class LogicCenterImp implements LogicCenter {
 	 */
 	public static void main(String args[]) {
 		LogicCenter logicCenter = LogicCenterImp.getInstance();
-		logicCenter.login(null, null);
+		LoginResult res = logicCenter.login(null, null);
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {
@@ -254,6 +255,20 @@ public class LogicCenterImp implements LogicCenter {
 				System.out.println("'" + cmd + "' read...\n");
 			} catch (Exception e) {
 			}
+		}
+		long id;
+		System.out.println("Input id:");
+		String temp = null;
+		try{
+			temp = stdin.readLine();
+		}
+		catch (Exception e) {
+		}
+		id = Long.valueOf(temp);
+		try {
+			logicCenter.getServer().logout(new ID(id));
+		} catch (RemoteException e) {
+			e.printStackTrace();
 		}
 
 		// UserInfo newUser1 = UserInfo.getNewLocalUser();
@@ -344,6 +359,11 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public AllGroupsBox getAllGroupsBox() {
 		return allGroupBox;
+	}
+
+	@Override
+	public Group getGroup(ID gid) {
+		return allGroupBox.getGroupMap().get(gid);
 	}
 }
 

@@ -13,9 +13,8 @@ public class GetStatResultResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws Exception {
+	protected BoolInfo getResult(){
 		statResult = center.calcStat();
-		//TODO 没有处理可能的错误
 		return new BoolInfo();
 	}
 

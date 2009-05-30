@@ -6,6 +6,7 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.ID;
+import entity.MyRemoteException;
 import entity.Permission;
 import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
@@ -23,12 +24,11 @@ public class AddPerContactResult extends OneTimeVirtualResult {
 	private Permission permission;
 	
 	@Override
-	protected BoolInfo getResult() throws RemoteException{
+	protected BoolInfo getResult() throws RemoteException, MyRemoteException{
 		BoolInfo res = center.getServer().addPerContact(thisUser, targetUser, permission);
 		ID targetUserID = center.getServer().getUID(targetUser);
 		if (res.isTrue())
 			center.getDataCenter().addPerRelationship(targetUserID);
-		//TODO 当前没有处理dataCenter的错误		
 		return res;
 	}
 	

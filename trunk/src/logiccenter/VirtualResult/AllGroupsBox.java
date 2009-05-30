@@ -1,20 +1,28 @@
 package logiccenter.VirtualResult;
 
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import entity.ErrorType;
 import entity.Group;
 import entity.ID;
+import entity.MyRemoteException;
 
 import logiccenter.LogicCenter;
 
 public class AllGroupsBox extends VirtualResult {
 	private LogicCenter center;
-	private List<Group> groups;
+	private Map<ID, Group> groups;
 	
 	class GetThread extends Thread{
 		@Override
 		public void run() {
-			groups = center.getDataCenter().getAllGroups();
+			groups = new HashMap<ID, Group>();
+			for(Group g: center.getDataCenter().getAllGroups())
+				groups.put(g.getID(), g);
 			setUpdateNow();
 		}
 	}
@@ -25,7 +33,7 @@ public class AllGroupsBox extends VirtualResult {
 	}
 	
 	public synchronized List<Group> getGroups(){
-		return groups;
+		return new ArrayList<Group>(groups.values());
 	}
 	
 	/**
@@ -34,34 +42,35 @@ public class AllGroupsBox extends VirtualResult {
 	 * @param newInfo
 	 */
 	public synchronized void editGroup(Group group){
-		boolean found = false;
-		for(int i=0; i<groups.size(); i++)
-		{
-			Group g = groups.get(i);
-			if (g.getID().equals(group.getID()))
-			{
-				groups.set(i, group);
-				found = true;
-				break;
-			}
+		groups.put(group.getID(), group);
+		try{
+			center.getAllContactsBox().updateGroupMembers(group);
 		}
-		if (!found)
-			groups.add(group);
+		catch (MyRemoteException e) {
+			setError(e.getErr());
+			return;
+		}
+		catch (RemoteException e){
+			setError(ErrorType.REMOTE_ERROR);
+			return;
+		}
 		setUpdateNow();
 	}
 
-	public synchronized void removeContact(ID gid){
-		for(int i=0; i<groups.size(); i++)
-			if (groups.get(i).getID().equals(gid))
-			{
-				groups.remove(i);
-				break;
-			}
+	public synchronized void removeGroup(ID gid){
+		Group g = groups.get(gid);
+		groups.remove(gid);
+		if (g != null)
+			center.getAllContactsBox().updateRelation(g.getUsersID());//更新所有人的关系
 		setUpdateNow();
 	}
 	
 	public synchronized void updateAll(){
 		GetThread thread = new GetThread();
 		thread.run();
-	}	
+	}
+	
+	public synchronized Map<ID, Group> getGroupMap(){
+		return groups;
+	}
 }

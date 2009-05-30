@@ -6,7 +6,6 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.Group;
-import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
 
 public class RemoveGroupMemberResult extends OneTimeVirtualResult {
@@ -21,15 +20,14 @@ public class RemoveGroupMemberResult extends OneTimeVirtualResult {
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);
 		else if (!center.getLoginUser().getID().equals(g.getAdminUserID()))
-			setError(ErrorType.ID_NOT_MATCHED);
+			setError(ErrorType.NOT_ADMIN);
 		else
 			thread.start();
 	}
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
-		//TODO 成功以后，更新相关群组信息
-		return center.getServer().removeGroupMember(center.getLoginUser().getID(), un, g);
+		return center.getServer().removeGroupMember(center.getLoginUser().getID(), un, g.getID());
 	}
 
 }

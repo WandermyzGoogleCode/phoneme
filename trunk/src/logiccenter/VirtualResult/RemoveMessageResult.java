@@ -1,5 +1,7 @@
 package logiccenter.VirtualResult;
 
+import java.rmi.RemoteException;
+
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
@@ -9,8 +11,8 @@ public class RemoveMessageResult extends OneTimeVirtualResult {
 	private Message msg;
 
 	@Override
-	protected BoolInfo getResult() throws Exception {
-		return center.getServer().ignoreMessage(center.getLoginUser().getID(), msg);
+	protected BoolInfo getResult() throws RemoteException{
+		return center.getServer().removeMessage(center.getLoginUser().getID(), msg);
 	}
 
 	public RemoveMessageResult(Message msg, LogicCenter center){

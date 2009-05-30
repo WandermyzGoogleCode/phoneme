@@ -2,9 +2,12 @@ package logiccenter.VirtualResult;
 
 import static logiccenter.VirtualResult.VirtualState.*;
 
+import java.rmi.RemoteException;
+
 import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.MyRemoteException;
 import entity.SimpleError;
 
@@ -18,7 +21,7 @@ import entity.SimpleError;
  *
  */
 public abstract class OneTimeVirtualResult extends VirtualResult {
-	protected abstract BoolInfo getResult() throws Exception;
+	protected abstract BoolInfo getResult() throws RemoteException, MyRemoteException;
 	protected LogicCenter center;
 
 	class GetThread extends Thread
@@ -38,10 +41,9 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 			catch (MyRemoteException e){
 				setError(e.getErr());
 			}
-			catch (Exception e)
+			catch (RemoteException e)
 			{
-				//TODO 写入具体的错误到error中
-				setError(null);
+				setError(ErrorType.REMOTE_ERROR);
 				System.err.println("Exception: "+e.toString());
 				e.printStackTrace();
 			}

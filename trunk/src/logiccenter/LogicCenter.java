@@ -70,7 +70,7 @@ public interface LogicCenter {
 	 * @param un
 	 * @return
 	 */
-	public AddSynContactResult addSynContact(IdenticalInfoField un);
+	public AddSynContactResult addSynContact(IdenticalInfoField un, int visibility);
 	
 	/**
 	 * 删除同步联系人
@@ -99,7 +99,7 @@ public interface LogicCenter {
 	 * @param p
 	 * @return
 	 */
-	public CreateGroupResult createGroup(Group g, Permission p);
+	public CreateGroupResult createGroup(Group g, Permission p, int visibility);
 	/**
 	 * 设置群组权限
 	 * @param g
@@ -139,7 +139,7 @@ public interface LogicCenter {
 	 * @param gID
 	 * @return
 	 */
-	public ApplyJoinGroupResult applyJoinGroup(ID gID);
+	public ApplyJoinGroupResult applyJoinGroup(ID gID, Permission p, int visibility);
 	/**
 	 * 退出群组gID,输入退出原因reason可以为空
 	 * @param gID
@@ -152,14 +152,14 @@ public interface LogicCenter {
 	 * @param gID
 	 * @return
 	 */
-	public AdmitInvitationResult admitInvitation(ID gID);
+	public AdmitInvitationResult admitInvitation(ID gID, Permission p, int visibility);
 	/**
 	 * 同意用户uID加入gID的申请
 	 * @param gID
 	 * @param uID
 	 * @return
 	 */
-	public AdmitApplicationResult admitApplication(ID gID, ID uID);
+	public AdmitApplicationResult admitApplication(ID gID, ID uID, Permission p, int visibility);
 	
 	/**
 	 * 设置uid的权限p
@@ -291,4 +291,11 @@ public interface LogicCenter {
 	 * @param loginUser
 	 */
 	public void setLoginUser(BaseUserInfo loginUser);
+
+	/**
+	 * 方便获取单个的群组
+	 * @param gid
+	 * @return
+	 */
+	public Group getGroup(ID gid);
 }

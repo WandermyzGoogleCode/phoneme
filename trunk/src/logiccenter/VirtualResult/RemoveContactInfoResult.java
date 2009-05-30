@@ -17,7 +17,6 @@ public class RemoveContactInfoResult extends OneTimeVirtualResult {
 	protected BoolInfo getResult() {
 		center.getDataCenter().removeUserInfo(id);
 		center.getAllContactsBox().removeContact(id);
-		//TODO 当前没有处理dataCenter的错误
 		return new BoolInfo();
 	}
 
