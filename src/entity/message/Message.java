@@ -1,8 +1,10 @@
 package entity.message;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 import entity.ID;
+import entity.MyRemoteException;
 
 import logiccenter.LogicCenter;
 
@@ -13,6 +15,8 @@ import logiccenter.LogicCenter;
  *
  */
 public abstract class Message implements Serializable{
+	protected boolean proceeded = false;
+
 	/**
 	 * 
 	 */
@@ -31,7 +35,12 @@ public abstract class Message implements Serializable{
 		center.removeMessage(this);
 	}
 
-	public abstract void proceed(LogicCenter center);
+	/**
+	 * 处理信息，可能会抛出异常，比如RemoteException
+	 * @param center
+	 * @throws Exception
+	 */
+	public abstract void proceed(LogicCenter center) throws RemoteException, MyRemoteException;
 	public abstract String title();
 	public abstract String detail();
 	/**
@@ -47,5 +56,15 @@ public abstract class Message implements Serializable{
 	 * 该消息是否已经proceed过
 	 * @return
 	 */
-	public abstract boolean proceeded();
+	public boolean proceeded(){
+		return this.proceeded; 
+	}
+	
+	/**
+	 * proceed这个按钮的名字，即告诉用户该Message如果选择proceed，
+	 * 那么会有什么结果。对于autoProceed的Message，这项东西是没有
+	 * 意义的。
+	 * @return
+	 */
+	public abstract String proceedName();
 }
