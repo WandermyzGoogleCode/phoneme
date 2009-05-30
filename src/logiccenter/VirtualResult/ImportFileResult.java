@@ -20,7 +20,6 @@ public class ImportFileResult extends OneTimeVirtualResult {
 	protected BoolInfo getResult(){
 		center.getDataCenter().importFile(fileName);
 		center.getAllContactsBox().updateAll();
-		//TODO 当前没有处理dataCenter的错误
 		return new BoolInfo();
 	}
 

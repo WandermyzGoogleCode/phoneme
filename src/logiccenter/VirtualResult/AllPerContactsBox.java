@@ -33,7 +33,6 @@ public class AllPerContactsBox extends VirtualResult {
 			} catch (MyRemoteException e) {
 				setError(e.getErr());
 			} catch (RemoteException e) {
-				// TODO 写入具体的错误信息
 				setError(ErrorType.REMOTE_ERROR);
 			}
 			setUpdateNow();

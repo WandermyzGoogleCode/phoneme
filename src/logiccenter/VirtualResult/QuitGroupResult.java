@@ -6,7 +6,6 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.ID;
-import entity.SimpleError;
 
 public class QuitGroupResult extends OneTimeVirtualResult {
 	ID gid;
@@ -24,8 +23,11 @@ public class QuitGroupResult extends OneTimeVirtualResult {
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException{
-		//TODO 退出成功后，维护相关群组信息，以及用户所在群组信息
-		return center.getServer().quitGroup(center.getLoginUser().getID(), gid, reason);
+		BoolInfo res = center.getServer().quitGroup(center.getLoginUser().getID(), gid, reason);
+		if (res.isTrue()){
+			center.getDataCenter().removeGroup(center.getGroup(gid));
+			center.getAllGroupsBox().removeGroup(gid);
+		}
+		return res;
 	}
-
 }

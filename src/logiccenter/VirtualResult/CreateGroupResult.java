@@ -7,16 +7,19 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.Group;
+import entity.MyRemoteException;
 import entity.Permission;
 import entity.SimpleError;
 
 public class CreateGroupResult extends OneTimeVirtualResult {
 	private Group g;
 	private Permission p;
+	int visibility;
 
-	public CreateGroupResult(Group g, Permission p,
+	public CreateGroupResult(Group g, Permission p, int visibility,
 			LogicCenter center) {
 		super(center);
+		this.visibility = visibility;
 		this.g = g;
 		this.p = p;
 		if (noLoginUser())
@@ -26,9 +29,10 @@ public class CreateGroupResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws RemoteException {
-		//TODO 如果成功，更新相关群组，以及用户所创建的群组的信息
-		return center.getServer().createGroup(center.getLoginUser().getID(), g, p);
+	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
+		Group resG = center.getServer().createGroup(center.getLoginUser().getID(), g, p, visibility);
+		center.getAllGroupsBox().editGroup(resG);
+		return new BoolInfo();
 	}
 
 }

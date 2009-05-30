@@ -7,7 +7,6 @@ import entity.BaseUserInfo;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.Password;
-import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.InfoField;
 

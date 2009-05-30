@@ -22,9 +22,8 @@ public class LocalSearchContactsResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws Exception {
+	protected BoolInfo getResult(){
 		contacts = center.searchContacts(info, matcher);
-		//TODO 没有处理可能的错误
 		return new BoolInfo();
 	}
 	

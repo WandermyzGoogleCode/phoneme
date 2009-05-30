@@ -24,7 +24,6 @@ public class ExportFileResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult(){
 		center.getDataCenter().exportFile(fileName);
-		//TODO 当前没有处理dataCenter的错误
 		return new BoolInfo();
 	}
 

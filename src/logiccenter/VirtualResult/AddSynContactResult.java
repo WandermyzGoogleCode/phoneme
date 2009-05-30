@@ -25,6 +25,7 @@ import entity.infoField.IdenticalInfoField;
 public class AddSynContactResult extends OneTimeVirtualResult {
 	private ID thisUser;
 	private IdenticalInfoField targetUser;
+	private int visibility;
 	
 	/**
 	 * thisUser本不应该传进来，而应该从center自己获取的。现在没时间，有时间再改之。
@@ -32,9 +33,10 @@ public class AddSynContactResult extends OneTimeVirtualResult {
 	 * @param un
 	 * @param center
 	 */
-	public AddSynContactResult(ID thisUser, IdenticalInfoField targetUser,
+	public AddSynContactResult(ID thisUser, IdenticalInfoField targetUser, int visibility,
 			LogicCenter center) {
 		super(center);
+		this.visibility = visibility;
 		this.thisUser = thisUser;
 		this.targetUser = targetUser;
 		if (noLoginUser())
@@ -45,6 +47,6 @@ public class AddSynContactResult extends OneTimeVirtualResult {
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException{
-		return center.getServer().addSynContact(thisUser, targetUser);
+		return center.getServer().addSynContact(thisUser, targetUser, visibility);
 	}
 }

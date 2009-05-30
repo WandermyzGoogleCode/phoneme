@@ -7,6 +7,7 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.ID;
+import entity.Permission;
 import entity.SimpleError;
 
 /**
@@ -18,10 +19,14 @@ import entity.SimpleError;
  */
 public class AdmitInvitationResult extends OneTimeVirtualResult {
 	private ID gid;
+	private Permission p;
+	private int visibility;
 
-	public AdmitInvitationResult(ID gid, LogicCenter center) {
+	public AdmitInvitationResult(ID gid, Permission p, int visibility, LogicCenter center) {
 		super(center);
 		this.gid = gid;
+		this.p = p;
+		this.visibility = visibility;
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);
 		else
@@ -30,8 +35,7 @@ public class AdmitInvitationResult extends OneTimeVirtualResult {
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
-		//TODO 如果成功，应该更新相关群组信息，以及用户所在群组的信息
-		return center.getServer().admitInvitation(center.getLoginUser().getID(), gid);
+		return center.getServer().admitInvitation(center.getLoginUser().getID(), gid, p, visibility);
 	}
 
 }

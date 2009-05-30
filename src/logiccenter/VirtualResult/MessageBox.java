@@ -38,8 +38,6 @@ public class MessageBox extends VirtualResult {
 		public void run() {
 			try
 			{
-				//TODO IMPORTANT 如何对远程调用的函数强行结束，比如在超时的时候，或者在用户指定的时候？ 
-				//当前的策略是，当用户退出登录的时候，服务器自动断开相关RMI的连接，从而释放该线程。
 				messages = center.getServer().getAllMessages(thisUser);
 				setPrepared();
 				while (!isInterrupted())

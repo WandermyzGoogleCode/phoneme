@@ -6,7 +6,6 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.Group;
-import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
 
 public class InviteToGroupResult extends OneTimeVirtualResult {
@@ -23,14 +22,14 @@ public class InviteToGroupResult extends OneTimeVirtualResult {
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);
 		else if (!center.getLoginUser().getID().equals(g.getAdminUserID()))
-			setError(ErrorType.ID_NOT_MATCHED);
+			setError(ErrorType.NOT_ADMIN);
 		else
 			thread.start();
 	}
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
-		return center.getServer().inviteToGroup(center.getLoginUser().getID(), un, g, inviteInfo);
+		return center.getServer().inviteToGroup(center.getLoginUser().getID(), un, g.getID(), inviteInfo);
 	}
 
 }
