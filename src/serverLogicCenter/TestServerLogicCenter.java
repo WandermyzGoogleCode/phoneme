@@ -42,7 +42,6 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 		thisUser.setID(thisID);
 		onlineUsers.add(thisID);
 		senders.put(thisID, new MessageSender(thisID));
-
 		return thisUser;
 	}
 	
