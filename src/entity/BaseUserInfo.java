@@ -59,4 +59,12 @@ public class BaseUserInfo implements Serializable{
 				res += "<"+key+": "+getInfoField(key).getStringValue()+">  |";
 		return res;
 	}
+	
+	/**
+	 * 方便获得名字
+	 * @return
+	 */
+	public String getName(){
+		return getInfoField(InfoFieldName.Name.name()).getStringValue();
+	}
 }

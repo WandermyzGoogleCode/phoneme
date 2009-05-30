@@ -56,12 +56,28 @@ public class Group implements Serializable {
 	public void setID(ID id) {
 		this.id = id;
 	}
+	
+	public void setAdminID(ID id){
+		this.adminUser = id;
+	}
 
 	public void addToGroup(ID id) {
 		this.users.add(id);
 	}
+	
+	public void removeGromGroup(ID id){
+		this.users.remove(id);
+	}
 
 	public void setInfoField(String name, InfoField info) {
 		this.fieldMap.put(name, info);
+	}
+	
+	/**
+	 * 方便获取名字……
+	 * @return
+	 */
+	public String getName(){
+		return getInfoField(InfoFieldName.GroupName.name()).getStringValue();
 	}
 }
