@@ -2,6 +2,7 @@ package ui;
 import java.util.List;
 
 import entity.BaseUserInfo;
+import entity.Group;
 import entity.UserInfo;
 
 public interface Gui {
@@ -26,4 +27,18 @@ public interface Gui {
 	 * @param targetUser
 	 */
 	public void addPerContact(BaseUserInfo targetUser);
+	
+	/**
+	 * 进入加targetUser为同步练习人的流程。
+	 * 主要过程有：1、获得对targetUser的关系可见度；2、调用logicCenter的接口，监控结果。
+	 * @param targetUser
+	 */
+	public void addSynContact(BaseUserInfo targetUser);
+
+	/**
+	 * 进入接受群组g邀请的流程。
+	 * 主要过程有：1、获得用户对群组的权限设置和可见度设置；2、调用logicCenter的接口，监控结果。
+	 * @param g
+	 */
+	public void admitInvitation(Group g);
 }
