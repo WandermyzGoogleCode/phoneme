@@ -22,6 +22,7 @@ public class SimpleStringMessage extends Message {
 	{
 		super(id);
 		this.str = str;
+		proceeded = true;
 	}
 	
 	@Override
@@ -40,11 +41,11 @@ public class SimpleStringMessage extends Message {
 
 	@Override
 	public boolean autoProceed() {
-		return false;
+		return true;
 	}
 
 	@Override
-	public boolean proceeded() {
-		return true;
+	public String proceedName() {
+		return "autoProceed";
 	}
 }

@@ -37,6 +37,7 @@ public class MessageSender {
 	 */
 	synchronized public void close(){
 		alive = false;
+		notifyAll();
 	}
 	
 	synchronized public boolean isAlive(){
