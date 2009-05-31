@@ -15,7 +15,11 @@ import java.util.Map;
 import java.util.Set;
 
 import algorithm.Checker;
+import algorithm.GroupChecker;
 import algorithm.RelationCube;
+import algorithm.SearchGroupChecker;
+import algorithm.SearchUserChecker;
+import algorithm.UserChecker;
 
 import logiccenter.VirtualResult.AddSynContactResult;
 
@@ -31,18 +35,8 @@ import entity.MyRemoteException;
 import entity.Password;
 import entity.Permission;
 import entity.infoField.IdenticalInfoField;
-import entity.message.AdmitSynContactMessage;
-import entity.message.ApplyJoinGroupMessage;
-import entity.message.ApplySynContactMessage;
-import entity.message.ContactUpdatedMessage;
-import entity.message.GroupAppAdmitMessage;
-import entity.message.GroupRemovedMessage;
-import entity.message.GroupUpdatedMessage;
-import entity.message.InviteToGroupMessage;
-import entity.message.Message;
-import entity.message.MessageSender;
-import entity.message.SimpleStringMessage;
-import entity.message.SynRelationLostMessage;
+import entity.infoField.IdenticalInfoFieldName;
+import entity.message.*;
 
 public class ServerLogicCenterImp implements ServerLogicCenter {
 	private static ServerLogicCenterImp instance = null;
@@ -53,14 +47,18 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	protected IDFactory idFactory;
 	protected RelationCube relationCube;
 
-	protected Checker groupChecker, userChecker, pwdChecker,
-			searchGroupChecker, searchUserChecker;// TODO 写他们的checker
+	protected Checker groupChecker, userChecker,
+			searchGroupChecker, searchUserChecker;
 
 	protected ServerLogicCenterImp() {
 		// TODO 各种初始化
 		idFactory = IDFactory.getInstance();
 		senders = new HashMap<ID, MessageSender>();
 		onlineUsers = new HashSet<ID>();
+		groupChecker = new GroupChecker(this);
+		userChecker = new UserChecker(this);
+		searchGroupChecker = new SearchGroupChecker();
+		searchUserChecker = new SearchUserChecker();
 	}
 
 	synchronized static public ServerLogicCenter getInstance() {
@@ -258,7 +256,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (g == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		if (!groupChecker.check(g))
+		if (g.getID() == null || g.getID().isNull() || !groupChecker.check(g))
 			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
 		dataCenter.setGroup(g);
 		for (ID id : g.getUserSet())
@@ -352,9 +350,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	@Override
 	public BoolInfo register(BaseUserInfo b, Password pwd)
 			throws RemoteException {
-		if (b == null || pwd == null)
+		if (b == null || pwd == null || pwd.isNull())
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		if (!userChecker.check(b) || !pwdChecker.check(pwd))
+		if (!userChecker.check(b))
 			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
 		dataCenter.register(b, pwd);
 		return new BoolInfo();
@@ -618,7 +616,11 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		ID fromID = dataCenter.searchUserID(from), toID = dataCenter.searchUserID(to);
 		if (fromID == null || fromID.isNull() || toID == null || toID.isNull())
 			throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
-		return relationCube.getSearchRes(fromID, toID, this);
+		List<ID> idRes = relationCube.getSearchRes(fromID, toID, this); 
+		List<BaseUserInfo> res = dataCenter.getUsersInfo(idRes);
+		for(int i=0; i<res.size(); i++)
+			res.set(i, filter(res.get(i), getGlobalPermission(idRes.get(i))));
+		return res;
 	}
 
 	@Override
@@ -629,8 +631,37 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		if (!searchGroupChecker.check(b))
 			throw new MyRemoteException(ErrorType.ILLEGAL_SEARCH);
 		List<BaseUserInfo> res = dataCenter.searchUser(b);
-		for(BaseUserInfo info: res)
-			filter(info, getGlobalPermission(info.getID()));
+		for(int i=0; i<res.size(); i++)
+			res.set(i, filter(res.get(i), getGlobalPermission(res.get(i).getID())));
 		return res;
+	}
+
+	@Override
+	public ServerDataCenter getDataCenter() {
+		return dataCenter;
+	}
+
+	@Override
+	public List<ID> getPerRelationis(ID id) throws RemoteException,
+			MyRemoteException {
+		if (!onlineUsers.contains(id))
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
+		return dataCenter.getPerContactID(id);
+	}
+
+	@Override
+	public List<ID> getSynRelations(ID id) throws RemoteException,
+			MyRemoteException {
+		if (!onlineUsers.contains(id))
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
+		return dataCenter.getSynContactID(id);
+	}
+
+	@Override
+	public List<Group> getAllGroups(ID id) throws RemoteException,
+			MyRemoteException {
+		if (!onlineUsers.contains(id))
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
+		return dataCenter.getGroups(id);
 	}
 }
