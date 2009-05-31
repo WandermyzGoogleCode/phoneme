@@ -93,6 +93,7 @@ public class DataCenterImp implements DataCenter {
 
 			if (userInfoTableExist == false) {
 				// 建立UserInfo信息表
+				//TODO CRITICAL 当前的USERID已经变成了LONG
 				sql = "CREATE TABLE UserInfo(UserID int not null";
 				while (fieldNameIter.hasNext()) {
 					sql += ("," + fieldNameIter.next() + " varchar(50)");
@@ -116,6 +117,8 @@ public class DataCenterImp implements DataCenter {
 			}
 
 			// 建立Group信息表
+			//TODO CRITICAL 当前的GROUPID已经变成了LONG
+			
 			if (groupTableExist == false) {
 				sql = "CREATE TABLE GroupInfo(GroupID int not null";
 				// /////////////！！！！！！！！！！！！（跟new Group()的实现有关，可能需要修改）
@@ -136,6 +139,7 @@ public class DataCenterImp implements DataCenter {
 			}
 
 			// 建立Group成员表
+			//TODO CRITICAL 当前的ID已经变成了LONG
 			if (groupMemTableExist == false) {
 				sql = "CREATE TABLE GroupMember(GroupID int not null,UserID int not null)";
 				statement.executeUpdate(sql);
@@ -149,6 +153,7 @@ public class DataCenterImp implements DataCenter {
 				permissionTableExist = false;
 			}
 			// 建立Permission表
+			//TODO CRITICAL 当前的ID已经变成了LONG
 			if (permissionTableExist == false) {
 				sql = "CREATE TABLE Permission(UserID int not null";
 				fieldNameIter = (new Permission()).getKeySet().iterator();
