@@ -10,6 +10,7 @@ public class Password implements Serializable {
 	private static final long serialVersionUID = 4823009801317584895L;
 	private static MessageDigest encoder;
 	String encodedValue;
+	boolean nullFlag = true;
 
 	static {
 		try {
@@ -21,9 +22,15 @@ public class Password implements Serializable {
 	}
 
 	public Password(String value) {
+		//TODO ¼ì²é
+		nullFlag = false;
 		encodedValue = new String(encoder.digest(value.getBytes()));
 	}
 
+	public boolean isNull(){
+		return nullFlag;
+	}
+	
 	public String getEncodedValue() {
 		return encodedValue;
 	}
@@ -34,10 +41,6 @@ public class Password implements Serializable {
 			return encodedValue.equals(((Password)obj).encodedValue);
 		else
 			return false;
-	}
-	
-	public void setNewPassword(String value) {
-		encodedValue = new String(encoder.digest(value.getBytes()));
 	}
 
 	/**

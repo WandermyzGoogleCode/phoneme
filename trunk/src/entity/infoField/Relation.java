@@ -8,11 +8,21 @@ import java.util.List;
  * 主要关系有：
  * 是否有个人关系（他是我的同步联系人）
  * 共同在哪些群组当中
+ * 是否已经被删除(下面有解释，UI组和数据库组基本都不用管这个字段）
  * 
- * 该字段只能由InfoFieldFactory来构造空关系，
+ * 该字段只能由InfoFieldFactory来构造空关系以及删除与否。
  * 实际关系由LogicCenter在提供AllContactsBox的时候自动生成。
  * 
- * 注意，该字段不能由用户修改
+ * 注意，该字段不能由用户修改。
+ * 
+ * 关于删除，是为了说明用户删除了该联系人，但是和该联系人还保留有
+ * 同步关系的（删除以后一直没有登录，从而没有机会更新服务器）。此时，当
+ * 登录时，我们会尽快处理这些删除，到服务器上删除同步关系。
+ * 
+ * UI在拿AllContactsBox.getContacts的时候是拿不到这些被删除的用户的
+ * 
+ * 注意，群组中的人你是不能删除的（除非你是管理员），你唯一能选择的就是
+ * 在显示的时候，是否显示那些只有群组关系，而没有个人关系的联系人。
  * @author Administrator
  *
  */
@@ -23,6 +33,7 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	private static final long serialVersionUID = -1699245995240789623L;
 	List<String> groups = new ArrayList<String>();
 	boolean personal = false;
+	boolean removed = false;
 
 	@Override
 	public String getName() {
@@ -34,8 +45,17 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 		return getStringValue();
 	}
 	
+	public Relation(){}
+	
+	public Relation(String value){
+		if (value == "removed")
+			removed = true;
+	}
+	
 	@Override
 	public String getStringValue() {
+		if (isRemoved())
+			return "removed";
 		String res = "";
 		if (personal)
 			res += "Personal";
@@ -68,6 +88,14 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	
 	public void removeGroup(String g){
 		groups.remove(g);
+	}
+	
+	public boolean isRemoved(){
+		return removed;
+	}
+	
+	public void setRemoved(boolean r){
+		this.removed = r;
 	}
 	
 	public static void main(String args[]){
