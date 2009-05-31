@@ -39,7 +39,7 @@ public class AllContactsBox extends VirtualResult {
 			List<ID> perIDList = center.getDataCenter().getAllPerContactsID();
 			Set<ID> synIDSet = (perIDList == null) ? new HashSet<ID>() : new HashSet<ID>(perIDList);
 			for (UserInfo contact : contacts.values()) {
-				Relation r = new Relation();
+				Relation r = (Relation)contact.getInfoField(InfoFieldName.Relation);
 				if (synIDSet.contains(contact.getBaseInfo().getID()))
 					r.setPersonal(true);
 				for (Group g : center.getAllGroupsBox().getGroups())
@@ -47,7 +47,6 @@ public class AllContactsBox extends VirtualResult {
 						r.addGroup(g.getInfoField(
 								InfoFieldName.GroupName.name())
 								.getStringValue());
-				contact.setInfoField(r);
 			}
 			setUpdateNow();
 		}
@@ -57,17 +56,21 @@ public class AllContactsBox extends VirtualResult {
 		return contacts.size();
 	}
 
-	public List<UserInfo> getContacts() {
-		return new ArrayList<UserInfo>(contacts.values());
+	public synchronized List<UserInfo> getContacts() {
+		List<UserInfo> res = new ArrayList<UserInfo>();
+		for(UserInfo info: contacts.values())
+			if (!((Relation)info.getInfoField(InfoFieldName.Relation)).isRemoved())
+				res.add(info);
+		return res;
 	}
 
 	public AllContactsBox(LogicCenter center) {
 		this.center = center;
 		GetThread thread = new GetThread();
-		thread.run();
+		thread.start();
 	}
 
-	protected void editContactImp(UserInfo newInfo){		
+	protected synchronized void editContactImp(UserInfo newInfo){		
 		//如果customInfo是null，那么不改变原来的customInfo
 		UserInfo oldInfo = contacts.get(newInfo.getBaseInfo().getID());
 		if (oldInfo != null && newInfo.getCustomInfo() == null)
@@ -77,14 +80,13 @@ public class AllContactsBox extends VirtualResult {
 		
 		Set<ID> synIDSet = new HashSet<ID>(center.getDataCenter()
 				.getAllPerContactsID());
-		Relation r = new Relation();
+		Relation r = (Relation)newInfo.getInfoField(InfoFieldName.Relation);
 		if (synIDSet.contains(newInfo.getBaseInfo().getID()))
 			r.setPersonal(true);
 		for (Group g : center.getAllGroupsBox().getGroups())
 			if (g.getUserSet().contains(newInfo.getBaseInfo().getID()))
 				r.addGroup(g.getInfoField(InfoFieldName.GroupName.name())
 						.getStringValue());
-		newInfo.setInfoField(r);
 		contacts.put(newInfo.getBaseInfo().getID(), newInfo);
 	}
 	/**
@@ -104,7 +106,7 @@ public class AllContactsBox extends VirtualResult {
 
 	public synchronized void updateAll() {
 		GetThread thread = new GetThread();
-		thread.run();
+		thread.start();
 	}
 	
 	public synchronized Map<ID, UserInfo> getContactsMap(){
@@ -131,10 +133,34 @@ public class AllContactsBox extends VirtualResult {
 		setUpdateNow();
 	}
 	
+	/**
+	 * 更新idList中所有用户的关系字段
+	 * @param idList
+	 */
 	public synchronized void updateRelation(List<ID> idList){
 		for(ID id: idList)
 			if (contacts.containsKey(id))
 				editContactImp(contacts.get(id));
 		setUpdateNow();
+	}
+	
+	/**
+	 * 获取所有要删除的联系人的信息
+	 */
+	public synchronized List<UserInfo> getRemovedContacts(){
+		List<UserInfo> res = new ArrayList<UserInfo>();
+		for(UserInfo info: contacts.values())
+			if (((Relation)info.getInfoField(InfoFieldName.Relation)).isRemoved())
+				res.add(info);
+		return res;		
+	}
+
+	/**
+	 * 将removed的用户清空
+	 */
+	public synchronized void clearRemovedContacts() {
+		for(ID id: contacts.keySet())
+			if (((Relation)contacts.get(id).getInfoField(InfoFieldName.Relation)).isRemoved())
+				contacts.remove(id);
 	}
 }

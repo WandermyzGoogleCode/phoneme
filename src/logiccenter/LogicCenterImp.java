@@ -334,6 +334,7 @@ public class LogicCenterImp implements LogicCenter {
 		if (messageBox != null)
 			messageBox.close();
 		messageBox = new MessageBox(loginUser.getID(), this);
+		allPerContactsBox = new AllPerContactsBox(this);
 	}
 
 	@Override
@@ -364,6 +365,19 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public Group getGroup(ID gid) {
 		return allGroupBox.getGroupMap().get(gid);
+	}
+
+	@Override
+	public RemoteSynResult removeSynchronize() {
+		return new RemoteSynResult(this);
+	}
+
+	@Override
+	public void logout() throws RemoteException {
+		server.logout(loginUser.getID());
+		loginUser = null;
+		allPerContactsBox = null;
+		messageBox = null;
 	}
 }
 
