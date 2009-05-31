@@ -9,16 +9,32 @@ public interface Gui {
 	/**
 	 * 对于userList中的每一个用户，都问同一个问题askInfo，将回答的结果返回。
 	 * 
+	 * ！由于当前没有本地同步，这个函数可以先不写了
+	 * 
 	 * @param userList
 	 * @return
 	 */
 	public List<Boolean> checkUserList(List<UserInfo> userList, String askInfo);
 	
+	/**
+	 * ！由于当前没有本地同步，这个函数可以先不写了
+	 * @param askInfo
+	 * @return
+	 */
 	public boolean yesOrNo(String askInfo);
-	
+
+	/**
+	 * ！由于当前没有本地同步，这个函数可以先不写了
+	 * @param a
+	 * @param list
+	 * @return
+	 */
 	public UserInfo selMatchedUser(UserInfo a, List<UserInfo> list);
 	
-	//让用户选择返回的用户信息中的每一个字段是来源于a还是来源于b
+	/**
+	 * 让用户选择返回的用户信息中的每一个字段是来源于a还是来源于b
+	 * ！由于当前没有本地同步，这个函数可以先不写了
+	 */
 	public UserInfo mergeUserInfo(UserInfo a, UserInfo b);
 	
 	/**
