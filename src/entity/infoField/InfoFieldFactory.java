@@ -93,7 +93,7 @@ public class InfoFieldFactory {
 			return new Web(value);
 		}
 		if (name.equals("Relation"))
-			return new Relation();
+			return new Relation(value);
 		return null;
 	}
 	

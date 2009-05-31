@@ -51,6 +51,10 @@ public class ID implements Serializable{
 		return new ID(groupStart+Math.abs(rand.nextLong())%groupRange);
 	}
 	
+	static public boolean isGroupID(ID id){
+		return id.getValue() >= groupStart && id.getValue() < groupStart+groupRange;
+	}
+	
 	static public ID getMessageRandID(){
 		return new ID(messageStart+Math.abs(rand.nextLong())%messageRange);
 	}
