@@ -2,6 +2,7 @@ package logiccenter;
 import datacenter.DataCenter;
 import entity.*;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import logiccenter.VirtualResult.*;
@@ -298,4 +299,17 @@ public interface LogicCenter {
 	 * @return
 	 */
 	public Group getGroup(ID gid);
+	
+	/**
+	 * 远程同步，本地同步先不做了，因为数据库的人没有
+	 * 搞定OUTLOOK
+	 * @return
+	 */
+	public RemoteSynResult removeSynchronize();
+	
+	/**
+	 * 程序退出之前要调用这个，否则会有线程
+	 * 被服务器锁着不放。
+	 */
+	public void logout() throws RemoteException;
 }

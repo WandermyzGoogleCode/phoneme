@@ -67,7 +67,7 @@ public class AllGroupsBox extends VirtualResult {
 	
 	public synchronized void updateAll(){
 		GetThread thread = new GetThread();
-		thread.run();
+		thread.start();
 	}
 	
 	public synchronized Map<ID, Group> getGroupMap(){

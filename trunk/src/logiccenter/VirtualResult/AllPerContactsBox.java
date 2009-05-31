@@ -17,6 +17,7 @@ import entity.UserInfo;
  * @author Administrator
  * 
  */
+//TODO 当前所有被授权联系人在本地没有存任何信息
 public class AllPerContactsBox extends VirtualResult {
 	private LogicCenter center;
 	private List<UserInfo> contacts;
@@ -53,7 +54,7 @@ public class AllPerContactsBox extends VirtualResult {
 			setError(ErrorType.NOT_LOGIN);
 		else {
 			GetThread thread = new GetThread();
-			thread.run();
+			thread.start();
 		}
 	}
 
@@ -68,6 +69,6 @@ public class AllPerContactsBox extends VirtualResult {
 
 	public synchronized void updateAll() {
 		GetThread thread = new GetThread();
-		thread.run();
+		thread.start();
 	}
 }
