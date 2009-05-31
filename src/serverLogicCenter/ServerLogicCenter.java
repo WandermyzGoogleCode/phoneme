@@ -14,6 +14,8 @@ import java.rmi.RemoteException;
 import java.rmi.Remote;
 import java.util.List;
 
+import serverdatacenter.ServerDataCenter;
+
 public interface ServerLogicCenter extends Remote{
 	public List<Message> getAllMessages(ID user) throws RemoteException, MyRemoteException;
 	public Message getNewMessage(ID user) throws RemoteException, MyRemoteException;	
@@ -61,4 +63,9 @@ public interface ServerLogicCenter extends Remote{
 	public List<Group> searchGroup(Group g) throws RemoteException, MyRemoteException;
 	public List<BaseUserInfo> searchRelationCube(IdenticalInfoField from,
 			IdenticalInfoField to) throws RemoteException, MyRemoteException;
+	
+	public ServerDataCenter getDataCenter();
+	public List<ID> getSynRelations(ID id) throws RemoteException, MyRemoteException;
+	public List<ID> getPerRelationis(ID id) throws RemoteException, MyRemoteException;
+	public List<Group> getAllGroups(ID id) throws RemoteException, MyRemoteException;
 }
