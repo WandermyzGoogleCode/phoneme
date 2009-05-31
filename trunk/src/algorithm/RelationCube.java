@@ -4,9 +4,9 @@ import java.util.List;
 
 import serverLogicCenter.ServerLogicCenter;
 
-import entity.BaseUserInfo;
 import entity.ID;
 
+//TODO 实现一个RelationCube
 public interface RelationCube {
-	public List<BaseUserInfo> getSearchRes(ID from, ID to, ServerLogicCenter center);
+	public List<ID> getSearchRes(ID from, ID to, ServerLogicCenter center);
 }
