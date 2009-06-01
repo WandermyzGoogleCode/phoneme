@@ -21,8 +21,9 @@ public class AllGroupsBox extends VirtualResult {
 		@Override
 		public void run() {
 			groups = new HashMap<ID, Group>();
-			for(Group g: center.getDataCenter().getAllGroups())
-				groups.put(g.getID(), g);
+			if (center.getDataCenter().getAllGroups() != null)
+				for(Group g: center.getDataCenter().getAllGroups())
+					groups.put(g.getID(), g);
 			setUpdateNow();
 		}
 	}
