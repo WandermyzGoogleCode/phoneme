@@ -34,7 +34,6 @@ public class GroupAppAdmitMessage extends Message {
 	public void proceed(LogicCenter center) {
 		center.getDataCenter().setGroup(group);
 		center.getDataCenter().setPermission(group.getID(), p);
-		center.getDataCenter().setVisibility(group.getID(), visibility);
 		center.getAllGroupsBox().editGroup(group);
 		proceeded = true;
 	}
