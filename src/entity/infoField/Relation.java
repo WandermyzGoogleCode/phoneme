@@ -119,4 +119,8 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	public int getMaxLength() {
 		return 200;
 	}
+	
+	public boolean isPersonal(){
+		return personal;
+	}
 }
