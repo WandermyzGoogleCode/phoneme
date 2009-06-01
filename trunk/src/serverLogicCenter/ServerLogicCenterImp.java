@@ -23,7 +23,7 @@ import algorithm.UserChecker;
 
 import logiccenter.VirtualResult.AddSynContactResult;
 
-import serverdatacenter.ServerDataCenter;
+import sdataCenter.ServerDataCenter;
 
 import entity.BaseUserInfo;
 import entity.BoolInfo;
