@@ -53,14 +53,6 @@ public interface DataCenter {
 	public ReturnType addPerRelationship(ID uid);
 	
 	/**
-	 * 设置当前用户到uid用户的关系可见性。uid是当前用户的同步联系人。
-	 * @param uid
-	 * @param visibility
-	 * @return
-	 */
-	public ReturnType setVisibility(ID uid, int visibility);
-	
-	/**
 	 * 删除被授权联系人关系
 	 * @param uid 被授权联系人的ID
 	 * @return
