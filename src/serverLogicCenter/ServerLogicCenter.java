@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.Remote;
 import java.util.List;
 
-import serverdatacenter.ServerDataCenter;
+import sdataCenter.ServerDataCenter;
 
 public interface ServerLogicCenter extends Remote{
 	public List<Message> getAllMessages(ID user) throws RemoteException, MyRemoteException;
