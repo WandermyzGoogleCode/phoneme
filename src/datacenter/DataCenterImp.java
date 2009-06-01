@@ -1101,12 +1101,6 @@ public class DataCenterImp implements DataCenter {
 	}
 
 	@Override
-	public ReturnType setVisibility(ID uid, int visibility) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<ID> getAllPerContactsID() {
 		// TODO Auto-generated method stub
 		List<ID> result=new ArrayList<ID>();
