@@ -25,8 +25,6 @@ public class SetVisibilityResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
 		BoolInfo res = center.getServer().setVisibility(center.getLoginUser().getID(), targetID, visibility);
-		if (res.isTrue())
-			center.getDataCenter().setVisibility(targetID, visibility);
 		return res;
 	}
 
