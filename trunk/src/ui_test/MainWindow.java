@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.AllContactsBox;
+import logiccenter.VirtualResult.AllPerContactsBox;
 import logiccenter.VirtualResult.GetStatResultResult;
 import logiccenter.VirtualResult.MessageBox;
 import logiccenter.VirtualResult.VirtualState;
@@ -25,6 +26,8 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -194,6 +197,7 @@ public class MainWindow
 	//private MessageBox messageBox;
 	public static LogicCenter logicCenter = LogicCenterImp.getInstance();
 	private Map<String, Integer> contactsCategory = new HashMap<String, Integer>();
+	private AllPerContactsBox allPermContactsBox;
 
 	// [end]
 
@@ -613,22 +617,13 @@ public class MainWindow
 		compositeMainStackLayout.topControl = compositeAddress;
 
 		labelAddressSearch = new Button(compositeAddress, SWT.NONE);
+		labelAddressSearch.addSelectionListener(new LabelAddressSearchSelectionListener());
 		final FormData fd_labelAddressSearch = new FormData();
 		fd_labelAddressSearch.top = new FormAttachment(toolBarAddress, 0, SWT.TOP);
 		labelAddressSearch.setLayoutData(fd_labelAddressSearch);
 		labelAddressSearch.setText("搜索");
-		labelAddressSearch.addSelectionListener(new SelectionAdapter()
-		{
-			public void widgetSelected(SelectionEvent e)
-			{
-				// MessageDialog.openInformation(shell, "hello", "regist");
-				// Shell regist=new Shell();
-				// regist.open();
-				// Dialog a=new Dialog(shell);
-				SearchLocalDialog r = new SearchLocalDialog(MainWindow.this, shell, SWT.None);
-				r.open();
-			}
-		});
+
+		
 		tabFolderAddress = new TabFolder(compositeAddress, SWT.NONE);
 		fd_labelAddressSearch.right = new FormAttachment(tabFolderAddress, 0, SWT.RIGHT);
 		final FormData fd_tabFolderAddress = new FormData();
@@ -642,6 +637,7 @@ public class MainWindow
 		tabItemAddressContact.setText("同步联系人");
 
 		treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER);
+		treeAddressContact.addMouseListener(new TreeAddressContactMouseListener());
 		treeAddressContact.addSelectionListener(new TreeAddressContactSelectionListener());
 		treeAddressContact.setSortColumn(null);
 		treeAddressContact.setHeaderVisible(true);
@@ -830,16 +826,44 @@ public class MainWindow
 	 */
 	private TreeItem getCurrentTreeItem()
 	{
-		TreeItem current = null;
+		TreeItem[] current = null;
 		if (tabFolderAddress.getSelection()[0] == tabItemAddressContact)
 		{
-			current = treeAddressContact.getSelection()[0];
+			current = treeAddressContact.getSelection();
 		} else if (tabFolderAddress.getSelection()[0] == tabItemAddressPermit)
 		{
-			current = treeAddressPermit.getSelection()[0];
+			current = treeAddressPermit.getSelection();
 		}
-
-		return current;
+		
+		if(current!=null && current.length>0)
+		{
+			return current[0];
+		}
+		else
+			return null;
+		
+	}
+	
+	/**
+	 * 取得当前所在的选项卡，可能是同步联系人或被授权联系人
+	 * @return
+	 */
+	private UserInfoTableType getCurrentContactTab()
+	{
+		if(tabFolderAddress.getSelection().length == 0) return UserInfoTableType.Null;
+		
+		if (tabFolderAddress.getSelection()[0] == tabItemAddressContact)
+		{
+			return UserInfoTableType.Synchronization;
+		}
+		else if(tabFolderAddress.getSelection()[0] == tabItemAddressPermit)
+		{
+			return UserInfoTableType.Permission;
+		}
+		else
+		{
+			return UserInfoTableType.Null;
+		}
 	}
 
 	/**
@@ -854,14 +878,17 @@ public class MainWindow
 		// [end]
 
 		// [start] 同步联系人
-		
-		ContactRefreshObserver observer = new ContactRefreshObserver();
 		allContactsBox = logicCenter.getAllContactsBox();
-		allContactsBox.addObserver(observer);
+		allContactsBox.addObserver(new ContactRefreshObserver());
 		// TODO ERRORED的处理
 		// [end]
 
 		// [start] 被授权联系人
+		//TODO: 被授权联系人
+		//allPermContactsBox = logicCenter.getAllPerContatcsBox();
+		//allPermContactsBox.addObserver(new ContactPermRefreshObserver());
+		
+		
 		treeAddressPermitItemNoGroup = new TreeItem(treeAddressPermit, SWT.NONE);
 		treeAddressPermitItemNoGroup.setText("未分组");
 
@@ -876,11 +903,11 @@ public class MainWindow
 		// [end]
 
 		// [start] MessageBox
-		// //TODO 正常情况下，应该登录后获取MessageBox，当前只是测试
+		// // 正常情况下，应该登录后获取MessageBox，当前只是测试
 		// MessageBoxObserver mObserver = new MessageBoxObserver();
 		// messageBox = logicCenter.getMessageBox();
 		// messageBox.addObserver(mObserver);
-		// //TODO ERRORED的处理
+		// // ERRORED的处理
 		// [end]
 	}
 
@@ -1225,24 +1252,18 @@ public class MainWindow
 	private class ToolItemAddressAddContactSelectionListener extends SelectionAdapter
 	{
 		public void widgetSelected(final SelectionEvent e)
-		{
-			// TODO: 添加联系人
-			AddContactDialog addContac = new AddContactDialog(shell, SWT.None);
-			addContac.open();
-		}
-	}
-
-	/**
-	 * 添加分组
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class ToolItemAddressAddGroupSelectionListener extends SelectionAdapter
-	{
-		public void widgetSelected(final SelectionEvent e)
-		{
-			// TODO: 添加分组
+		{	
+			if(getCurrentContactTab() == UserInfoTableType.Synchronization)
+			{
+				UserInfo newUser = UserInfo.getNewLocalUser();
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.Synchronization, newUser);
+				userInfoDialog.OpenEditInfo();
+				//!TODO 如何判断一个UserInfo是同步联系人还是被授权联系人？
+			}
+			else if(getCurrentContactTab() == UserInfoTableType.Permission)
+			{
+				
+			}
 		}
 	}
 
@@ -1260,12 +1281,12 @@ public class MainWindow
 
 			if (current != null)
 			{
-				if (current.getParentItem() == null)
+				if (current.getParentItem() == null)	//编辑分组
 				{
 					if (current != treeAddressContactItemNoGroup)
 					{
 						InfoFieldFactory factory = InfoFieldFactory.getFactory();
-						EditGroupDialog editGroupDialog = new EditGroupDialog(shell);
+						EditCategoryDialog editGroupDialog = new EditCategoryDialog(shell);
 						editGroupDialog.SetCategoryName(current.getText());
 						if (editGroupDialog.open() == 0)
 						{
@@ -1280,18 +1301,13 @@ public class MainWindow
 						}
 					}
 				}
-				else
+				else	//编辑联系人
 				{
-					// TODO: 编辑联系人
 					UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
-							(tabFolderAddress.getSelection()[0] == tabItemAddressContact) ? 
-									UserInfoTableType.Synchronization : UserInfoTableType.Permission,
+							(getCurrentContactTab() == UserInfoTableType.Permission) ? 
+									UserInfoTableType.Permission : UserInfoTableType.Synchronization,
 							(UserInfo)current.getData());
-					if(userInfoDialog.open()==0)
-					{
-						userInfoDialog.modifyUser();
-						logicCenter.editContactInfo((UserInfo)current.getData());
-					}
+					userInfoDialog.OpenEditInfo();
 					
 //					// Debug:
 //					int ind = current.getParentItem().indexOf(current);
@@ -1320,9 +1336,11 @@ public class MainWindow
 
 			if (current != null && current.getParentItem() != null)
 			{
-				// TODO: 编辑联系人权限
-				// Debug:
-				MessageDialog.openInformation(shell, "编辑联系人权限", current.getText());
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
+						(getCurrentContactTab() == UserInfoTableType.Permission) ? 
+								UserInfoTableType.Permission : UserInfoTableType.Synchronization,
+						(UserInfo)current.getData());
+				userInfoDialog.OpenPermission();
 			}
 		}
 	}
@@ -1341,25 +1359,27 @@ public class MainWindow
 
 			if (current != null)
 			{
-				if (current.getParentItem() == null && 
-						MessageDialog.openConfirm(shell, "确认删除", String.format("你确实要删除分组\"%s\"吗？", current.getText()))
-						)
+				if (current.getParentItem() == null)
 				{
-					for(TreeItem item : current.getItems())
+					if (MessageDialog.openConfirm(shell, "确认删除", String.format("你确实要删除分组\"%s\"吗？", current.getText())))
 					{
-						UserInfo user = (UserInfo)item.getData();
-						user.getCustomInfo().setInfoField("Category",
-								InfoFieldFactory.getFactory().makeInfoField("Category", null));
-						logicCenter.editContactInfo(user);
+						for (TreeItem item : current.getItems())
+						{
+							UserInfo user = (UserInfo) item.getData();
+							user.getCustomInfo().setInfoField("Category",
+									InfoFieldFactory.getFactory().makeInfoField("Category", null));
+							logicCenter.editContactInfo(user);
+						}
 					}
 				}
 				else
 				{
-					if (MessageDialog.openConfirm(shell, "确认删除", String.format("你确实要删除联系人\"%s\"吗？", current.getText())))
-					{
-						UserInfo user = (UserInfo)current.getData();
-						logicCenter.removeContactInfo(user.getBaseInfo().getID());
-					}
+					//TODO: 删除联系人
+					UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
+							(getCurrentContactTab() == UserInfoTableType.Permission) ? 
+									UserInfoTableType.Permission : UserInfoTableType.Synchronization,
+							(UserInfo)current.getData());
+					userInfoDialog.open();
 				}
 			}
 		}
@@ -1394,8 +1414,6 @@ public class MainWindow
 				{
 					if (item.getSelection())
 					{
-						// TODO: 设置当前联系人的分组
-						// Debug:
 						InfoField cate = factory.makeInfoField("Category", item.getText());
 						user.getCustomInfo().setInfoField("Category", cate);
 						//MessageDialog.openInformation(shell, "设置分组", "id = " + ((Integer) item.getData()).toString());
@@ -1419,7 +1437,7 @@ public class MainWindow
 		{
 				TreeItem current = getCurrentTreeItem();
 				
-				EditGroupDialog editGroupDialog = new EditGroupDialog(shell);
+				EditCategoryDialog editGroupDialog = new EditCategoryDialog(shell);
 				if(editGroupDialog.open() == 0)
 				{
 					InfoFieldFactory factory = InfoFieldFactory.getFactory();
@@ -1468,11 +1486,12 @@ public class MainWindow
 	 * @author Wander
 	 * 
 	 */
-	private class TextAddressSearchModifyListener implements ModifyListener
-	{
-		public void modifyText(final ModifyEvent e)
+	private class LabelAddressSearchSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
 		{
-			// TODO: 在本地搜索联系人，最好可以搜拼音（考虑找字库）
+			UserInfo user = new UserInfo();
+			UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "本地搜索", UserInfoTableType.SearchForm, user);
+			userInfoDialog.OpenEditInfo();
 		}
 	}
 
@@ -1492,6 +1511,26 @@ public class MainWindow
 				}
 			}
 		});
+	}
+	
+	
+	private class TreeAddressContactMouseListener extends MouseAdapter {
+		public void mouseDoubleClick(final MouseEvent e)
+		{
+			TreeItem current = getCurrentTreeItem();
+
+			if (current != null)
+			{
+				if (current.getParentItem() != null)
+				{
+					UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
+							(tabFolderAddress.getSelection()[0] == tabItemAddressContact) ? 
+									UserInfoTableType.Synchronization : UserInfoTableType.Permission,
+							(UserInfo)current.getData());
+					userInfoDialog.open();
+				}
+			}
+		}
 	}
 
 	// [end]
@@ -1544,12 +1583,14 @@ public class MainWindow
 		}
 	}
 
+
 	// [end]
 
 	// [start] Observer相关事件
 	class RefreshContactTask implements Runnable
 	{
 		private List<UserInfo> users;
+		private boolean isPerm;
 
 		@Override
 		public void run()
@@ -1565,8 +1606,10 @@ public class MainWindow
 			 * treeAddressContact.setHeaderVisible(true);
 			 * tabItemAddressContact.setControl(treeAddressContact);
 			 */
-					
-			treeAddressContact.removeAll();
+			Tree currentTree = isPerm ? treeAddressPermit : treeAddressContact;
+			TreeItem currentNoGroupItem = isPerm ? treeAddressPermitItemNoGroup : treeAddressContactItemNoGroup;		
+			
+			currentTree.removeAll();
 			contactsCategory.clear();
 
 			List<TreeItem> cateList = new ArrayList<TreeItem>();
@@ -1581,16 +1624,16 @@ public class MainWindow
 				String tag = users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
 				String bir = users.get(i).getBaseInfo().getInfoField("Birthday").getStringValue();
 
-				if(treeAddressContactItemNoGroup == null || treeAddressContactItemNoGroup.isDisposed())
+				if(currentNoGroupItem == null || currentNoGroupItem.isDisposed())
 				{
-					treeAddressContactItemNoGroup = new TreeItem(treeAddressContact, SWT.NONE);
-					treeAddressContactItemNoGroup.setText("未分组");
+					currentNoGroupItem = new TreeItem(treeAddressContact, SWT.NONE);
+					currentNoGroupItem.setText("未分组");
 				}
 				
 				TreeItem parentItem;
 				if (tag == null || tag.isEmpty())
 				{
-					parentItem = treeAddressContactItemNoGroup;
+					parentItem = currentNoGroupItem;
 				}
 				else if (contactsCategory.containsKey(tag))
 				{
@@ -1598,7 +1641,7 @@ public class MainWindow
 				}
 				else
 				{
-					parentItem = new TreeItem(treeAddressContact, SWT.NONE);
+					parentItem = new TreeItem(currentTree, SWT.NONE);
 					cateList.add(parentItem);
 					parentItem.setText(tag);
 					contactsCategory.put(tag, cateList.size()-1);
@@ -1607,7 +1650,7 @@ public class MainWindow
 				current.setData(users.get(i));
 			}
 			
-			for(TreeItem item : treeAddressContact.getItems())
+			for(TreeItem item : currentTree.getItems())
 			{
 				item.setExpanded(true);
 			}
@@ -1641,6 +1684,13 @@ public class MainWindow
 		public RefreshContactTask(List<UserInfo> users)
 		{
 			this.users = users;
+			this.isPerm = false;
+		}
+		
+		public  RefreshContactTask(List<UserInfo> users, boolean isPerm)
+		{
+			this.users = users;
+			this.isPerm = isPerm;
 		}
 	}
 
@@ -1672,6 +1722,16 @@ public class MainWindow
 		{
 			AllContactsBox allContactsBox = (AllContactsBox) o;
 			Display.getDefault().syncExec(new RefreshContactTask(allContactsBox.getContacts()));
+		}
+	}
+	
+	class ContactPermRefreshObserver implements Observer
+	{
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			AllPerContactsBox allPerContactsBox = (AllPerContactsBox) o;
+			Display.getDefault().syncExec(new RefreshContactTask(allPerContactsBox.getContacts(),true));
 		}
 	}
 
