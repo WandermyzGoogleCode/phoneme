@@ -94,6 +94,7 @@ public class DataCenterImp implements DataCenter {
 			if (userInfoTableExist == false) {
 				// 建立UserInfo信息表
 				//TODO CRITICAL 当前的USERID已经变成了LONG
+				//TODO CRITICAL 请用字段的getMaxLength来设定字符串长度
 				sql = "CREATE TABLE UserInfo(UserID int not null";
 				while (fieldNameIter.hasNext()) {
 					sql += ("," + fieldNameIter.next() + " varchar(50)");
@@ -637,6 +638,7 @@ public class DataCenterImp implements DataCenter {
 		return null;
 	}
 
+	//TODO CRITICAL 注意群组中的成员也会更新
 	@Override
 	public ReturnType setGroup(Group g) {
 		groupWriteBuffer.add(g);
