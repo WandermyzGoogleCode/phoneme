@@ -26,12 +26,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+
+import algorithm.LCSQUserInfoMatcher;
+import algorithm.LCSTUserInfoMatcher;
+import algorithm.SimpleUserInfoMatcher;
+import algorithm.UserInfoMatcher;
 
 import entity.UserInfo;
 import entity.infoField.BaseInfoFieldName;
@@ -49,6 +56,8 @@ import ui_test.UserInfoTable.UserInfoTableType;
 public class UserInfoDialog extends Dialog
 {
 	//[start] Component Properties
+	private Scale scaleSearchThreshold;
+	private Label labelSearchThreshold;
 	private Label labelSearchStrategy;
 	private Combo comboSearchStrategy;
 	private Label labelName;
@@ -78,6 +87,9 @@ public class UserInfoDialog extends Dialog
 	//private UserInfo newUser;
 	private List<UserInfoTableElem> userInfoTableElems;
 	private Operate operate = Operate.Null;
+	
+	private UserInfoMatcher searchMatcher = null;
+	private double searchThreshold = 0;
 	
 	private enum Operate
 	{
@@ -181,10 +193,11 @@ public class UserInfoDialog extends Dialog
 
 		compositeInfo = new Composite(tabFolder, SWT.NONE);
 		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
+		gridLayout.numColumns = 4;
 		compositeInfo.setLayout(gridLayout);
 		tabItemInfo.setControl(compositeInfo);
 
+		//[start]搜索
 		if(userInfoTableType == UserInfoTableType.SearchForm)
 		{
 			labelSearchStrategy = new Label(compositeInfo, SWT.NONE);
@@ -195,14 +208,25 @@ public class UserInfoDialog extends Dialog
 			comboSearchStrategy = new Combo(compositeInfo, SWT.NONE);
 			final GridData gd_comboSearchStrategy = new GridData();
 			comboSearchStrategy.setLayoutData(gd_comboSearchStrategy);
+			
+			comboSearchStrategy.add("Simple", 0);
+			comboSearchStrategy.add("LCSQ", 1);
+			comboSearchStrategy.add("LCST", 2);
+			comboSearchStrategy.select(0);
+
+			labelSearchThreshold = new Label(compositeInfo, SWT.NONE);
+			labelSearchThreshold.setText("精确度");
+			scaleSearchThreshold = new Scale(compositeInfo, SWT.NONE);
+			scaleSearchThreshold.setSelection(50);
 		}
+		//[end]
 
 		tableViewerInfo = new TableViewer(compositeInfo, SWT.BORDER);
 		
 		tableInfo = tableViewerInfo.getTable();
 		tableInfo.setLinesVisible(true);
 		tableInfo.setHeaderVisible(true);
-		final GridData gd_tableInfo = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
+		final GridData gd_tableInfo = new GridData(SWT.RIGHT, SWT.FILL, true, true, 4, 1);
 		tableInfo.setLayoutData(gd_tableInfo);
 
 		tableColumnField = new TableColumn(tableInfo, SWT.NONE);
@@ -229,6 +253,10 @@ public class UserInfoDialog extends Dialog
 		tableViewerInfo.setColumnProperties(new String[] {"field", "value"});
 		tableViewerInfo.setCellEditors(cellEditors);
 		tableViewerInfo.setCellModifier(new UserInfoCellModifier(shell, tableViewerInfo, userInfoTableType));
+		new Label(compositeInfo, SWT.NONE);
+		new Label(compositeInfo, SWT.NONE);
+		new Label(compositeInfo, SWT.NONE);
+		new Label(compositeInfo, SWT.NONE);
 		new Label(compositeInfo, SWT.NONE);
 		//[end]
 		
@@ -315,29 +343,73 @@ public class UserInfoDialog extends Dialog
 		}
 	}	
 	
+	/**
+	 * 打开对话框并直接跳转到“个人资料”选项卡
+	 */
 	public void OpenEditInfo()
 	{
 		operate = Operate.Edit;
 		super.open();
 	}
 	
+	/**
+	 * 打开对话框并直接跳转到“权限”选项卡
+	 */
 	public void OpenPermission()
 	{
 		operate = Operate.Permission;
 		super.open();
 	}
 	
+	/**
+	 * 删除指定用户
+	 */
 	public void OpenDelete()
 	{
 		operate = Operate.Delete;
 		super.open();
 	}
 	
+	/**
+	 * 返回搜索策略，默认为Simple
+	 * @return
+	 */
+	public UserInfoMatcher getStrategy()
+	{
+		return searchMatcher;
+	}
+	
+	
+	
 	protected void buttonPressed(int buttonId)
 	{
 		if (buttonId == IDialogConstants.OK_ID) {
-			modifyUser();
-			logicCenter.editContactInfo(user);
+			if(userInfoTableType == UserInfoTableType.Synchronization)
+			{
+				modifyUser();
+				logicCenter.editContactInfo(user);
+			}
+			else if (userInfoTableType == UserInfoTableType.SearchForm)
+			{
+				modifyUser();
+				searchThreshold = (double)scaleSearchThreshold.getSelection() / (double)scaleSearchThreshold.getMaximum();
+				switch(comboSearchStrategy.getSelectionIndex())
+				{
+				case 0:
+					searchMatcher = new SimpleUserInfoMatcher(searchThreshold);
+					break;
+				case 1:
+					searchMatcher = new LCSQUserInfoMatcher(searchThreshold);
+					break;
+				case 2:
+					searchMatcher = new LCSTUserInfoMatcher(searchThreshold); 
+					break;
+				default:
+					searchMatcher = new SimpleUserInfoMatcher(searchThreshold);
+					break;
+				}
+			}
+			
 			
 			//return;
 		}
