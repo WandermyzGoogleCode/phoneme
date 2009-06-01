@@ -4,7 +4,7 @@ import entity.*;
 import entity.infoField.*;
 import entity.message.Message;
 import algorithm.*;
-
+   
 public interface ServerDataCenter {
 	/**
 	 * 将info上的IdenticalInfoField绑定到该注册用户的id上，以便登录的时候可以通过
