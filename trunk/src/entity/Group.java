@@ -48,8 +48,8 @@ public class Group implements Serializable {
 		users = new HashSet<ID>();
 		fieldMap = new HashMap<String, InfoField>();
 		InfoFieldFactory factory = InfoFieldFactory.getFactory();
-		List<EmptyInfoField> fields = factory.makeAllGroupEmptyField();
-		for (EmptyInfoField field : fields)
+		List<InfoField> fields = factory.makeAllGroupEmptyField();
+		for (InfoField field : fields)
 			fieldMap.put(field.getName(), field);
 	}
 
@@ -65,7 +65,7 @@ public class Group implements Serializable {
 		this.users.add(id);
 	}
 	
-	public void removeGromGroup(ID id){
+	public void removeFromGroup(ID id){
 		this.users.remove(id);
 	}
 

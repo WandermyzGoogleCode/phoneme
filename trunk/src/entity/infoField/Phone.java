@@ -7,11 +7,12 @@ public class Phone extends EmptyPhone {
 	 * 
 	 */
 	private static final long serialVersionUID = -7178975888690500192L;
+	public static final int maxLength = 20;
 	private String number;
 
 	public static boolean check(String number){
 		//TODO 有空的话，更详细的判断
-		return (number != null && Pattern.matches("(\\d+\\-)?\\d+", number));
+		return (number != null && number.length() <= maxLength && Pattern.matches("(\\d+\\-)?\\d+", number));
 	}
 	
 	public Phone(String number)

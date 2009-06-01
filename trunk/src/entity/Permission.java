@@ -44,8 +44,8 @@ public class Permission implements Serializable{
 	{
 		fields = new HashMap<String, Boolean>();
 		InfoFieldFactory factory = InfoFieldFactory.getFactory();
-		List<EmptyInfoField> ifields = factory.makeAllBaseEmptyField();
-		for(EmptyInfoField ifield: ifields)
+		List<InfoField> ifields = factory.makeAllBaseEmptyField();
+		for(InfoField ifield: ifields)
 			fields.put(ifield.getName(), false);
 	}
 	

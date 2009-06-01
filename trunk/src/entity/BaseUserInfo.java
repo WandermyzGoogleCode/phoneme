@@ -37,8 +37,8 @@ public class BaseUserInfo implements Serializable{
 		this.id = ID.getNullID();
 		fieldMap = new HashMap<String, InfoField>();
 		InfoFieldFactory factory = InfoFieldFactory.getFactory();
-		List<EmptyInfoField> fields = factory.makeAllBaseEmptyField();
-		for(EmptyInfoField field: fields)
+		List<InfoField> fields = factory.makeAllBaseEmptyField();
+		for(InfoField field: fields)
 			fieldMap.put(field.getName(), field);
 	}
 	public void setID(ID id){

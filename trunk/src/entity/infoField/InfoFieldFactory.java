@@ -100,36 +100,25 @@ public class InfoFieldFactory {
 	private InfoFieldFactory(){
 	}
 	
-	public List<EmptyInfoField> makeAllBaseEmptyField()
+	public List<InfoField> makeAllBaseEmptyField()
 	{
-		ArrayList<EmptyInfoField> res = new ArrayList<EmptyInfoField>();
-		res.add(new EmptyAddress());
-		res.add(new EmptyBirthday());
-		res.add(new EmptyCellphone());
-		res.add(new EmptyCompany());
-		res.add(new EmptyEmailAddr());
-		res.add(new EmptyImg());
-		res.add(new EmptyName());
-		res.add(new EmptyPhone());
-		res.add(new EmptyPosition());
-		res.add(new EmptyQQNumber());
-		res.add(new EmptyWeb());
+		ArrayList<InfoField> res = new ArrayList<InfoField>();
+		for(BaseInfoFieldName name: BaseInfoFieldName.values())
+			res.add(makeInfoField(name.name(), ""));
 		return res;
 	}
 	
-	public List<EmptyInfoField> makeAllCustomEmptyField()
+	public List<InfoField> makeAllCustomEmptyField()
 	{
-		ArrayList<EmptyInfoField> res = new ArrayList<EmptyInfoField>();
-		res.add(new EmptyNickName());
-		res.add(new EmptyRemarks());
-		res.add(new EmptyTag());
-		res.add(new Relation());
-		return res;		
+		ArrayList<InfoField> res = new ArrayList<InfoField>();
+		for(CustomInfoFieldName name: CustomInfoFieldName.values())
+			res.add(makeInfoField(name.name(), ""));
+		return res;
 	}
 	
-	public List<EmptyInfoField> makeAllGroupEmptyField()
+	public List<InfoField> makeAllGroupEmptyField()
 	{
-		ArrayList<EmptyInfoField> res = new ArrayList<EmptyInfoField>();
+		ArrayList<InfoField> res = new ArrayList<InfoField>();
 		res.add(new EmptyGroupName());
 		res.add(new EmptyGroupDescription());
 		res.add(new EmptyTag());

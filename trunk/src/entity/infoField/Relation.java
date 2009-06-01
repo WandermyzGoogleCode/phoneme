@@ -31,6 +31,7 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	 * 
 	 */
 	private static final long serialVersionUID = -1699245995240789623L;
+	public static final int maxLength = 200;
 	List<String> groups = new ArrayList<String>();
 	boolean personal = false;
 	boolean removed = false;
@@ -62,8 +63,13 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 		if (!groups.isEmpty())
 		{
 			res += "||Groups:";
-			for(String s: groups)
+			for(String s: groups){
+				if (res.length()+4+s.length() > maxLength){
+					res += "...";
+					break;
+				}
 				res += " "+s;
+			}
 		}
 		return res;
 	}
@@ -107,5 +113,10 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 		r.addGroup("test");
 		r.addGroup("test");
 		System.out.println(r);
+	}
+
+	@Override
+	public int getMaxLength() {
+		return 200;
 	}
 }

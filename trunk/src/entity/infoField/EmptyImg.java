@@ -16,4 +16,9 @@ public class EmptyImg extends EmptyInfoField implements MultimediaInfoField {
 	public String getName() {
 		return "Image";
 	}
+
+	@Override
+	public int getMaxLength() {
+		return Img.maxLength;
+	}
 }

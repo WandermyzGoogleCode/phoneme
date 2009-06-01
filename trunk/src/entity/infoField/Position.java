@@ -5,7 +5,7 @@ public class Position extends EmptyPosition {
 	 * 
 	 */
 	private static final long serialVersionUID = 4354494388069835483L;
-	private static int maxLength = 500;
+	public static int maxLength = 50;
 	private String position;
 
 	public static boolean check(String position){

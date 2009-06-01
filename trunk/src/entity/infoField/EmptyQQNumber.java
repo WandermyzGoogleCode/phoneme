@@ -6,7 +6,7 @@ package entity.infoField;
  * @author Administrator
  *
  */
-public class EmptyQQNumber extends EmptyInfoField implements IdenticalInfoField {
+public abstract class EmptyQQNumber extends EmptyInfoField implements IdenticalInfoField {
 
 	/**
 	 * 
@@ -16,6 +16,11 @@ public class EmptyQQNumber extends EmptyInfoField implements IdenticalInfoField 
 	@Override
 	public String getName() {
 		return "QQNumber";
+	}
+
+	@Override
+	public int getMaxLength() {
+		return QQNumber.maxLength;
 	}
 
 }

@@ -5,7 +5,7 @@ public class GroupName extends EmptyGroupName {
 	 * 
 	 */
 	private static final long serialVersionUID = -8471578597892895255L;
-	private static final int maxLength = 100;
+	public static final int maxLength = 50;
 	private static final String nullName = "NoName";
 	private String name;
 

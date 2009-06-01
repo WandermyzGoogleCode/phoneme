@@ -19,4 +19,9 @@ public class EmptyName extends EmptyInfoField implements IndexedInfoField
 		return "Name";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return Name.maxLength;
+	}
+
 }

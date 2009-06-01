@@ -7,10 +7,11 @@ public class QQNumber extends EmptyQQNumber {
 	 * 
 	 */
 	private static final long serialVersionUID = -3633220370059662405L;
+	public static final int maxLength = 20;
 	private String number;
 
 	public static boolean check(String number){
-		return (number != null && Pattern.matches("\\d+", number));
+		return (number != null && number.length() <= maxLength && Pattern.matches("\\d+", number));
 	}
 	
 	public QQNumber(String qnum)
@@ -35,5 +36,10 @@ public class QQNumber extends EmptyQQNumber {
 	@Override
 	public boolean isEmpty() {
 		return number.equals("");
+	}
+
+	@Override
+	public String toIDString() {
+		return getName()+":"+getStringValue();
 	}
 }

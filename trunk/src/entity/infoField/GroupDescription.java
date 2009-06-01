@@ -5,7 +5,7 @@ public class GroupDescription extends EmptyGroupDescription {
 	 * 
 	 */
 	private static final long serialVersionUID = -135322858855669388L;
-	private static final int maxLength = 5000;
+	public static final int maxLength = 1000;
 	private String description;
 
 	public static boolean check(String desc){

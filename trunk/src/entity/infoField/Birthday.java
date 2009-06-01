@@ -12,6 +12,7 @@ public class Birthday extends EmptyBirthday {
 	 * 
 	 */
 	private static final long serialVersionUID = -3884258647822327940L;
+	public static final int maxLength = 20;
 	private static final String nullData = "";
 	private String day;
 	private int y, m, d;
@@ -21,7 +22,7 @@ public class Birthday extends EmptyBirthday {
 	
 	public static boolean check(String data){
 		//TODO 有空的话，加上更加精确的判断
-		if (data == null)
+		if (data == null || data.length() > maxLength)
 			return false;
 		return Pattern.matches("\\d+-\\d+-\\d+", data);
 	}

@@ -18,4 +18,9 @@ public class EmptyPhone extends EmptyInfoField implements IndexedInfoField
 		return "Phone";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return Phone.maxLength;
+	}
+
 }

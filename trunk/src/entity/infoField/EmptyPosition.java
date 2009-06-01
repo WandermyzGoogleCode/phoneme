@@ -18,4 +18,9 @@ public class EmptyPosition extends EmptyInfoField implements IndexedInfoField
 		return "Position";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return Position.maxLength;
+	}
+
 }

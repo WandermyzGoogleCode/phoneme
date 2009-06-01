@@ -7,5 +7,5 @@ package entity.infoField;
  *
  */
 public interface IdenticalInfoField extends InfoField {
-
+	String toIDString();
 }

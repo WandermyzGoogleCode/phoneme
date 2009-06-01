@@ -6,7 +6,7 @@ public class Web extends EmptyWeb {
 	 */
 	private static final long serialVersionUID = 7376365384406568419L;
 	private String web;
-	private static final int maxLength = 500;
+	public static final int maxLength = 500;
 	
 	public static boolean check(String web){
 		return (web != null && web.length() <= maxLength);
