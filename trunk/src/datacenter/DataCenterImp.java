@@ -1109,19 +1109,100 @@ public class DataCenterImp implements DataCenter {
 	@Override
 	public List<ID> getAllPerContactsID() {
 		// TODO Auto-generated method stub
-		return null;
+		List<ID> result=new ArrayList<ID>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection connection = (Connection) DriverManager
+					.getConnection(url);
+			connection.setAutoCommit(false);
+			Statement statement = (Statement) connection.createStatement();
+			String sql = "SELECT UserID FROM UserInfo WHERE WhetherPer=1";
+			ResultSet allUserID = statement.executeQuery(sql);
+			while(allUserID.next()){
+				result.add(new ID(allUserID.getLong(1)));
+			}
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override
 	public List<ID> getAllSynContactsID() {
 		// TODO Auto-generated method stub
-		return null;
+		List<ID> result=new ArrayList<ID>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection connection = (Connection) DriverManager
+					.getConnection(url);
+			connection.setAutoCommit(false);
+			Statement statement = (Statement) connection.createStatement();
+			String sql = "SELECT UserID FROM UserInfo WHERE WhetherSync=1";
+			ResultSet allUserID = statement.executeQuery(sql);
+			while(allUserID.next()){
+				result.add(new ID(allUserID.getLong(1)));
+			}
+		}catch(Exception ex){
+			System.out.println(ex);
+			ex.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override
 	public List<Group> getAllGroups() {
 		// TODO Auto-generated method stub
-		return null;
+		List<Group> result = new ArrayList<Group>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection connection = (Connection) DriverManager
+					.getConnection(url);
+			connection.setAutoCommit(false);
+			Statement statement = (Statement) connection.createStatement();
+			String sql = "SELECT GroupID FROM GroupInfo";
+			ResultSet allGroupID = statement.executeQuery(sql);
+			// 一个表项代表一个group字段的所有用户的值
+			Map<String, ResultSet> groupFieldList = new HashMap<String, ResultSet>();
+			String sql1 = "SELECT ? FROM GroupInfo";
+			String sql2 = "SELECT UserID FROM GroupMember WHERE GroupID=?";
+			PreparedStatement pstatement1 = (PreparedStatement) connection
+					.prepareStatement(sql1);
+			PreparedStatement pstatement2 = (PreparedStatement) connection
+					.prepareStatement(sql2);
+			Iterator<String> iter = new Group().getKeySet().iterator();
+			while (iter.hasNext()) {
+				String temp = iter.next();
+				pstatement1.setString(1, temp);
+				groupFieldList.put(temp, pstatement1.executeQuery());
+			}
+			while (allGroupID.next()) {
+				int groupID = allGroupID.getInt(1);
+				Group group = new Group();
+				group.setID(new ID(groupID));
+				pstatement2.setInt(1, groupID);
+				ResultSet idRs = pstatement2.executeQuery();
+				while (idRs.next()) {
+					group.addToGroup(new ID(idRs.getInt(1)));
+				}
+				Iterator<String> listIter = groupFieldList.keySet().iterator();
+				while (listIter.hasNext()) {
+					// 设置group的各个字段
+					String temp = listIter.next();
+					groupFieldList.get(temp).next();// 此处可能有问题
+					group.setInfoField(temp, InfoFieldFactory.getFactory()
+							.makeInfoField(temp,
+									groupFieldList.get(temp).getString(1)));
+				}
+				result.add(group);
+			}
+
+		} catch (Exception ex) {
+			System.out.println(ex);
+			ex.printStackTrace();
+			System.exit(0);
+		}
+		return result;
 	}
 
 }
