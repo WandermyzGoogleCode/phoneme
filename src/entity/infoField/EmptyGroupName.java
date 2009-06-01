@@ -17,4 +17,9 @@ public class EmptyGroupName extends EmptyInfoField implements IndexedInfoField {
 		return "GroupName";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return GroupName.maxLength;
+	}
+
 }

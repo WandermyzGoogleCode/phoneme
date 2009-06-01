@@ -8,7 +8,7 @@ package entity.infoField;
  * @author Administrator
  *
  */
-public class EmptyCellphone extends EmptyInfoField implements IdenticalInfoField 
+public abstract class EmptyCellphone extends EmptyInfoField implements IdenticalInfoField 
 {
 
 	/**
@@ -19,5 +19,10 @@ public class EmptyCellphone extends EmptyInfoField implements IdenticalInfoField
 	@Override
 	public String getName() {
 		return "Cellphone";
+	}
+
+	@Override
+	public int getMaxLength() {
+		return Cellphone.maxLength;
 	}
 }

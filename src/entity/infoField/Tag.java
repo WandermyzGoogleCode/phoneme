@@ -6,7 +6,7 @@ public class Tag extends EmptyTag {
 	 */
 	private static final long serialVersionUID = -7120471122733906974L;
 	private String tag;
-	private static final int maxLength = 50;
+	public static final int maxLength = 50;
 	
 	public static boolean check(String tag){
 		return (tag != null && tag.length() <= maxLength);

@@ -12,4 +12,9 @@ public class EmptyTag extends EmptyInfoField implements IndexedInfoField {
 		return "Category";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return Tag.maxLength;
+	}
+
 }

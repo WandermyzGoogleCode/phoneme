@@ -12,4 +12,9 @@ public class EmptyBirthday extends EmptyInfoField implements IndexedInfoField
 	public String getName() {
 		return "Birthday";
 	}
+
+	@Override
+	public int getMaxLength() {
+		return Birthday.maxLength;
+	}
 }

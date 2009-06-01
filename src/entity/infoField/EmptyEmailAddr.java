@@ -1,6 +1,6 @@
 package entity.infoField;
 
-public class EmptyEmailAddr extends EmptyInfoField implements IdenticalInfoField 
+public abstract class EmptyEmailAddr extends EmptyInfoField implements IdenticalInfoField 
 {
 
 	/**
@@ -11,5 +11,10 @@ public class EmptyEmailAddr extends EmptyInfoField implements IdenticalInfoField
 	@Override
 	public String getName() {
 		return "EmailAddress";
+	}
+
+	@Override
+	public int getMaxLength() {
+		return EmailAddr.maxLength;
 	}
 }

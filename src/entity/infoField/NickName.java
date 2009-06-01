@@ -5,7 +5,7 @@ public class NickName extends EmptyNickName {
 	 * 
 	 */
 	private static final long serialVersionUID = -3947844432005571211L;
-	private static int maxLength = 200;
+	public static int maxLength = 50;
 	private String name;
 
 	public static boolean check(String data){

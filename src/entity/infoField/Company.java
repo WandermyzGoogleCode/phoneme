@@ -6,7 +6,7 @@ public class Company extends EmptyCompany {
 	 */
 	private static final long serialVersionUID = 9079041943593432133L;
 
-	private static int maxLength = 500;
+	public static int maxLength = 200;
 
 	private String company;
 

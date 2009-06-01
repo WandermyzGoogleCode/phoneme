@@ -22,8 +22,8 @@ public class CustomUserInfo {
 	{
 		fieldMap = new HashMap<String, InfoField>();
 		InfoFieldFactory factory = InfoFieldFactory.getFactory();
-		List<EmptyInfoField> fields = factory.makeAllCustomEmptyField();
-		for(EmptyInfoField field: fields)
+		List<InfoField> fields = factory.makeAllCustomEmptyField();
+		for(InfoField field: fields)
 			fieldMap.put(field.getName(), field);		
 	}
 

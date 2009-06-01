@@ -17,4 +17,9 @@ public class EmptyWeb extends EmptyInfoField implements IndexedInfoField {
 		return "Website";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return Web.maxLength;
+	}
+
 }

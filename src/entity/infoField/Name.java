@@ -5,7 +5,7 @@ public class Name extends EmptyName {
 	 * 
 	 */
 	private static final long serialVersionUID = 3189490709293556137L;
-	private static final int maxLength = 100;
+	public static final int maxLength = 50;
 	private static final String nullName = "NoName";
 	private String name;
 

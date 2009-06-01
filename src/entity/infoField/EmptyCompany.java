@@ -17,4 +17,9 @@ public class EmptyCompany extends EmptyInfoField implements IndexedInfoField
 	public String getName() {
 		return "Company";
 	}
+
+	@Override
+	public int getMaxLength() {
+		return Company.maxLength;
+	}
 }

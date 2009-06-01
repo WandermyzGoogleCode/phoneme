@@ -12,4 +12,9 @@ public class EmptyGroupDescription extends EmptyInfoField {
 		return "GroupDescription";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return GroupDescription.maxLength;
+	}
+
 }

@@ -17,4 +17,9 @@ public class EmptyRemarks extends EmptyInfoField {
 		return "Remarks";
 	}
 
+	@Override
+	public int getMaxLength() {
+		return Remarks.maxLength;
+	}
+
 }

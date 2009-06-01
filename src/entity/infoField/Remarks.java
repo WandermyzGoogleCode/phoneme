@@ -6,7 +6,7 @@ public class Remarks extends EmptyRemarks {
 	 */
 	private static final long serialVersionUID = -222450790560309357L;
 	private String remarks;
-	private static int maxLength = 2000;
+	public static int maxLength = 2000;
 
 	public static boolean check(String remarks){
 		return (remarks != null && remarks.length() <= maxLength);

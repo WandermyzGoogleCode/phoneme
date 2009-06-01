@@ -7,12 +7,13 @@ public class Cellphone extends EmptyCellphone{
 	 * 
 	 */
 	private static final long serialVersionUID = 7291035141898489378L;
+	public static final int maxLength = 20;
 	private static final String nullNumber = "";
 	private String number;
 	
 	public static boolean check(String data){
 		//TODO 有空的话，更加准确的检测
-		if (data == null)
+		if (data == null || data.length() > maxLength)
 			return false;
 		return Pattern.matches("(\\+\\d{2})?\\d{11}", data);
 	}
@@ -39,5 +40,10 @@ public class Cellphone extends EmptyCellphone{
 	@Override
 	public boolean isEmpty() {
 		return number.equals(nullNumber);
+	}
+
+	@Override
+	public String toIDString() {
+		return getName()+":"+getStringValue();
 	}
 }

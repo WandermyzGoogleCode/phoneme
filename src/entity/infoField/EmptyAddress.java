@@ -21,4 +21,9 @@ public class EmptyAddress extends EmptyInfoField {
 	public String getName() {
 		return "Address";
 	}
+
+	@Override
+	public int getMaxLength() {
+		return Address.maxLength;
+	}
 }

@@ -27,4 +27,10 @@ public interface InfoField extends Serializable{
 	public String getStringValue();
 	
 	public boolean isEmpty();
+	
+	/**
+	 * getStringValue的最大长度
+	 * @return
+	 */
+	public int getMaxLength();
 }

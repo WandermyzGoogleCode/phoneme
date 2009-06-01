@@ -5,7 +5,7 @@ public class Address extends EmptyAddress {
 	 * 
 	 */
 	private static final long serialVersionUID = 225686845640478206L;
-	private static final int maxLength = 1000;
+	public static final int maxLength = 200;
 	private String addr;
 
 	static public boolean check(String addr){
