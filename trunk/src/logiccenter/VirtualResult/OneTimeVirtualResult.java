@@ -63,6 +63,6 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 	 * @return
 	 */
 	protected boolean noLoginUser(){
-		return (center.getLoginUser().isNull());
+		return (center.getLoginUser() != null && center.getLoginUser().isNull());
 	}
 }
