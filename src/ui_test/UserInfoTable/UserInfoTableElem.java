@@ -48,9 +48,13 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.Search)
+		else if(userInfoTableType == UserInfoTableType.SearchResult)
 		{
 			return false;
+		}
+		else if(userInfoTableType == UserInfoTableType.SearchForm)
+		{
+			return true;
 		}
 		else return false;
 	}
@@ -71,10 +75,14 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.Search)
+		else if(userInfoTableType == UserInfoTableType.SearchResult)
 		{
 			//TODO: 处理权限
 			return BaseInfoFieldName.contains(fieldName);
+		}
+		else if(userInfoTableType == UserInfoTableType.SearchForm)
+		{
+			return true;
 		}
 		else return false;
 	}

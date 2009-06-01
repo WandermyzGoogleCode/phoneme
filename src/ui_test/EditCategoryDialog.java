@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-public class EditGroupDialog extends Dialog
+public class EditCategoryDialog extends Dialog
 {
 
 	private Text textCategoryName;
@@ -28,7 +28,7 @@ public class EditGroupDialog extends Dialog
 	 * Create the dialog
 	 * @param parentShell
 	 */
-	public EditGroupDialog(Shell parentShell)
+	public EditCategoryDialog(Shell parentShell)
 	{
 		super(parentShell);
 	}

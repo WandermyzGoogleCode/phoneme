@@ -40,7 +40,7 @@ public class UserInfoCellModifier implements ICellModifier
 	{
 		TableItem item = (TableItem)element;
 		UserInfoTableElem elem = (UserInfoTableElem)item.getData();
-		String name = elem.GetInfoField().getName();
+		//String name = elem.GetInfoField().getName();
 		
 		InfoField newField = InfoFieldFactory.getFactory().makeInfoField(elem.GetInfoField().getName(), (String)value);
 		if(newField.getStringValue().equals(value))		
@@ -51,6 +51,7 @@ public class UserInfoCellModifier implements ICellModifier
 		else
 		{
 			MessageDialog.openWarning(shell, "格式错误", String.format("\"%s\"字段格式有误", newField.getName()));
+			//TODO:  此处有随机BUG
 		}
 		//item.setData(elem);
 		

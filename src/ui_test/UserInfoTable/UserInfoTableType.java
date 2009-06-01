@@ -2,8 +2,11 @@ package ui_test.UserInfoTable;
 
 public enum UserInfoTableType
 {
+	Null,
 	Owner,
 	Synchronization,
 	Permission,
-	Search
+	SearchResult,
+	SearchForm,
+	Group
 }
