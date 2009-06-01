@@ -36,8 +36,8 @@ public class AllContactsBox extends VirtualResult {
 			List<UserInfo> temp = center.getDataCenter().getAllUserInfo(null);
 			for(UserInfo info: temp)
 				contacts.put(info.getBaseInfo().getID(), info); 
-			List<ID> perIDList = center.getDataCenter().getAllPerContactsID();
-			Set<ID> synIDSet = (perIDList == null) ? new HashSet<ID>() : new HashSet<ID>(perIDList);
+			List<ID> synIDList = center.getDataCenter().getAllSynContactsID();
+			Set<ID> synIDSet = (synIDList == null) ? new HashSet<ID>() : new HashSet<ID>(synIDList);
 			for (UserInfo contact : contacts.values()) {
 				Relation r = (Relation)contact.getInfoField(InfoFieldName.Relation);
 				if (synIDSet.contains(contact.getBaseInfo().getID()))
@@ -78,8 +78,8 @@ public class AllContactsBox extends VirtualResult {
 		if (newInfo.getCustomInfo() == null)
 			newInfo.setCustomInfo(new CustomUserInfo());
 		
-		Set<ID> synIDSet = new HashSet<ID>(center.getDataCenter()
-				.getAllPerContactsID());
+		List<ID> synIDList = center.getDataCenter().getAllSynContactsID();
+		Set<ID> synIDSet = (synIDList == null) ? new HashSet<ID>() : new HashSet<ID>(synIDList);
 		Relation r = (Relation)newInfo.getInfoField(InfoFieldName.Relation);
 		if (synIDSet.contains(newInfo.getBaseInfo().getID()))
 			r.setPersonal(true);

@@ -208,7 +208,7 @@ public class LogicCenterImp implements LogicCenter {
 		this.dataCenter = dataCenter;
 		//TODO TEST
 		//allPerContactsBox = new AllPerContactsBox(this);
-		//allGroupBox = new AllGroupsBox(this);
+		allGroupBox = new AllGroupsBox(this);
 		allContactsBox = new AllContactsBox(this);//必须放在allGroupBox后面，因为他会调用allGroupBox
 		try {
 			Registry registry = LocateRegistry.getRegistry("Localhost");// TODO
