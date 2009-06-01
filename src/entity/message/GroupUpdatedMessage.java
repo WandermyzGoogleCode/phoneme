@@ -16,6 +16,7 @@ public class GroupUpdatedMessage extends Message {
 
 	public GroupUpdatedMessage(Group g, String detail, ID mID){
 		super(mID);
+		this.detail = detail;
 		this.g = g;
 	}
 	
