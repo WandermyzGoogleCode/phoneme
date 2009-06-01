@@ -47,8 +47,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	protected IDFactory idFactory;
 	protected RelationCube relationCube;
 
-	protected Checker groupChecker, userChecker,
-			searchGroupChecker, searchUserChecker;
+	protected Checker groupChecker, userChecker, searchGroupChecker,
+			searchUserChecker;
 
 	protected ServerLogicCenterImp() {
 		// TODO 各种初始化
@@ -204,7 +204,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		dataCenter.addToGroup(g, thisUser, p);
 		dataCenter.setVisiblity(thisUser, gid, visibility);
 		g.addToGroup(thisUser);
-		pushMessage(thisUser, new GroupUpdatedMessage(g, "您已经加入该群组", idFactory.getNewMessageID()));
+		pushMessage(thisUser, new GroupUpdatedMessage(g, "您已经加入该群组", idFactory
+				.getNewMessageID()));
 		String detail = "群组有新用户加入：" + getUserInfo(thisUser).getStringValue();
 		for (ID id : g.getUserSet())
 			if (!id.equals(thisUser))
@@ -337,8 +338,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		if (g == null)
 			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
 		if (g.getUserSet().contains(thisUser)) {
-			g.removeGromGroup(thisUser);
-			dataCenter.setGroup(g);
+			g.removeFromGroup(thisUser);
+			dataCenter.removeFromGroup(g, thisUser);
 			String detail = "用户：" + getUserInfo(thisUser).getName() + "退出了群组";
 			for (ID id : g.getUserSet())
 				pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
@@ -389,8 +390,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		ID targetUser = dataCenter.searchUserID(un);
 		if (targetUser == null || targetUser.isNull())
 			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		g.removeGromGroup(targetUser);
-		dataCenter.setGroup(g);
+		g.removeFromGroup(targetUser);
+		dataCenter.removeFromGroup(g, targetUser);
 		String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
 		for (ID id : g.getUserSet())
 			pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
@@ -613,12 +614,13 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			IdenticalInfoField to) throws RemoteException, MyRemoteException {
 		if (from == null || to == null)
 			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
-		ID fromID = dataCenter.searchUserID(from), toID = dataCenter.searchUserID(to);
+		ID fromID = dataCenter.searchUserID(from), toID = dataCenter
+				.searchUserID(to);
 		if (fromID == null || fromID.isNull() || toID == null || toID.isNull())
 			throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
-		List<ID> idRes = relationCube.getSearchRes(fromID, toID, this); 
+		List<ID> idRes = relationCube.getSearchRes(fromID, toID, this);
 		List<BaseUserInfo> res = dataCenter.getUsersInfo(idRes);
-		for(int i=0; i<res.size(); i++)
+		for (int i = 0; i < res.size(); i++)
 			res.set(i, filter(res.get(i), getGlobalPermission(idRes.get(i))));
 		return res;
 	}
@@ -631,8 +633,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		if (!searchGroupChecker.check(b))
 			throw new MyRemoteException(ErrorType.ILLEGAL_SEARCH);
 		List<BaseUserInfo> res = dataCenter.searchUser(b);
-		for(int i=0; i<res.size(); i++)
-			res.set(i, filter(res.get(i), getGlobalPermission(res.get(i).getID())));
+		for (int i = 0; i < res.size(); i++)
+			res.set(i, filter(res.get(i), getGlobalPermission(res.get(i)
+					.getID())));
 		return res;
 	}
 
