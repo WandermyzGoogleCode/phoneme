@@ -36,7 +36,6 @@ public class AdmitSynContactMessage extends Message {
 	@Override
 	public void proceed(LogicCenter center) {
 		center.getDataCenter().addSynRelationship(admitUser.getID());
-		center.getDataCenter().setVisibility(admitUser.getID(), visibility);
 		center.getAllContactsBox().editContact(new UserInfo(admitUser));
 		proceeded = true;
 	}

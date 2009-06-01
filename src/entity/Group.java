@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -79,5 +80,12 @@ public class Group implements Serializable {
 	 */
 	public String getName(){
 		return getInfoField(InfoFieldName.GroupName.name()).getStringValue();
+	}
+	
+	/**
+	 * 直接设置整个用户的set，用于数据库直接写入
+	 */
+	public void setIDSet(Collection<ID> ids){
+		users = new HashSet<ID>(ids);
 	}
 }
