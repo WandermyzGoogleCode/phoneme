@@ -95,15 +95,21 @@ public class DataCenterImp implements DataCenter {
 				// 建立UserInfo信息表
 				//TODO CRITICAL 当前的USERID已经变成了LONG
 				//TODO CRITICAL 请用字段的getMaxLength来设定字符串长度
-				sql = "CREATE TABLE UserInfo(UserID int not null";
+				sql = "CREATE TABLE UserInfo(UserID bigint not null";
 				while (fieldNameIter.hasNext()) {
-					sql += ("," + fieldNameIter.next() + " varchar(50)");
+					String temp=fieldNameIter.next();
+					sql += ("," + temp + " varchar(");
+					sql += (new BaseUserInfo()).getInfoField(temp).getMaxLength();
+					sql+=")";
 				}
 
 				// /////////////！！！！！！！！！！！！（跟new CustomUserInfo()的实现有关，可能需要修改）
 				fieldNameIter = (new CustomUserInfo()).getKeySet().iterator();
 				while (fieldNameIter.hasNext()) {
-					sql += ("," + fieldNameIter.next() + " varchar(50)");
+					String temp=fieldNameIter.next();
+					sql += ("," + temp + " varchar(");
+					sql += (new CustomUserInfo()).getInfoField(temp).getMaxLength();
+					sql += ")";
 				}
 				sql += ",WhetherSync int not null DEFAULT 0,WhetherPer int not null DEFAULT 0)";
 				statement.executeUpdate(sql);
@@ -121,11 +127,14 @@ public class DataCenterImp implements DataCenter {
 			//TODO CRITICAL 当前的GROUPID已经变成了LONG
 			
 			if (groupTableExist == false) {
-				sql = "CREATE TABLE GroupInfo(GroupID int not null";
+				sql = "CREATE TABLE GroupInfo(GroupID bigint not null";
 				// /////////////！！！！！！！！！！！！（跟new Group()的实现有关，可能需要修改）
 				fieldNameIter = (new Group()).getKeySet().iterator();
 				while (fieldNameIter.hasNext()) {
-					sql += ("," + fieldNameIter.next() + " varchar(50)");
+					String temp=fieldNameIter.next();
+					sql += ("," + temp + " varchar(");
+					sql += (new Group()).getInfoField(temp).getMaxLength();
+					sql += ")";
 				}
 				sql += ")";
 				statement.executeUpdate(sql);
@@ -142,7 +151,7 @@ public class DataCenterImp implements DataCenter {
 			// 建立Group成员表
 			//TODO CRITICAL 当前的ID已经变成了LONG
 			if (groupMemTableExist == false) {
-				sql = "CREATE TABLE GroupMember(GroupID int not null,UserID int not null)";
+				sql = "CREATE TABLE GroupMember(GroupID bigint not null,UserID bigint not null)";
 				statement.executeUpdate(sql);
 			}
 
@@ -156,7 +165,7 @@ public class DataCenterImp implements DataCenter {
 			// 建立Permission表
 			//TODO CRITICAL 当前的ID已经变成了LONG
 			if (permissionTableExist == false) {
-				sql = "CREATE TABLE Permission(UserID int not null";
+				sql = "CREATE TABLE Permission(UserID bigint not null";
 				fieldNameIter = (new Permission()).getKeySet().iterator();
 				while (fieldNameIter.hasNext()) {
 					sql += ("," + fieldNameIter.next() + " int not null");
