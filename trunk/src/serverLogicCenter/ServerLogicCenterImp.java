@@ -118,6 +118,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		MessageSender sender = senders.get(user);
 		synchronized (sender) {
 			while (sender.isAlive() && !sender.hasMessage()) {
+				System.out.println(user+":message wake up");//TODO TEST
 				try {
 					sender.wait();
 				} catch (Exception e) {
@@ -126,6 +127,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 					break;
 				}
 			}
+			System.out.println(user+":message sended--"+sender.isAlive()+sender.hasMessage());//TODO TEST
 			if (sender.isAlive() && sender.hasMessage())
 				return sender.getMessage();
 		}

@@ -32,7 +32,7 @@ public class MessageTable {
 		}
 	}
 
-	public void addMessage(ID mid, ID uid, Message msg) throws SQLException {
+	synchronized public void addMessage(ID mid, ID uid, Message msg) throws SQLException {
 		String psql = "REPLACE INTO Message VALUES(?, ?, ?)";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, mid.getValue());
@@ -41,7 +41,7 @@ public class MessageTable {
 		pStatement.execute();
 	}
 
-	public List<Message> getAllMessages(ID uid) throws SQLException{
+	synchronized public List<Message> getAllMessages(ID uid) throws SQLException{
 		String psql = "SELECT msg FROM Message WHERE uid=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, uid.getValue());
@@ -53,7 +53,7 @@ public class MessageTable {
 		return res;
 	}
 
-	public void removeMsg(ID uid, Message msg) throws SQLException{
+	synchronized public void removeMsg(ID uid, Message msg) throws SQLException{
 		String psql = "DELETE FROM Message WHERE mid=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, msg.getID().getValue());

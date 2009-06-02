@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 import entity.ID;
 import entity.infoField.IdenticalInfoField;
@@ -28,7 +29,7 @@ public class IDMapTable {
 		}
 	}
 
-	public ID getID(IdenticalInfoField idField) throws SQLException{
+	synchronized public ID getID(IdenticalInfoField idField) throws SQLException{
 		String psql = "SELECT uid FROM idMap WHERE idField=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setString(1, idField.toIDString());
@@ -39,7 +40,7 @@ public class IDMapTable {
 			return new ID(rows.getLong(1));
 	}
 	
-	public void setID(IdenticalInfoField idField, ID uid) throws SQLException{
+	synchronized public void setID(IdenticalInfoField idField, ID uid) throws SQLException{
 		String psql = "REPLACE INTO idMap VALUES(?, ?)";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setString(1, idField.toIDString());
@@ -47,7 +48,7 @@ public class IDMapTable {
 		pStatement.execute();
 	}
 
-	public void removeIDField(IdenticalInfoField idField) throws SQLException{
+	synchronized public void removeIDField(IdenticalInfoField idField) throws SQLException{
 		String psql = "DELETE FROM idMap WHERE idField=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setString(1, idField.toIDString());

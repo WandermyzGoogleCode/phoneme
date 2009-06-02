@@ -43,6 +43,7 @@ public class MessageBox extends VirtualResult {
 				while (!isInterrupted())
 				{
 					Message newMessage = center.getServer().getNewMessage(thisUser);
+					System.out.println(center.getLoginUser().getName()+" receive new message");//TODO TEST
 					if (isInterrupted())
 						break;
 					if (newMessage == null){
@@ -50,6 +51,7 @@ public class MessageBox extends VirtualResult {
 						break;
 					}
 					messages.add(newMessage);
+					System.out.println("size: "+messages.size());//TODO TEST
 					setUpdateTime(Calendar.getInstance().getTime());
 				}
 			}
