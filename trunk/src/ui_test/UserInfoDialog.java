@@ -386,8 +386,9 @@ public class UserInfoDialog extends Dialog
 		
 		//[start] 权限
 		if( !logicCenter.getLoginUser().isNull() &&
-			(userInfoTableType == UserInfoTableType.Permission
-				|| userInfoTableType == UserInfoTableType.Owner)
+			(userInfoTableType == UserInfoTableType.Permission)
+				//|| userInfoTableType == UserInfoTableType.Owner
+				//TODO: 默认权限
 			)
 		{
 			tabItemPermission = new TabItem(tabFolder, SWT.NONE);
