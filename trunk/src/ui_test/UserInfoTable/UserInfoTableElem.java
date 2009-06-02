@@ -68,6 +68,10 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
+		else if(userInfoTableType == UserInfoTableType.New)
+		{
+			return BaseInfoFieldName.contains(fieldName);
+		}
 		else return false;
 	}
 	
@@ -104,6 +108,10 @@ public class UserInfoTableElem
 			return true;
 		}
 		else if(userInfoTableType == UserInfoTableType.Register)
+		{
+			return BaseInfoFieldName.contains(fieldName);
+		}
+		else if(userInfoTableType == UserInfoTableType.New)
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
