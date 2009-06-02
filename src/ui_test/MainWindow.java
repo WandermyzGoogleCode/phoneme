@@ -37,6 +37,8 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -267,6 +269,7 @@ public class MainWindow
 	protected void createContents()
 	{
 		shell = new Shell();
+		shell.addShellListener(new ShellShellListener());
 		shell.setLayout(new FormLayout());
 		shell.setSize(800, 600);
 		shell.setText(Messages.getString("MainWindow.PhoneMe")); //$NON-NLS-1$
@@ -1691,7 +1694,7 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			UserInfo user = new UserInfo();
-			UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "本地搜索", UserInfoTableType.SearchForm, user);
+			UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "本地搜索", UserInfoTableType.SearchLocalForm, user);
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
 				LocalSearchContactsResult result = logicCenter.localSearchContacts(user, userInfoDialog.getStrategy());
@@ -1988,6 +1991,23 @@ public class MainWindow
 	}
 
 	// [end]
+	
+	/**
+	 * 退出时执行
+	 */
+	private class ShellShellListener extends ShellAdapter {
+		public void shellClosed(final ShellEvent e)
+		{
+			try
+			{
+				logicCenter.logout();
+			} catch (RemoteException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
 
 	// [start] Observer相关事件
 

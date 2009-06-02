@@ -1,14 +1,14 @@
-package ui_test.GroupTableTree;
+package ui_test.SearchResultTable;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import entity.Group;
+import entity.BaseUserInfo;
 import entity.UserInfo;
 import entity.infoField.InfoFieldName;
 
-public class GroupTableTreeLabelProvider implements ITableLabelProvider
+public class SearchResultTableLabelProvider implements ITableLabelProvider
 {
 
 	@Override
@@ -21,34 +21,21 @@ public class GroupTableTreeLabelProvider implements ITableLabelProvider
 	@Override
 	public String getColumnText(Object element, int columnIndex)
 	{
-		if(element instanceof Group)
+		if(element instanceof BaseUserInfo)
 		{
-			Group group = (Group)element;
-			if(columnIndex == 0)
-				return group.getName();
-			else
-				return "";
-		}
-		else if(element instanceof UserInfo)
-		{
-			UserInfo user = (UserInfo)element;
+			BaseUserInfo user = (BaseUserInfo)element;
 			switch(columnIndex)
 			{
 			case 0:
-				return user.getInfoField(InfoFieldName.Name).getStringValue();
+				return user.getInfoField("Name").getStringValue();
 			case 1:
-				return user.getInfoField(InfoFieldName.NickName).getStringValue();
+				return user.getInfoField("Cellphone").getStringValue();
 			case 2:
-				return "";
+				return user.getInfoField("EmailAddress").getStringValue();
 			case 3:
-				return user.getInfoField(InfoFieldName.Cellphone).getStringValue();
-			case 4:
-				return user.getInfoField(InfoFieldName.EmailAddress).getStringValue();
-			case 5:
-				return user.getInfoField(InfoFieldName.Birthday).getStringValue();
+				return user.getInfoField("Birthday").getStringValue();
 			}
 		}
-		
 		return "";
 	}
 

@@ -56,11 +56,11 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.SearchResult)
+		else if(userInfoTableType == UserInfoTableType.SearchRemoteResult)
 		{
 			return false;
 		}
-		else if(userInfoTableType == UserInfoTableType.SearchForm)
+		else if(userInfoTableType == UserInfoTableType.SearchLocalForm)
 		{
 			return true;
 		}
@@ -69,6 +69,10 @@ public class UserInfoTableElem
 			return BaseInfoFieldName.contains(fieldName);
 		}
 		else if(userInfoTableType == UserInfoTableType.NewLocal)
+		{
+			return BaseInfoFieldName.contains(fieldName);
+		}
+		else if(userInfoTableType == UserInfoTableType.SearchRemoteForm)
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
@@ -98,12 +102,12 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.SearchResult)
+		else if(userInfoTableType == UserInfoTableType.SearchRemoteResult)
 		{
 			//TODO: 处理权限
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.SearchForm)
+		else if(userInfoTableType == UserInfoTableType.SearchLocalForm)
 		{
 			return true;
 		}
@@ -112,6 +116,10 @@ public class UserInfoTableElem
 			return BaseInfoFieldName.contains(fieldName);
 		}
 		else if(userInfoTableType == UserInfoTableType.NewLocal)
+		{
+			return BaseInfoFieldName.contains(fieldName);
+		}
+		else if(userInfoTableType == UserInfoTableType.SearchRemoteForm)
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}

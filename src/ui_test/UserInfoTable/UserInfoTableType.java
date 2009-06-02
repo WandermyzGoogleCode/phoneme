@@ -30,12 +30,17 @@ public enum UserInfoTableType
 	/**
 	 * 搜索结果
 	 */
-	SearchResult,
+	SearchRemoteResult,
 	
 	/**
-	 * 搜索表单
+	 * 本地搜索表单
 	 */
-	SearchForm,
+	SearchLocalForm,
+	
+	/**
+	 * 远程搜索表单
+	 */
+	SearchRemoteForm,
 	
 	/**
 	 * 群组联系人

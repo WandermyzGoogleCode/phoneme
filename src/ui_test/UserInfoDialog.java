@@ -172,7 +172,7 @@ public class UserInfoDialog extends Dialog
 				|| userInfoTableType == UserInfoTableType.Permission
 				|| userInfoTableType == UserInfoTableType.Group
 				|| userInfoTableType == UserInfoTableType.Owner
-				|| userInfoTableType == UserInfoTableType.SearchResult
+				|| userInfoTableType == UserInfoTableType.SearchRemoteResult
 				|| userInfoTableType == UserInfoTableType.Local
 				)
 		{
@@ -194,7 +194,7 @@ public class UserInfoDialog extends Dialog
 				userType = "群组联系人";	//TODO: 群组名
 			else if(userInfoTableType == UserInfoTableType.Owner)
 				userType = "所有者";
-			else if(userInfoTableType == UserInfoTableType.SearchResult)
+			else if(userInfoTableType == UserInfoTableType.SearchRemoteResult)
 				userType = "搜索结果";
 			else if(userInfoTableType == UserInfoTableType.Local)
 				userType = "本地联系人";
@@ -250,7 +250,7 @@ public class UserInfoDialog extends Dialog
 			if(userInfoTableType == UserInfoTableType.Synchronization
 				|| userInfoTableType == UserInfoTableType.Permission
 				|| userInfoTableType == UserInfoTableType.Group
-				|| userInfoTableType == UserInfoTableType.SearchResult
+				|| userInfoTableType == UserInfoTableType.SearchRemoteResult
 				)
 			{
 				buttonInviteGroup = new Button(compositeTools, SWT.NONE);
@@ -258,7 +258,7 @@ public class UserInfoDialog extends Dialog
 				buttonInviteGroup.setText("邀请加入群组");
 			}
 
-			if(userInfoTableType == UserInfoTableType.SearchResult)
+			if(userInfoTableType == UserInfoTableType.SearchRemoteResult)
 			{
 				buttonAddSync = new Button(compositeTools, SWT.NONE);
 				buttonAddSync.addSelectionListener(new ButtonAddSyncSelectionListener());
@@ -297,7 +297,7 @@ public class UserInfoDialog extends Dialog
 		tabItemInfo.setControl(compositeInfo);
 
 		//[start]搜索
-		if(userInfoTableType == UserInfoTableType.SearchForm)
+		if(userInfoTableType == UserInfoTableType.SearchLocalForm)
 		{
 			labelSearchStrategy = new Label(compositeInfo, SWT.NONE);
 			final GridData gd_labelSearchStrategy = new GridData();
@@ -587,7 +587,7 @@ public class UserInfoDialog extends Dialog
 				modifyUser();
 				logicCenter.editContactInfo(user);
 			}
-			else if (userInfoTableType == UserInfoTableType.SearchForm)
+			else if (userInfoTableType == UserInfoTableType.SearchLocalForm)
 			{
 				modifyUser();
 				searchThreshold = (double)scaleSearchThreshold.getSelection() / (double)scaleSearchThreshold.getMaximum();
