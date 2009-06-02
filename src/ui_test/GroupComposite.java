@@ -138,7 +138,7 @@ public class GroupComposite extends Composite
 		{
 			AllGroupsBox allGroupsBox = (AllGroupsBox)o;
 			List<Group> groupsList = allGroupsBox.getGroups();
-			Display.getCurrent().syncExec(new AllGroupsRefreshTask(groupsList));
+			Display.getDefault().syncExec(new AllGroupsRefreshTask(groupsList));
 		}
 	}
 	
@@ -197,7 +197,7 @@ public class GroupComposite extends Composite
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new CreateGroupResultTask((CreateGroupResult)o));
+			Display.getDefault().syncExec(new CreateGroupResultTask((CreateGroupResult)o));
 		}
 	}
 	
