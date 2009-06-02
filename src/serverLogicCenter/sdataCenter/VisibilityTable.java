@@ -3,11 +3,14 @@ package serverLogicCenter.sdataCenter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 
 import entity.ID;
+import entity.Permission;
 
 public class VisibilityTable {
 	private Connection connection;
@@ -47,5 +50,25 @@ public class VisibilityTable {
 		pStatement.setLong(2, uid.getValue());
 		pStatement.setLong(3, id.getValue());
 		pStatement.execute();
+	}
+
+	public List<Integer> getVisibilities(ID uid, List<ID> idList) throws SQLException{
+		List<Integer> res = new ArrayList<Integer>();
+		String psql = "SELECT v FROM Visibility WHERE uid=? AND (";
+		for(ID id: idList){
+			if (psql.charAt(psql.length()-1) != '(')
+				psql += " OR ";
+			psql += "id=?";
+		}
+		psql += ")";
+		PreparedStatement pStatement = connection.prepareStatement(psql);
+		pStatement.setLong(1, uid.getValue());
+		for(int i=0; i<idList.size(); i++)
+			pStatement.setLong(i+2, idList.get(i).getValue());
+		ResultSet rows = pStatement.executeQuery();
+		while (rows.next()){
+			res.add(rows.getInt(1));
+		}
+		return res;
 	}
 }

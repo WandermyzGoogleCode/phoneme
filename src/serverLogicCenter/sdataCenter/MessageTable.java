@@ -52,4 +52,11 @@ public class MessageTable {
 		}
 		return res;
 	}
+
+	public void removeMsg(ID uid, Message msg) throws SQLException{
+		String psql = "DELETE FROM Message WHERE mid=?";
+		PreparedStatement pStatement = connection.prepareStatement(psql);
+		pStatement.setLong(1, msg.getID().getValue());
+		pStatement.execute();
+	}
 }
