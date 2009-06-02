@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import serverLogicCenter.ServerLogicCenter;
+import serverLogicCenter.sdataCenter.ServerDataCenter;
 import entity.Group;
 import entity.ID;
 
@@ -19,7 +19,7 @@ public class BFSRelationCube implements RelationCube {
 
 	@Override
 	public List<ID> getSearchRes(ID from, ID to,
-			ServerLogicCenter center) throws SQLException {
+			ServerDataCenter center) throws SQLException {
 		Set<ID> footmark = new HashSet<ID>();
 		Queue<ID> queue = new ArrayDeque<ID>();
 		Map<ID, Integer> dist = new HashMap<ID, Integer>();
@@ -36,8 +36,8 @@ public class BFSRelationCube implements RelationCube {
 			
 			
 			//同步联系人
-			List<ID> synContacts = center.getDataCenter().getSynContactID(now);
-			List<Integer> visibilities = center.getDataCenter().getVisibilities(now, synContacts); 
+			List<ID> synContacts = center.getSynContactID(now);
+			List<Integer> visibilities = center.getVisibilities(now, synContacts); 
 			for(int i=0; i<synContacts.size(); i++){
 				if (visibilities.get(i) < nowDist)
 					continue;
@@ -50,11 +50,11 @@ public class BFSRelationCube implements RelationCube {
 			}
 			
 			//群组
-			List<Group> groups = center.getDataCenter().getGroups(now);
+			List<Group> groups = center.getGroups(now);
 			List<ID> idList = new ArrayList<ID>();
 			for(Group g: groups)
 				idList.add(g.getID());
-			visibilities = center.getDataCenter().getVisibilities(now, idList);
+			visibilities = center.getVisibilities(now, idList);
 			for(int i=0; i<groups.size(); i++){
 				if (visibilities.get(i) < nowDist)
 					continue;

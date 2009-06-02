@@ -2,19 +2,16 @@ package algorithm;
 
 import java.sql.SQLException;
 
-import serverLogicCenter.ServerLogicCenter;
+import serverLogicCenter.sdataCenter.ServerDataCenter;
 import entity.BaseUserInfo;
-import entity.BoolInfo;
-import entity.ErrorType;
 import entity.ID;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.IdenticalInfoFieldName;
-import entity.infoField.InfoField;
 
 public class UserChecker implements Checker {
-	private ServerLogicCenter center;
+	private ServerDataCenter center;
 	
-	public UserChecker(ServerLogicCenter center){
+	public UserChecker(ServerDataCenter center){
 		this.center = center;
 	}
 
@@ -34,7 +31,7 @@ public class UserChecker implements Checker {
 			IdenticalInfoField field = (IdenticalInfoField)b.getInfoField(name.name());
 			try {
 				if (field != null && !field.isEmpty()){
-					ID oid = center.getDataCenter().searchUserID(field);
+					ID oid = center.searchUserID(field);
 					if (oid != null && !oid.isNull() && !oid.equals(b.getID()))
 						return false;
 				}
