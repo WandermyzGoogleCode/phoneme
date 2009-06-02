@@ -2,13 +2,13 @@ package algorithm;
 
 import java.sql.SQLException;
 
-import serverLogicCenter.ServerLogicCenter;
+import serverLogicCenter.sdataCenter.ServerDataCenter;
 import entity.Group;
 
 public class GroupChecker implements Checker {
-	private ServerLogicCenter center;
+	private ServerDataCenter center;
 	
-	public GroupChecker(ServerLogicCenter center){
+	public GroupChecker(ServerDataCenter center){
 		this.center = center;
 	}
 
@@ -27,7 +27,7 @@ public class GroupChecker implements Checker {
 		if (g.getID() != null && !g.getID().isNull()){
 			Group oldG;
 			try {
-				oldG = center.getDataCenter().getGroup(g.getID());
+				oldG = center.getGroup(g.getID());
 			} catch (SQLException e) {
 				System.out.println(e);
 				e.printStackTrace();
