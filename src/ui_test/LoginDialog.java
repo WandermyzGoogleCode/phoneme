@@ -130,59 +130,69 @@ public class LoginDialog extends Dialog
 			ident = (IdenticalInfoField)InfoFieldFactory.getFactory().makeInfoField(comboIdentType.getText(), textIdent.getText());
 			password = textPassword.getText();
 			
-			LoginResult result = logicCenter.login(ident, new Password(password));
-			result.addObserver(new LoginResultObserver());
-			if(observer != null) result.addObserver(observer);
+//			LoginResult result = logicCenter.login(ident, new Password(password));
+//			result.addObserver(new LoginResultObserver());
+//			if(observer != null) result.addObserver(observer);
 		
-			return;
+			//return;
 		}
 		super.buttonPressed(buttonId);
 	}
 	
-	class LoginResultObserver implements Observer
-	{
-
-		@Override
-		public void update(Observable o, Object arg)
-		{
-			// TODO Auto-generated method stub
-			Display.getDefault().syncExec(new LoginResultTask((LoginResult)o));
-		}
-		
-	}
-	
-	class LoginResultTask implements Runnable
-	{
-		private LoginResult loginResult;
-
-		public LoginResultTask(LoginResult loginResult)
-		{
-			this.loginResult = loginResult;
-		}
-		@Override
-		public void run()
-		{
-			VirtualState state = loginResult.getState();
-			if(state == VirtualState.ERRORED)
-			{
-				MyError error = loginResult.getError();
-				MessageDialog.openWarning(parentShell, "登录失败", error.toString());
-			}
-			else if(state == VirtualState.PREPARED)
-			{
-				BaseUserInfo loginUser = logicCenter.getLoginUser();
-				MessageDialog.openInformation(parentShell, "登录成功","登录成功");
-				getShell().setText("PhoneMe" + String.format(" - \"%s\" 已登录", loginUser.getInfoField("Name")));
-				//TODO: 上句好像没用
-				thisDialog.close();
-			}
-		}
-		
-	}
+//	class LoginResultObserver implements Observer
+//	{
+//
+//		@Override
+//		public void update(Observable o, Object arg)
+//		{
+//			// TODO Auto-generated method stub
+//			Display.getDefault().syncExec(new LoginResultTask((LoginResult)o));
+//		}
+//		
+//	}
+//	
+//	class LoginResultTask implements Runnable
+//	{
+//		private LoginResult loginResult;
+//
+//		public LoginResultTask(LoginResult loginResult)
+//		{
+//			this.loginResult = loginResult;
+//		}
+//		@Override
+//		public void run()
+//		{
+//			VirtualState state = loginResult.getState();
+//			if(state == VirtualState.ERRORED)
+//			{
+//				MyError error = loginResult.getError();
+//				MessageDialog.openWarning(parentShell, "登录失败", error.toString());
+//			}
+//			else if(state == VirtualState.PREPARED)
+//			{
+//				BaseUserInfo loginUser = logicCenter.getLoginUser();
+//				MessageDialog.openInformation(parentShell, "登录成功","登录成功");
+//				getShell().setText("PhoneMe" + String.format(" - \"%s\" 已登录", loginUser.getInfoField("Name")));
+//				//TODO: 上句好像没用
+//				thisDialog.close();
+//			}
+//		}
+//		
+//	}
 	
 	public void addObserver(Observer o)
 	{
 		this.observer = o;
+	}
+	
+	public IdenticalInfoField getIdenticalField()
+	{
+		return ident;
+	}
+	
+	public String getPassword()
+	{
+		return password;
 	}
 
 }

@@ -72,13 +72,13 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import ui_test.GroupInfoDialog.RemoveGroupResultTask;
-import ui_test.LoginDialog.LoginResultTask;
 import ui_test.UserInfoTable.UserInfoTableType;
 
 import com.ibm.icu.impl.ICUService.Factory;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.BaseUserInfo;
+import entity.MyError;
 import entity.Password;
 import entity.StatResult;
 import entity.UserInfo;
@@ -1059,14 +1059,15 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			LoginDialog loginDialog = new LoginDialog(shell);
-			loginDialog.addObserver(new LoginResultObserver());
 			loginDialog.open();
+			
+			LoginResult result = logicCenter.login(loginDialog.getIdenticalField(), new Password(loginDialog.getPassword()));
+			result.addObserver(new LoginResultObserver());
 		}
 	}
 	
 	class LoginResultObserver implements Observer
 	{
-
 		@Override
 		public void update(Observable o, Object arg)
 		{
@@ -1087,8 +1088,18 @@ public class MainWindow
 		public void run()
 		{
 			VirtualState state = loginResult.getState();
-			if(state == VirtualState.PREPARED)
+			if(state == VirtualState.ERRORED)
 			{
+				MyError error = loginResult.getError();
+				MessageDialog.openWarning(shell, "登录失败", error.toString());
+			}
+			else if(state == VirtualState.PREPARED)
+			{
+				BaseUserInfo loginUser = logicCenter.getLoginUser();
+				MessageDialog.openInformation(shell, "登录成功","登录成功");
+				shell.setText("PhoneMe" + String.format(" - \"%s\" 已登录", loginUser.getInfoField("Name")));
+				//TODO: 上句好像没用
+				
 				compositeMessageBox.GetMessage();
 			}
 		}
