@@ -16,6 +16,8 @@ public class RegisterResult extends OneTimeVirtualResult {
 
 	public RegisterResult(BaseUserInfo b, Password pwd, LogicCenter center) {
 		super(center);
+		this.b = b;
+		this.pwd = pwd;
 		boolean hasIdentical = false;
 		for (String is : b.getKeySet()) {
 			InfoField infoField = b.getInfoField(is);
