@@ -182,11 +182,12 @@ public class GroupComposite extends Composite
 		{
 			Group newGroup = new Group();
 			GroupInfoDialog groupInfoDialog = new GroupInfoDialog(thisComposite.getShell(),"新建群组", GroupInfoTableType.New, newGroup);	
-			
+			Permission permission = new Permission();
+			groupInfoDialog.setPermission(permission);
 			if(groupInfoDialog.open() == IDialogConstants.OK_ID)
 			{
 				//!TODO: 参数表怎么回事？; Observer未被调用
-				CreateGroupResult result = logicCenter.createGroup(newGroup, new Permission(), 0);
+				CreateGroupResult result = logicCenter.createGroup(newGroup, permission, 0);
 				result.addObserver(new CreateGrouopResultObserver());
 			}
 		}
@@ -217,7 +218,8 @@ public class GroupComposite extends Composite
 			VirtualState state = result.getState();
 			if(state == VirtualState.PREPARED)
 			{
-				//TODO: 我也不知道该干什么
+				MessageDialog.openInformation(getShell(), "新建群组 成功", "新建群组 成功");
+				treeViewer.refresh();
 			}
 			else if(state == VirtualState.ERRORED)
 			{

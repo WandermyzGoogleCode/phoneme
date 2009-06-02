@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 import ui_test.GroupInfoTable.GroupInfoCellModifier;
 import ui_test.GroupInfoTable.GroupInfoTableContentProvider;
@@ -44,16 +45,19 @@ import ui_test.GroupTableTree.GroupInfoTableType;
 import ui_test.UserInfoTable.UserInfoTableType;
 //import entity.Group;
 //import entity.UserInfo;
+import entity.Permission;
 import entity.infoField.EmptyGroupDescription;
 import entity.infoField.EmptyGroupName;
 import entity.infoField.GroupFieldName;
 import entity.infoField.InfoFieldFactory;
 //import entity.infoField.GroupName;
 import entity.infoField.InfoField;
+import ui_test.ContactPermissionComposite;
 
 public class GroupInfoDialog extends Dialog
 {
 
+	private ContactPermissionComposite contactPermissionComposite;
 	private Label labelGroupName;
 	private Button buttonToolsExitGroup;
 	private Button buttonToolsPermission;
@@ -76,6 +80,7 @@ public class GroupInfoDialog extends Dialog
 	private Shell shell;
 	
 	private GroupInfoDialog thisDialog = this;
+	private Permission permission = new Permission();
 	
 	/**
 	 * Create the dialog
@@ -183,6 +188,9 @@ public class GroupInfoDialog extends Dialog
 		//[start] 权限
 		tabItemPermission = new TabItem(tabFolder, SWT.NONE);
 		tabItemPermission.setText("权限");
+
+		contactPermissionComposite = new ContactPermissionComposite(tabFolder, SWT.NONE, permission);
+		tabItemPermission.setControl(contactPermissionComposite);
 		//[end]
 		return container;
 	}
@@ -209,22 +217,26 @@ public class GroupInfoDialog extends Dialog
 	
 	private void modifyGroup()
 	{
-		List<InfoField> fieldsList = (List<InfoField>)tableViewerInfo.getInput();
-		for(InfoField field : fieldsList)
+		for(TableItem item : tableViewerInfo.getTable().getItems())
 		{
+			InfoField field = (InfoField)item.getData();
 			group.setInfoField(field.getName(), field);
 		}
 	}
 	protected void buttonPressed(int buttonId)
 	{
 		if (buttonId == IDialogConstants.OK_ID) 
-		{
-			modifyGroup();
-			
+		{		
 			if(groupInfoTableType == GroupInfoTableType.Normal && true)	//TODO: 并且有权限
 			{
+				modifyGroup();
 				logicCenter.editGroup(group);
 				return;
+			}
+			else if(groupInfoTableType == GroupInfoTableType.New)
+			{
+				modifyGroup();
+				contactPermissionComposite.ModifyPermission();
 			}
 		}
 		super.buttonPressed(buttonId);
@@ -376,6 +388,11 @@ public class GroupInfoDialog extends Dialog
 		{
 			//TODO: 退出群组
 		}
+	}
+	
+	public void setPermission(Permission permission)
+	{
+		this.permission = permission;
 	}
 
 }
