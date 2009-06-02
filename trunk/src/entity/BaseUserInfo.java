@@ -79,4 +79,17 @@ public class BaseUserInfo implements Serializable{
 	public String getName(){
 		return getInfoField(InfoFieldName.Name.name()).getStringValue();
 	}
+	
+	/**
+	 * 方便获取一个非空的IdenticalInfoField，不存在则返回null
+	 * @return
+	 */
+	public IdenticalInfoField getIdenticalField(){
+		for(IdenticalInfoFieldName name: IdenticalInfoFieldName.values()){
+			InfoField field = getInfoField(name.name());
+			if (!field.isEmpty())
+				return (IdenticalInfoField)field;
+		}
+		return null;
+	}
 }
