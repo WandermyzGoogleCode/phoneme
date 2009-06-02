@@ -68,7 +68,8 @@ public class UserInfoTable {
 				}
 			sql += ")";
 
-			sql += ", PRIMARY KEY(uid)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql += ", PRIMARY KEY(uid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
+			//System.out.println(sql);//TODO TEST
 			statement.executeUpdate(sql);
 		}
 	}
