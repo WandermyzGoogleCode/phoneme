@@ -1,5 +1,6 @@
 package algorithm;
 
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class BFSRelationCube implements RelationCube {
 
 	@Override
 	public List<ID> getSearchRes(ID from, ID to,
-			ServerLogicCenter center) {
+			ServerLogicCenter center) throws SQLException {
 		Set<ID> footmark = new HashSet<ID>();
 		Queue<ID> queue = new ArrayDeque<ID>();
 		Map<ID, Integer> dist = new HashMap<ID, Integer>();
