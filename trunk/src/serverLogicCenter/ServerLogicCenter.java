@@ -26,7 +26,7 @@ public interface ServerLogicCenter extends Remote{
 	public BoolInfo applyJoinGroup(ID thisUser, ID gid, Permission p, int visibility) throws RemoteException;
 	public Group createGroup(ID thisUser, Group g, Permission p, int visibility) throws RemoteException, MyRemoteException;
 	public BoolInfo editGroup(ID thisUser, Group g) throws RemoteException;
-	public BoolInfo editMyBaseInfo(BaseUserInfo baseInfo) throws RemoteException;
+	public BoolInfo editMyBaseInfo(BaseUserInfo baseInfo, Password pwd) throws RemoteException;
 	public ID getUID(IdenticalInfoField identicalInfo) throws RemoteException, MyRemoteException;
 	public BoolInfo inviteToGroup(ID id, IdenticalInfoField un, ID gid,
 			String inviteInfo) throws RemoteException;
@@ -68,4 +68,5 @@ public interface ServerLogicCenter extends Remote{
 	public List<ID> getSynRelations(ID id) throws RemoteException, MyRemoteException;
 	public List<ID> getPerRelationis(ID id) throws RemoteException, MyRemoteException;
 	public List<Group> getAllGroups(ID id) throws RemoteException, MyRemoteException;
+	public List<Permission> getPermissions(ID uid, List<ID> idList) throws RemoteException, MyRemoteException;
 }
