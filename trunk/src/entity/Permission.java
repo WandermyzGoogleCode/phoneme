@@ -69,4 +69,10 @@ public class Permission implements Serializable{
 		res.union(this);
 		return res;
 	}
+
+	public static Permission getDefaultGlobalPermission() {
+		Permission res = new Permission();
+		res.setField(InfoFieldName.Name.name(), true);
+		return res;
+	}
 }
