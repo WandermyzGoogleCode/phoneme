@@ -85,11 +85,13 @@ import entity.infoField.InfoFieldFactory;
 import entity.message.Message;
 import ui_test.GroupComposite;
 import ui_test.SearchComposite;
+import ui_test.MessageBoxComposite;
 
 public class MainWindow
 {
 
 	// [start] UI Components Properties
+	private MessageBoxComposite compositeMessageBox;
 	private SearchComposite compositeSearch;
 	private GroupComposite compositeGroup;
 	private Tree treeAddressSearchResult;
@@ -195,7 +197,6 @@ public class MainWindow
 	private Button listButtonGroup;
 	private Button listButtonSearch;
 	private Button listButtonMessageBox;
-	private MessageBoxDialog compositeMessage;
 	private MenuItem menuFile;
 	private Menu filemenu;
 	private MenuItem menuFileExport;
@@ -836,7 +837,6 @@ public class MainWindow
 		// [start] MessageBox Composite
 		// (new ListButtonUserInfoSelectionListener()).widgetSelected(null);
 		// MessageBox
-		compositeMessage = new MessageBoxDialog(compositeMain, SWT.NONE);
 		// [end]
 
 		// [start] 人立方版面
@@ -861,6 +861,8 @@ public class MainWindow
 		compositeGroup = new GroupComposite(compositeMain, SWT.NONE);
 
 		compositeSearch = new SearchComposite(compositeMain, SWT.NONE);
+
+		compositeMessageBox = new MessageBoxComposite(compositeMain, SWT.NONE);
 		compositeMainStackLayout.topControl = compositeAddress;
 		// [end]	
 	}
@@ -1092,7 +1094,7 @@ public class MainWindow
 //			listButtonMessageBox.setSelection(false);
 			
 			BaseUserInfo loginBaseUserInfo = logicCenter.getLoginUser();
-			if(loginBaseUserInfo == null)
+			if(loginBaseUserInfo.isNull())
 			{
 				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
 				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
@@ -1123,7 +1125,7 @@ public class MainWindow
 			listButtonSearch.setSelection(false);
 			compositeSearch.setVisible(false);
 			listButtonMessageBox.setSelection(false);
-			compositeMessage.setVisible(false);
+			compositeMessageBox.setVisible(false);
 			
 			//compositeMainStackLayout.topControl = compositeAddress;
 
@@ -1145,7 +1147,7 @@ public class MainWindow
 			listButtonSearch.setSelection(false);
 			listButtonMessageBox.setSelection(false);
 			compositeSearch.setVisible(false);
-			compositeMessage.setVisible(false);
+			compositeMessageBox.setVisible(false);
 		}
 	}
 
@@ -1163,7 +1165,7 @@ public class MainWindow
 			listButtonSearch.setSelection(true);
 			listButtonMessageBox.setSelection(false);
 			compositeSearch.setVisible(true);
-			compositeMessage.setVisible(false);
+			compositeMessageBox.setVisible(false);
 			compositeMainStackLayout.topControl = compositeSearch;
 			// System.out.println("renlifang");
 		}
@@ -1182,8 +1184,8 @@ public class MainWindow
 			listButtonSearch.setSelection(false);
 			listButtonMessageBox.setSelection(true);
 			compositeSearch.setVisible(false);
-			compositeMessage.setVisible(true);
-			compositeMainStackLayout.topControl = compositeMessage;
+			compositeMessageBox.setVisible(true);
+			compositeMainStackLayout.topControl = compositeMessageBox;
 			// System.out.println("messagebox");
 		}
 	}
@@ -2026,7 +2028,6 @@ public class MainWindow
 		@Override
 		public void run()
 		{
-			compositeMessage.setMessage(messages);
 		}
 
 		public RefreshMessageTask(List<Message> messages)

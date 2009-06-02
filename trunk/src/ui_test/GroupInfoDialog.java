@@ -230,7 +230,8 @@ public class GroupInfoDialog extends Dialog
 			if(groupInfoTableType == GroupInfoTableType.Normal && true)	//TODO: 并且有权限
 			{
 				modifyGroup();
-				logicCenter.editGroup(group);
+				EditGroupResult result = logicCenter.editGroup(group);
+				result.addObserver(new EditGroupResultObserver());
 				return;
 			}
 			else if(groupInfoTableType == GroupInfoTableType.New)
