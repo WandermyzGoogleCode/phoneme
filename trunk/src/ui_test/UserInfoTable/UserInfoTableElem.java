@@ -4,6 +4,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
 
+import entity.CustomUserInfo;
 import entity.infoField.BaseInfoFieldName;
 import entity.infoField.CustomInfoFieldName;
 import entity.infoField.InfoField;
@@ -34,14 +35,21 @@ public class UserInfoTableElem
 	public boolean IsEditable()
 	{
 		String fieldName = infoField.getName();
-		if(userInfoTableType == UserInfoTableType.Synchronization)
+		
+		if(fieldName == "Relation") return false;
+		
+		if(userInfoTableType == UserInfoTableType.Local)
 		{
 			return true;
+		}
+		else if(userInfoTableType == UserInfoTableType.Synchronization)
+		{
+			return CustomInfoFieldName.contains(fieldName);
 			//return CustomInfoFieldName.contains(fieldName);
 		}
 		else if(userInfoTableType == UserInfoTableType.Permission)
 		{
-			return true;
+			return CustomInfoFieldName.contains(fieldName);
 			//return CustomInfoFieldName.contains(fieldName);
 		}
 		else if(userInfoTableType == UserInfoTableType.Owner)
@@ -55,6 +63,10 @@ public class UserInfoTableElem
 		else if(userInfoTableType == UserInfoTableType.SearchForm)
 		{
 			return true;
+		}
+		else if(userInfoTableType == UserInfoTableType.Register)
+		{
+			return BaseInfoFieldName.contains(fieldName);
 		}
 		else return false;
 	}
@@ -62,6 +74,13 @@ public class UserInfoTableElem
 	public boolean IsVisible()
 	{
 		String fieldName = infoField.getName();
+		
+		if(fieldName == "Relation") return false;
+		
+		if(userInfoTableType == UserInfoTableType.Local)
+		{
+			return true;
+		}
 		if(userInfoTableType == UserInfoTableType.Synchronization)
 		{
 			//TODO: 处理权限
@@ -83,6 +102,10 @@ public class UserInfoTableElem
 		else if(userInfoTableType == UserInfoTableType.SearchForm)
 		{
 			return true;
+		}
+		else if(userInfoTableType == UserInfoTableType.Register)
+		{
+			return BaseInfoFieldName.contains(fieldName);
 		}
 		else return false;
 	}

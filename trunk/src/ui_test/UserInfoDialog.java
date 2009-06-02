@@ -3,9 +3,16 @@ package ui_test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
+import logiccenter.VirtualResult.AllGroupsBox;
+import logiccenter.VirtualResult.AllPerContactsBox;
+import logiccenter.VirtualResult.EditGroupResult;
+import logiccenter.VirtualResult.SetPermissionResult;
+import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -24,6 +31,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Scale;
@@ -34,28 +42,42 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 import algorithm.LCSQUserInfoMatcher;
 import algorithm.LCSTUserInfoMatcher;
 import algorithm.SimpleUserInfoMatcher;
 import algorithm.UserInfoMatcher;
 
+import entity.Group;
+import entity.Permission;
 import entity.UserInfo;
 import entity.infoField.BaseInfoFieldName;
 import entity.infoField.CustomInfoFieldName;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldName;
+import entity.message.Message;
 
 //import ui_test.MainWindow.ToolItemAddressCustomGroupNewSelectionListener;
+import ui_test.GroupInfoDialog.EditGroupResultTask;
 import ui_test.UserInfoTable.UserInfoCellModifier;
 import ui_test.UserInfoTable.UserInfoContentProvider;
 import ui_test.UserInfoTable.UserInfoLabelProvider;
 import ui_test.UserInfoTable.UserInfoTableElem;
 import ui_test.UserInfoTable.UserInfoTableType;
+import ui_test.ContactPermissionComposition;
 
 public class UserInfoDialog extends Dialog
 {
 	//[start] Component Properties
+	private ContactPermissionComposition contactPermissionComposition;
+	private Button buttonSetPerm;
+	private Button buttonAddSync;
+	private Button buttonInviteGroup;
+	private Text textRePassword;
+	private Text textPassword;
+	private Label labelRePassword;
+	private Label labelPassword;
 	private Scale scaleSearchThreshold;
 	private Label labelSearchThreshold;
 	private Label labelSearchStrategy;
@@ -91,6 +113,15 @@ public class UserInfoDialog extends Dialog
 	private UserInfoMatcher searchMatcher = null;
 	private double searchThreshold = 0;
 	
+	private String password;
+	
+	private Group group = null;
+	private AllPerContactsBox allPerContactsBox = null;
+	private AllGroupsBox allGroupsBox = null;
+	Permission permission = null;
+	
+	private UserInfoDialog thisDialog = this;
+	
 	private enum Operate
 	{
 		Null,
@@ -113,6 +144,12 @@ public class UserInfoDialog extends Dialog
 		this.userInfoTableType = userType;
 		this.user = user;
 		this.logicCenter = LogicCenterImp.getInstance();
+		
+		if(userType == UserInfoTableType.Synchronization 
+			&& user.getInfoField(InfoFieldName.Relation).isEmpty())
+		{
+			this.userInfoTableType = UserInfoTableType.Local;
+		}
 	}
 
 	/**
@@ -134,6 +171,7 @@ public class UserInfoDialog extends Dialog
 				|| userInfoTableType == UserInfoTableType.Group
 				|| userInfoTableType == UserInfoTableType.Owner
 				|| userInfoTableType == UserInfoTableType.SearchResult
+				|| userInfoTableType == UserInfoTableType.Local
 				)
 		{
 			tabItemTools = new TabItem(tabFolder, SWT.NONE);
@@ -141,37 +179,57 @@ public class UserInfoDialog extends Dialog
 	
 			compositeTools = new Composite(tabFolder, SWT.NONE);
 			final GridLayout gridLayout = new GridLayout();
-			gridLayout.numColumns = 4;
+			gridLayout.numColumns = 6;
 			compositeTools.setLayout(gridLayout);
 			tabItemTools.setControl(compositeTools);
 	
+			String userType = "";
+			if(userInfoTableType == UserInfoTableType.Synchronization)
+				userType = "同步联系人";
+			else if(userInfoTableType == UserInfoTableType.Permission)
+				userType = "被授权联系人";
+			else if(userInfoTableType == UserInfoTableType.Group)
+				userType = "群组联系人";	//TODO: 群组名
+			else if(userInfoTableType == UserInfoTableType.Owner)
+				userType = "所有者";
+			else if(userInfoTableType == UserInfoTableType.SearchResult)
+				userType = "搜索结果";
+			else if(userInfoTableType == UserInfoTableType.Local)
+				userType = "本地联系人";
+
 			labelName = new Label(compositeTools, SWT.NONE);
 			final GridData gd_labelName = new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1);
 			labelName.setLayoutData(gd_labelName);
-			labelName.setText(user.getBaseInfo().getInfoField("Name").getStringValue());
+			labelName.setText(user.getBaseInfo().getInfoField("Name").getStringValue() + " - " + userType);
 			new Label(compositeTools, SWT.NONE);
 			
 			if(userInfoTableType == UserInfoTableType.Synchronization
 					|| userInfoTableType == UserInfoTableType.Permission
-					|| userInfoTableType == UserInfoTableType.Owner)
+					|| userInfoTableType == UserInfoTableType.Owner
+					|| userInfoTableType == UserInfoTableType.Local)
 			{
+			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
 				buttonEdit = new Button(compositeTools, SWT.NONE);
 				buttonEdit.setLayoutData(new GridData());
 				buttonEdit.addSelectionListener(new ButtonEditSelectionListener());
 				buttonEdit.setText("编辑");
 			}
 	
-			if(userInfoTableType == UserInfoTableType.Synchronization
-					|| userInfoTableType == UserInfoTableType.Permission
+			if(userInfoTableType == UserInfoTableType.Permission
 					|| userInfoTableType == UserInfoTableType.Owner)
 			{
 				buttonPermission = new Button(compositeTools, SWT.NONE);
 				buttonPermission.addSelectionListener(new ButtonPermissionSelectionListener());
-				buttonPermission.setText("权限");
+				if(userInfoTableType == UserInfoTableType.Owner)
+					buttonPermission.setText("默认权限");
+				else
+					buttonPermission.setText("权限");
 			}
 	
 			if(userInfoTableType == UserInfoTableType.Synchronization
-					|| userInfoTableType == UserInfoTableType.Permission)
+					|| userInfoTableType == UserInfoTableType.Permission
+					|| userInfoTableType == UserInfoTableType.Local)
 			{
 				buttonDelete = new Button(compositeTools, SWT.NONE);
 				buttonDelete.addSelectionListener(new ButtonDeleteSelectionListener());
@@ -181,15 +239,53 @@ public class UserInfoDialog extends Dialog
 	
 			if(userInfoTableType == UserInfoTableType.Group)
 			{
+				//TODO: 群组管理员权限检查
 				buttonDeleteFromGroup = new Button(compositeTools, SWT.NONE);
+				buttonDeleteFromGroup.addSelectionListener(new ButtonDeleteFromGroupSelectionListener());
 				buttonDeleteFromGroup.setText("从群组中删除");
 			}
+
+			if(userInfoTableType == UserInfoTableType.Synchronization
+				|| userInfoTableType == UserInfoTableType.Permission
+				|| userInfoTableType == UserInfoTableType.Group
+				|| userInfoTableType == UserInfoTableType.SearchResult
+				)
+			{
+				buttonInviteGroup = new Button(compositeTools, SWT.NONE);
+				buttonInviteGroup.addSelectionListener(new ButtonInviteGroupSelectionListener());
+				buttonInviteGroup.setText("邀请加入群组");
+			}
+
+			if(userInfoTableType == UserInfoTableType.SearchResult)
+			{
+				buttonAddSync = new Button(compositeTools, SWT.NONE);
+				buttonAddSync.setText("加为同步联系人");
+	
+				buttonSetPerm = new Button(compositeTools, SWT.NONE);
+				buttonSetPerm.setText("设为被授权联系人");
+			}
+			
+			
+			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
 		}
 		//[end]
 
 		//[start]联系人信息
 		tabItemInfo = new TabItem(tabFolder, SWT.NONE);
-		tabItemInfo.setText("联系人信息");
+		
+		if(userInfoTableType == UserInfoTableType.Owner
+				|| userInfoTableType == UserInfoTableType.Register)
+		{
+			tabItemInfo.setText("个人信息");
+		}
+		else
+		{
+			tabItemInfo.setText("联系人信息");
+		}
 
 		compositeInfo = new Composite(tabFolder, SWT.NONE);
 		final GridLayout gridLayout = new GridLayout();
@@ -218,6 +314,31 @@ public class UserInfoDialog extends Dialog
 			labelSearchThreshold.setText("精确度");
 			scaleSearchThreshold = new Scale(compositeInfo, SWT.NONE);
 			scaleSearchThreshold.setSelection(50);
+		}
+		//[end]
+
+		//[start]设置密码
+		if(userInfoTableType == UserInfoTableType.Register
+			|| userInfoTableType == UserInfoTableType.Owner	
+			)
+		{
+			labelPassword = new Label(compositeInfo, SWT.NONE);
+			labelPassword.setText("密码");
+	
+			textPassword = new Text(compositeInfo, SWT.BORDER | SWT.PASSWORD);
+			final GridData gd_textPassword = new GridData(SWT.FILL, SWT.CENTER, false, false);
+			textPassword.setLayoutData(gd_textPassword);
+			new Label(compositeInfo, SWT.NONE);
+			new Label(compositeInfo, SWT.NONE);
+	
+			labelRePassword = new Label(compositeInfo, SWT.NONE);
+			labelRePassword.setText("重复密码");
+	
+			textRePassword = new Text(compositeInfo, SWT.BORDER | SWT.PASSWORD);
+			final GridData gd_textRePassword = new GridData(SWT.FILL, SWT.CENTER, true, false);
+			textRePassword.setLayoutData(gd_textRePassword);
+			new Label(compositeInfo, SWT.NONE);
+			new Label(compositeInfo, SWT.NONE);
 		}
 		//[end]
 
@@ -261,11 +382,25 @@ public class UserInfoDialog extends Dialog
 		//[end]
 		
 		//[start] 权限
-		if(userInfoTableType == UserInfoTableType.Synchronization
-				|| userInfoTableType == UserInfoTableType.Permission)
+		if( !logicCenter.getLoginUser().isNull() &&
+			(userInfoTableType == UserInfoTableType.Permission
+				|| userInfoTableType == UserInfoTableType.Owner)
+			)
 		{
 			tabItemPermission = new TabItem(tabFolder, SWT.NONE);
-			tabItemPermission.setText("权限");
+			
+			if(userInfoTableType == UserInfoTableType.Owner)
+			{
+				tabItemPermission.setText("默认权限");
+			}
+			else
+			{
+				tabItemPermission.setText("权限");
+				permission = allPerContactsBox.getPermission(user.getBaseInfo().getID());
+			}
+			
+			contactPermissionComposition = new ContactPermissionComposition(tabFolder, SWT.NONE, permission);
+
 		}
 		//[end]
 		
@@ -343,31 +478,55 @@ public class UserInfoDialog extends Dialog
 		}
 	}	
 	
+	private boolean verifyRegisterUser()
+	{
+		if(user.getInfoField(InfoFieldName.Name).isEmpty())
+		{
+			MessageDialog.openWarning(shell, "缺少必填项", "请输入您的名字");
+			return false;
+		}
+		
+		if(userInfoTableType == UserInfoTableType.Register 
+				&& textPassword.getText().isEmpty())
+		{
+			MessageDialog.openWarning(shell, "密码确认", "请设置您的密码");
+			return false;
+		}
+		
+		if(! textPassword.getText().equals(textRePassword.getText()))
+		{
+			MessageDialog.openWarning(shell, "密码确认", "两次密码不一致");
+			return false;
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * 打开对话框并直接跳转到“个人资料”选项卡
 	 */
-	public void OpenEditInfo()
+	public int OpenEditInfo()
 	{
 		operate = Operate.Edit;
-		super.open();
+		return super.open();
 	}
 	
 	/**
 	 * 打开对话框并直接跳转到“权限”选项卡
 	 */
-	public void OpenPermission()
+	public int OpenPermission()
 	{
 		operate = Operate.Permission;
-		super.open();
+		return super.open();
 	}
 	
 	/**
 	 * 删除指定用户
 	 */
-	public void OpenDelete()
+	public int OpenDelete()
 	{
 		operate = Operate.Delete;
-		super.open();
+		return super.open();
 	}
 	
 	/**
@@ -379,12 +538,48 @@ public class UserInfoDialog extends Dialog
 		return searchMatcher;
 	}
 	
+	/**
+	 * 返回密码，如果用户未输入密码则为空
+	 * @return
+	 */
+	public String getPassword()
+	{
+		return password;
+	}
+	
+	/**
+	 * 设置要操作的群组
+	 */
+	public void setGroup(Group group)
+	{
+		this.group = group;
+	}
+	
+	/**
+	 * 为权限设置准备
+	 * @param allPerContactsBox
+	 */
+	public void setAllPerContactsBox(AllPerContactsBox allPerContactsBox)
+	{
+		this.allPerContactsBox = allPerContactsBox;
+	}
+	
+	/**
+	 * 为与群组有关的操作做准备
+	 * @param allGroupsBox
+	 */
+	public void setAllGroupsBox(AllGroupsBox allGroupsBox)
+	{
+		this.allGroupsBox = allGroupsBox;
+	}
+	
 	
 	
 	protected void buttonPressed(int buttonId)
 	{
 		if (buttonId == IDialogConstants.OK_ID) {
-			if(userInfoTableType == UserInfoTableType.Synchronization)
+			if(userInfoTableType == UserInfoTableType.Synchronization
+					|| userInfoTableType == UserInfoTableType.Local)
 			{
 				modifyUser();
 				logicCenter.editContactInfo(user);
@@ -409,11 +604,71 @@ public class UserInfoDialog extends Dialog
 					break;
 				}
 			}
-			
-			
-			//return;
+			else if (userInfoTableType == UserInfoTableType.Register
+					|| userInfoTableType == UserInfoTableType.Owner)
+			{
+				modifyUser();
+				
+				if(!verifyRegisterUser())
+					return;
+				else
+					password = textPassword.getText();
+			}
+			else if(userInfoTableType == UserInfoTableType.Permission)
+			{
+				contactPermissionComposition.ModifyPermission();
+				SetPermissionResult result = logicCenter.setPermission(user.getBaseInfo().getID(), permission);
+				result.addObserver(new SetPermissionResultObserver());
+				return;
+			}
 		}
 		super.buttonPressed(buttonId);
+	}
+	
+	/**
+	 * 编辑权限 Observer
+	 * @author Wander
+	 *
+	 */
+	class SetPermissionResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getCurrent().syncExec(new SetPermissionResultTask((SetPermissionResult)o));
+		}
+		
+	}
+	
+	/**
+	 * 编辑权限 Task
+	 * @author Wander
+	 *
+	 */
+	class SetPermissionResultTask implements Runnable
+	{
+		private SetPermissionResult result;
+		
+		public SetPermissionResultTask(SetPermissionResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				thisDialog.close();
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(shell, "编辑权限失败", result.getError().toString());
+			}
+			
+		}
 	}
 	
 	//[start] 常用操作 事件
@@ -443,6 +698,35 @@ public class UserInfoDialog extends Dialog
 			{
 				if(operate == Operate.Delete)
 					buttonPressed(IDialogConstants.CANCEL_ID);
+			}
+		}
+	}
+	
+	/**
+	 * 从群组中删除用户
+	 * @author Wander
+	 *
+	 */
+	private class ButtonDeleteFromGroupSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			//TODO: 从群组中删除用户
+		}
+	}
+	
+	/**
+	 * 邀请加入群组
+	 * @author Wander
+	 *
+	 */
+	private class ButtonInviteGroupSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell(), allGroupsBox);
+			if(groupSelectDialog.open() == IDialogConstants.OK_ID)
+			{
+				Group group = groupSelectDialog.getSelectedGroup();
+				//logicCenter.inviteToGroup(un, g, inviteInfo);
 			}
 		}
 	}

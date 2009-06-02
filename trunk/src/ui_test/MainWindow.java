@@ -1,5 +1,6 @@
 package ui_test;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import logiccenter.VirtualResult.LocalSearchContactsResult;
 import logiccenter.VirtualResult.MessageBox;
 import logiccenter.VirtualResult.VirtualState;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -69,16 +71,20 @@ import ui_test.UserInfoTable.UserInfoTableType;
 import com.ibm.icu.impl.ICUService.Factory;
 import com.swtdesigner.SWTResourceManager;
 
+import entity.BaseUserInfo;
+import entity.Password;
 import entity.StatResult;
 import entity.UserInfo;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 import entity.message.Message;
+import ui_test.GroupComposite;
 
 public class MainWindow
 {
 
 	// [start] UI Components Properties
+	private GroupComposite compositeGroup;
 	private Tree treeAddressSearchResult;
 	private TabItem tabItemAddressSearchResult;
 	private Tree treeAddressContact;
@@ -92,14 +98,14 @@ public class MainWindow
 	private TreeColumn treeAddressPermitColumnEmail;
 	private TreeColumn treeAddressPermitColumnCellphone;
 	private TreeColumn treeAddressPermitColumnRelation;
-	private TreeColumn treeAddressPermitColumnCall;
+	//private TreeColumn treeAddressPermitColumnCall;
 	private TreeColumn treeAddressPermitColumnNickName;
 	private TreeColumn treeAddressPermitColumnName;
 	private Tree treeAddressPermit;
 	private TreeColumn treeAddressContactColumnEmail;
 	private TreeColumn treeAddressContactColumnCellphone;
 	private TreeColumn treeAddressContactColumnRelation;
-	private TreeColumn treeAddressContactColumnCall;
+	//private TreeColumn treeAddressContactColumnCall;
 	private TreeColumn treeAddressContactColumnNickName;
 	private TreeColumn treeAddressContactColumnName;
 	private TabItem tabItemAddressContact;
@@ -112,53 +118,53 @@ public class MainWindow
 	private ToolItem toolItemAddressDel;
 	private ToolItem toolItemAddressPermission;
 	private ToolItem toolItemAddressEdit;
-	private Combo comboInfoGender;
-	private Label labelInfoGender;
-	private ToolItem toolItemInfoDownload;
-	private ToolItem toolItemInfoReset;
-	private ToolItem toolItemInfoUpload;
-	private ToolItem toolItemInfoSave;
-	private ToolBar toolBarInfo;
-	private Text textInfoStatus;
-	private Label labelInfoStatus;
-	private Group groupInfoCustom;
-	private Text textInfoCompanyAddress;
-	private Label labelInfoCompanyAddress;
-	private Text textInfoCompanyPhone;
-	private Label labelInfoCompanyPhone;
-	private Text textInfoTitle;
-	private Label labelInfoTitle;
-	private Text textInfoCompany;
-	private Label labelInfoCompany;
-	private Group groupInfoGroup;
-	private Text textInfoFamilyAddress;
-	private Label labelInfoFamilyAddress;
-	private Text textInfoFamilyPhone;
-	private Label labelInfoFamilyPhone;
-	private Group groupInfoFamily;
+//	private Combo comboInfoGender;
+//	private Label labelInfoGender;
+//	private ToolItem toolItemInfoDownload;
+//	private ToolItem toolItemInfoReset;
+//	private ToolItem toolItemInfoUpload;
+//	private ToolItem toolItemInfoSave;
+//	private ToolBar toolBarInfo;
+//	private Text textInfoStatus;
+//	private Label labelInfoStatus;
+//	private Group groupInfoCustom;
+//	private Text textInfoCompanyAddress;
+//	private Label labelInfoCompanyAddress;
+//	private Text textInfoCompanyPhone;
+//	private Label labelInfoCompanyPhone;
+//	private Text textInfoTitle;
+//	private Label labelInfoTitle;
+//	private Text textInfoCompany;
+//	private Label labelInfoCompany;
+//	private Group groupInfoGroup;
+//	private Text textInfoFamilyAddress;
+//	private Label labelInfoFamilyAddress;
+//	private Text textInfoFamilyPhone;
+//	private Label labelInfoFamilyPhone;
+//	private Group groupInfoFamily;
 	// private Button button;
 	// private Composite composite_1;
-	private Text textInfoDesc;
-	private Label labelInfoDesc;
+//	private Text textInfoDesc;
+//	private Label labelInfoDesc;
 	// private Composite composite;
-	private ScrolledComposite scrolledCompositeInfo;
-	private Text textInfoMSN;
-	private Label labelInfoMSN;
-	private Text textInfoQQNumber;
-	private Label labelInfoQQNumber;
-	private Text textInfoEmail;
-	private Label labelInfoEmail;
-	private DateTime dateTimeBirthday;
-	private Label labelInfoBirthday;
-	private Text textInfoCellphone;
-	private Label labelInfoCellphone;
-	private Label labelInfoNickName;
-	private Text textInfoNickName;
-	private Text textInfoName;
-	private Label labelInfoName;
-	private Group groupInfoPersonal;
-	private Button buttonInfoChangeAvatar;
-	private Canvas canvasInfoAvatar;
+//	private ScrolledComposite scrolledCompositeInfo;
+//	private Text textInfoMSN;
+//	private Label labelInfoMSN;
+//	private Text textInfoQQNumber;
+//	private Label labelInfoQQNumber;
+//	private Text textInfoEmail;
+//	private Label labelInfoEmail;
+//	private DateTime dateTimeBirthday;
+//	private Label labelInfoBirthday;
+//	private Text textInfoCellphone;
+//	private Label labelInfoCellphone;
+//	private Label labelInfoNickName;
+//	private Text textInfoNickName;
+//	private Text textInfoName;
+//	private Label labelInfoName;
+//	private Group groupInfoPersonal;
+//	private Button buttonInfoChangeAvatar;
+//	private Canvas canvasInfoAvatar;
 	protected Shell shell;
 
 	private Composite compositeMain;
@@ -173,7 +179,7 @@ public class MainWindow
 	private ToolBar toolBarAddress;
 	private ToolItem toolItemAddressSyncRemote;
 	private ToolItem toolItemAddressSyncLocal;
-	private Composite compositeInfo;
+//	private Composite compositeInfo;
 	private ToolItem toolItemMainRegister;
 	private ToolItem toolItemMainLogin;
 	private ToolItem toolItemMainLogout;
@@ -181,9 +187,9 @@ public class MainWindow
 	private Button listButtonAddressBook;
 	private Button listButtonGroup;
 	private Button listButtonSearch;
-	private Composite renlifang;
+	private Composite compositeSearch;
 	private Button listButtonMessageBox;
-	private MessageBoxDialog messageCompsite;
+	private MessageBoxDialog compositeMessage;
 	private MenuItem menuFile;
 	private Menu filemenu;
 	private MenuItem menuFileExport;
@@ -204,12 +210,14 @@ public class MainWindow
 	// [end]
  
 	// [start] 自定义Properties
+	//private GroupComposite groupComposite;
+	
 	private AllContactsBox allContactsBox;
 	//private MessageBox messageBox;
 	public static LogicCenter logicCenter = LogicCenterImp.getInstance();
 	private Map<String, Integer> contactsCategory = new HashMap<String, Integer>();
-	//private AllPerContactsBox allPermContactsBox;
-	private List<UserInfo> localSearchResult = null;
+	private AllPerContactsBox allPerContactsBox;
+	//private List<UserInfo> localSearchResult = null;
 	// [end]
 
 	/**
@@ -341,229 +349,229 @@ public class MainWindow
 		fd_compositeMain.top = new FormAttachment(toolBarMain, 0, SWT.BOTTOM);
 
 		// [start] 个人信息composite
-		scrolledCompositeInfo = new ScrolledComposite(compositeMain, SWT.V_SCROLL | SWT.H_SCROLL);
-		scrolledCompositeInfo.getVerticalBar().setThumb(0);
-		scrolledCompositeInfo.getVerticalBar().setIncrement(10);
-
-		compositeInfo = new Composite(scrolledCompositeInfo, SWT.NONE);
-		compositeInfo.setLayout(new FormLayout());
-
-		canvasInfoAvatar = new Canvas(compositeInfo, SWT.DOUBLE_BUFFERED);
-		canvasInfoAvatar.addPaintListener(new CanvasInfoAvatarPaintListener());
-		final FormData fd_canvasInfoAvatar = new FormData();
-		fd_canvasInfoAvatar.left = new FormAttachment(0, 15);
-		fd_canvasInfoAvatar.right = new FormAttachment(0, 135);
-		fd_canvasInfoAvatar.bottom = new FormAttachment(0, 160);
-		fd_canvasInfoAvatar.top = new FormAttachment(0, 40);
-		canvasInfoAvatar.setLayoutData(fd_canvasInfoAvatar);
-		canvasInfoAvatar.setData(SWTResourceManager.getImage(MainWindow.class, "/img/nullAvatar.jpg"));
-
-		buttonInfoChangeAvatar = new Button(compositeInfo, SWT.NONE);
-		buttonInfoChangeAvatar.addSelectionListener(new ButtonInfoChangeAvatarSelectionListener());
-		final FormData fd_buttonInfoChangeAvatar = new FormData();
-		fd_buttonInfoChangeAvatar.top = new FormAttachment(canvasInfoAvatar, 5, SWT.BOTTOM);
-		fd_buttonInfoChangeAvatar.right = new FormAttachment(0, 109);
-		fd_buttonInfoChangeAvatar.left = new FormAttachment(0, 40);
-		buttonInfoChangeAvatar.setLayoutData(fd_buttonInfoChangeAvatar);
-		buttonInfoChangeAvatar.setText("更换头像...");
-
-		groupInfoPersonal = new Group(compositeInfo, SWT.NONE);
-		groupInfoPersonal.setText("个人");
-		final FormData fd_groupInfoPersonal = new FormData();
-		fd_groupInfoPersonal.right = new FormAttachment(0, 585);
-		fd_groupInfoPersonal.left = new FormAttachment(0, 15);
-		fd_groupInfoPersonal.bottom = new FormAttachment(0, 490);
-		fd_groupInfoPersonal.top = new FormAttachment(0, 200);
-		groupInfoPersonal.setLayoutData(fd_groupInfoPersonal);
-
-		labelInfoName = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoName.setBounds(38, 34, 24, 17);
-		labelInfoName.setText("姓名");
-
-		textInfoName = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoName.setBounds(86, 34, 142, 23);
-
-		textInfoNickName = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoNickName.setBounds(363, 34, 142, 23);
-
-		labelInfoNickName = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoNickName.setBounds(314, 34, 24, 17);
-		labelInfoNickName.setText("昵称");
-
-		labelInfoCellphone = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoCellphone.setBounds(38, 115, 24, 17);
-		labelInfoCellphone.setText("手机");
-
-		textInfoCellphone = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoCellphone.setBounds(86, 112, 142, 23);
-		textInfoCellphone.addFocusListener(new TextInfoCellphoneFocusListener());
-
-		labelInfoBirthday = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoBirthday.setBounds(314, 74, 24, 17);
-		labelInfoBirthday.setText("生日");
-
-		dateTimeBirthday = new DateTime(groupInfoPersonal, SWT.DATE);
-		dateTimeBirthday.setBounds(362, 72, 93, 24);
-
-		labelInfoEmail = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoEmail.setBounds(314, 115, 36, 17);
-		labelInfoEmail.setText("E-mail");
-
-		textInfoEmail = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoEmail.setBounds(363, 112, 142, 23);
-		textInfoEmail.addFocusListener(new TextInfoEmailFocusListener());
-
-		labelInfoQQNumber = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoQQNumber.setBounds(38, 150, 24, 23);
-		labelInfoQQNumber.setText("QQ");
-
-		textInfoQQNumber = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoQQNumber.setBounds(86, 150, 142, 23);
-		textInfoQQNumber.addFocusListener(new TextInfoQQNumberFocusListener());
-
-		labelInfoMSN = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoMSN.setBounds(314, 150, 36, 17);
-		labelInfoMSN.addFocusListener(new LabelInfoMSNFocusListener());
-		labelInfoMSN.setText("MSN");
-
-		textInfoMSN = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoMSN.setBounds(362, 150, 142, 23);
-
-		labelInfoDesc = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoDesc.setBounds(38, 197, 48, 23);
-		labelInfoDesc.setText("个人描述");
-
-		textInfoDesc = new Text(groupInfoPersonal, SWT.BORDER);
-		textInfoDesc.setBounds(98, 197, 427, 80);
-
-		labelInfoGender = new Label(groupInfoPersonal, SWT.NONE);
-		labelInfoGender.setBounds(38, 74, 24, 17);
-		labelInfoGender.setText("性别");
-
-		comboInfoGender = new Combo(groupInfoPersonal, SWT.READ_ONLY);
-		comboInfoGender.setBounds(86, 71, 67, 25);
-		comboInfoGender.add("不公开");
-		comboInfoGender.add("男");
-		comboInfoGender.add("女");
-		comboInfoGender.setData("不公开", 0);
-		comboInfoGender.setData("男", 1);
-		comboInfoGender.setData("女", 2);
-		comboInfoGender.select(0);
-
-		groupInfoFamily = new Group(compositeInfo, SWT.NONE);
-		final FormData fd_groupInfoFamily = new FormData();
-		fd_groupInfoFamily.bottom = new FormAttachment(0, 605);
-		fd_groupInfoFamily.right = new FormAttachment(groupInfoPersonal, 0, SWT.RIGHT);
-		fd_groupInfoFamily.top = new FormAttachment(0, 510);
-		fd_groupInfoFamily.left = new FormAttachment(groupInfoPersonal, 0, SWT.LEFT);
-		groupInfoFamily.setLayoutData(fd_groupInfoFamily);
-		groupInfoFamily.setText("家庭");
-
-		labelInfoFamilyPhone = new Label(groupInfoFamily, SWT.NONE);
-		labelInfoFamilyPhone.setBounds(29, 30, 48, 17);
-		labelInfoFamilyPhone.setText("家庭电话");
-
-		textInfoFamilyPhone = new Text(groupInfoFamily, SWT.BORDER);
-		textInfoFamilyPhone.setBounds(101, 24, 142, 23);
-		textInfoFamilyPhone.addFocusListener(new TextInfoFamilyPhoneFocusListener());
-
-		labelInfoFamilyAddress = new Label(groupInfoFamily, SWT.NONE);
-		labelInfoFamilyAddress.setBounds(29, 65, 48, 17);
-		labelInfoFamilyAddress.setText("家庭住址");
-
-		textInfoFamilyAddress = new Text(groupInfoFamily, SWT.BORDER);
-		textInfoFamilyAddress.setBounds(101, 59, 282, 23);
-
-		groupInfoGroup = new Group(compositeInfo, SWT.NONE);
-		final FormData fd_groupInfoGroup = new FormData();
-		fd_groupInfoGroup.bottom = new FormAttachment(0, 765);
-		fd_groupInfoGroup.top = new FormAttachment(0, 625);
-		fd_groupInfoGroup.right = new FormAttachment(groupInfoFamily, 570, SWT.LEFT);
-		fd_groupInfoGroup.left = new FormAttachment(groupInfoFamily, 0, SWT.LEFT);
-		groupInfoGroup.setLayoutData(fd_groupInfoGroup);
-		groupInfoGroup.setText("单位");
-
-		labelInfoCompany = new Label(groupInfoGroup, SWT.NONE);
-		labelInfoCompany.setBounds(35, 32, 24, 17);
-		labelInfoCompany.setText("单位");
-
-		textInfoCompany = new Text(groupInfoGroup, SWT.BORDER);
-		textInfoCompany.setBounds(110, 32, 142, 23);
-
-		labelInfoTitle = new Label(groupInfoGroup, SWT.NONE);
-		labelInfoTitle.setBounds(311, 32, 24, 17);
-		labelInfoTitle.setText("头衔");
-
-		textInfoTitle = new Text(groupInfoGroup, SWT.BORDER);
-		textInfoTitle.setBounds(360, 32, 142, 23);
-
-		labelInfoCompanyPhone = new Label(groupInfoGroup, SWT.NONE);
-		labelInfoCompanyPhone.setBounds(35, 70, 48, 17);
-		labelInfoCompanyPhone.setText("单位电话");
-
-		textInfoCompanyPhone = new Text(groupInfoGroup, SWT.BORDER);
-		textInfoCompanyPhone.setBounds(110, 72, 142, 23);
-		textInfoCompanyPhone.addFocusListener(new TextInfoCompanyPhoneFocusListener());
-
-		labelInfoCompanyAddress = new Label(groupInfoGroup, SWT.NONE);
-		labelInfoCompanyAddress.setBounds(35, 107, 48, 17);
-		labelInfoCompanyAddress.setText("单位地址");
-
-		textInfoCompanyAddress = new Text(groupInfoGroup, SWT.BORDER);
-		textInfoCompanyAddress.setBounds(110, 109, 282, 23);
-
-		groupInfoCustom = new Group(compositeInfo, SWT.NONE);
-		final FormData fd_groupInfoCustom = new FormData();
-		fd_groupInfoCustom.right = new FormAttachment(groupInfoGroup, 0, SWT.RIGHT);
-		fd_groupInfoCustom.top = new FormAttachment(0, 800);
-		fd_groupInfoCustom.left = new FormAttachment(groupInfoPersonal, 0, SWT.LEFT);
-		groupInfoCustom.setLayoutData(fd_groupInfoCustom);
-		groupInfoCustom.setLayout(new FormLayout());
-		groupInfoCustom.setText("自定义");
-
-		labelInfoStatus = new Label(compositeInfo, SWT.NONE);
-		final FormData fd_labelInfoStatus = new FormData();
-		fd_labelInfoStatus.top = new FormAttachment(canvasInfoAvatar, 0, SWT.TOP);
-		fd_labelInfoStatus.left = new FormAttachment(0, 170);
-		labelInfoStatus.setLayoutData(fd_labelInfoStatus);
-		labelInfoStatus.setText("我的状态");
-
-		textInfoStatus = new Text(compositeInfo, SWT.BORDER);
-		final FormData fd_textInfoStatus = new FormData();
-		fd_textInfoStatus.bottom = new FormAttachment(buttonInfoChangeAvatar, 0, SWT.BOTTOM);
-		fd_textInfoStatus.right = new FormAttachment(groupInfoPersonal, 0, SWT.RIGHT);
-		fd_textInfoStatus.top = new FormAttachment(labelInfoStatus, 5, SWT.BOTTOM);
-		fd_textInfoStatus.left = new FormAttachment(labelInfoStatus, 0, SWT.LEFT);
-		textInfoStatus.setLayoutData(fd_textInfoStatus);
-
-		toolBarInfo = new ToolBar(compositeInfo, SWT.NONE);
-		final FormData fd_toolBarInfo = new FormData();
-		fd_toolBarInfo.top = new FormAttachment(0, 5);
-		fd_toolBarInfo.left = new FormAttachment(0, 5);
-		toolBarInfo.setLayoutData(fd_toolBarInfo);
-
-		toolItemInfoSave = new ToolItem(toolBarInfo, SWT.PUSH);
-		toolItemInfoSave.addSelectionListener(new ToolItemInfoSaveSelectionListener());
-		toolItemInfoSave.setToolTipText("保存对个人信息的修改");
-		toolItemInfoSave.setText("存");
-
-		toolItemInfoReset = new ToolItem(toolBarInfo, SWT.PUSH);
-		toolItemInfoReset.addSelectionListener(new ToolItemInfoResetSelectionListener());
-		toolItemInfoReset.setToolTipText("放弃所有修改");
-		toolItemInfoReset.setText("重");
-
-		toolItemInfoUpload = new ToolItem(toolBarInfo, SWT.PUSH);
-		toolItemInfoUpload.addSelectionListener(new ToolItemInfoUploadSelectionListener());
-		toolItemInfoUpload.setToolTipText("将个人信息更新到服务器");
-		toolItemInfoUpload.setText("上");
-
-		toolItemInfoDownload = new ToolItem(toolBarInfo, SWT.PUSH);
-		toolItemInfoDownload.addSelectionListener(new ToolItemInfoDownloadSelectionListener());
-		toolItemInfoDownload.setToolTipText("从服务器上下载个人信息");
-		toolItemInfoDownload.setText("下");
-
-		compositeInfo.setSize(630, 1000);
-		scrolledCompositeInfo.setContent(compositeInfo);
+//		scrolledCompositeInfo = new ScrolledComposite(compositeMain, SWT.V_SCROLL | SWT.H_SCROLL);
+//		scrolledCompositeInfo.getVerticalBar().setThumb(0);
+//		scrolledCompositeInfo.getVerticalBar().setIncrement(10);
+//
+//		compositeInfo = new Composite(scrolledCompositeInfo, SWT.NONE);
+//		compositeInfo.setLayout(new FormLayout());
+//
+//		canvasInfoAvatar = new Canvas(compositeInfo, SWT.DOUBLE_BUFFERED);
+//		canvasInfoAvatar.addPaintListener(new CanvasInfoAvatarPaintListener());
+//		final FormData fd_canvasInfoAvatar = new FormData();
+//		fd_canvasInfoAvatar.left = new FormAttachment(0, 15);
+//		fd_canvasInfoAvatar.right = new FormAttachment(0, 135);
+//		fd_canvasInfoAvatar.bottom = new FormAttachment(0, 160);
+//		fd_canvasInfoAvatar.top = new FormAttachment(0, 40);
+//		canvasInfoAvatar.setLayoutData(fd_canvasInfoAvatar);
+//		canvasInfoAvatar.setData(SWTResourceManager.getImage(MainWindow.class, "/img/nullAvatar.jpg"));
+//
+//		buttonInfoChangeAvatar = new Button(compositeInfo, SWT.NONE);
+//		buttonInfoChangeAvatar.addSelectionListener(new ButtonInfoChangeAvatarSelectionListener());
+//		final FormData fd_buttonInfoChangeAvatar = new FormData();
+//		fd_buttonInfoChangeAvatar.top = new FormAttachment(canvasInfoAvatar, 5, SWT.BOTTOM);
+//		fd_buttonInfoChangeAvatar.right = new FormAttachment(0, 109);
+//		fd_buttonInfoChangeAvatar.left = new FormAttachment(0, 40);
+//		buttonInfoChangeAvatar.setLayoutData(fd_buttonInfoChangeAvatar);
+//		buttonInfoChangeAvatar.setText("更换头像...");
+//
+//		groupInfoPersonal = new Group(compositeInfo, SWT.NONE);
+//		groupInfoPersonal.setText("个人");
+//		final FormData fd_groupInfoPersonal = new FormData();
+//		fd_groupInfoPersonal.right = new FormAttachment(0, 585);
+//		fd_groupInfoPersonal.left = new FormAttachment(0, 15);
+//		fd_groupInfoPersonal.bottom = new FormAttachment(0, 490);
+//		fd_groupInfoPersonal.top = new FormAttachment(0, 200);
+//		groupInfoPersonal.setLayoutData(fd_groupInfoPersonal);
+//
+//		labelInfoName = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoName.setBounds(38, 34, 24, 17);
+//		labelInfoName.setText("姓名");
+//
+//		textInfoName = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoName.setBounds(86, 34, 142, 23);
+//
+//		textInfoNickName = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoNickName.setBounds(363, 34, 142, 23);
+//
+//		labelInfoNickName = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoNickName.setBounds(314, 34, 24, 17);
+//		labelInfoNickName.setText("昵称");
+//
+//		labelInfoCellphone = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoCellphone.setBounds(38, 115, 24, 17);
+//		labelInfoCellphone.setText("手机");
+//
+//		textInfoCellphone = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoCellphone.setBounds(86, 112, 142, 23);
+//		textInfoCellphone.addFocusListener(new TextInfoCellphoneFocusListener());
+//
+//		labelInfoBirthday = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoBirthday.setBounds(314, 74, 24, 17);
+//		labelInfoBirthday.setText("生日");
+//
+//		dateTimeBirthday = new DateTime(groupInfoPersonal, SWT.DATE);
+//		dateTimeBirthday.setBounds(362, 72, 93, 24);
+//
+//		labelInfoEmail = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoEmail.setBounds(314, 115, 36, 17);
+//		labelInfoEmail.setText("E-mail");
+//
+//		textInfoEmail = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoEmail.setBounds(363, 112, 142, 23);
+//		textInfoEmail.addFocusListener(new TextInfoEmailFocusListener());
+//
+//		labelInfoQQNumber = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoQQNumber.setBounds(38, 150, 24, 23);
+//		labelInfoQQNumber.setText("QQ");
+//
+//		textInfoQQNumber = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoQQNumber.setBounds(86, 150, 142, 23);
+//		textInfoQQNumber.addFocusListener(new TextInfoQQNumberFocusListener());
+//
+//		labelInfoMSN = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoMSN.setBounds(314, 150, 36, 17);
+//		labelInfoMSN.addFocusListener(new LabelInfoMSNFocusListener());
+//		labelInfoMSN.setText("MSN");
+//
+//		textInfoMSN = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoMSN.setBounds(362, 150, 142, 23);
+//
+//		labelInfoDesc = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoDesc.setBounds(38, 197, 48, 23);
+//		labelInfoDesc.setText("个人描述");
+//
+//		textInfoDesc = new Text(groupInfoPersonal, SWT.BORDER);
+//		textInfoDesc.setBounds(98, 197, 427, 80);
+//
+//		labelInfoGender = new Label(groupInfoPersonal, SWT.NONE);
+//		labelInfoGender.setBounds(38, 74, 24, 17);
+//		labelInfoGender.setText("性别");
+//
+//		comboInfoGender = new Combo(groupInfoPersonal, SWT.READ_ONLY);
+//		comboInfoGender.setBounds(86, 71, 67, 25);
+//		comboInfoGender.add("不公开");
+//		comboInfoGender.add("男");
+//		comboInfoGender.add("女");
+//		comboInfoGender.setData("不公开", 0);
+//		comboInfoGender.setData("男", 1);
+//		comboInfoGender.setData("女", 2);
+//		comboInfoGender.select(0);
+//
+//		groupInfoFamily = new Group(compositeInfo, SWT.NONE);
+//		final FormData fd_groupInfoFamily = new FormData();
+//		fd_groupInfoFamily.bottom = new FormAttachment(0, 605);
+//		fd_groupInfoFamily.right = new FormAttachment(groupInfoPersonal, 0, SWT.RIGHT);
+//		fd_groupInfoFamily.top = new FormAttachment(0, 510);
+//		fd_groupInfoFamily.left = new FormAttachment(groupInfoPersonal, 0, SWT.LEFT);
+//		groupInfoFamily.setLayoutData(fd_groupInfoFamily);
+//		groupInfoFamily.setText("家庭");
+//
+//		labelInfoFamilyPhone = new Label(groupInfoFamily, SWT.NONE);
+//		labelInfoFamilyPhone.setBounds(29, 30, 48, 17);
+//		labelInfoFamilyPhone.setText("家庭电话");
+//
+//		textInfoFamilyPhone = new Text(groupInfoFamily, SWT.BORDER);
+//		textInfoFamilyPhone.setBounds(101, 24, 142, 23);
+//		textInfoFamilyPhone.addFocusListener(new TextInfoFamilyPhoneFocusListener());
+//
+//		labelInfoFamilyAddress = new Label(groupInfoFamily, SWT.NONE);
+//		labelInfoFamilyAddress.setBounds(29, 65, 48, 17);
+//		labelInfoFamilyAddress.setText("家庭住址");
+//
+//		textInfoFamilyAddress = new Text(groupInfoFamily, SWT.BORDER);
+//		textInfoFamilyAddress.setBounds(101, 59, 282, 23);
+//
+//		groupInfoGroup = new Group(compositeInfo, SWT.NONE);
+//		final FormData fd_groupInfoGroup = new FormData();
+//		fd_groupInfoGroup.bottom = new FormAttachment(0, 765);
+//		fd_groupInfoGroup.top = new FormAttachment(0, 625);
+//		fd_groupInfoGroup.right = new FormAttachment(groupInfoFamily, 570, SWT.LEFT);
+//		fd_groupInfoGroup.left = new FormAttachment(groupInfoFamily, 0, SWT.LEFT);
+//		groupInfoGroup.setLayoutData(fd_groupInfoGroup);
+//		groupInfoGroup.setText("单位");
+//
+//		labelInfoCompany = new Label(groupInfoGroup, SWT.NONE);
+//		labelInfoCompany.setBounds(35, 32, 24, 17);
+//		labelInfoCompany.setText("单位");
+//
+//		textInfoCompany = new Text(groupInfoGroup, SWT.BORDER);
+//		textInfoCompany.setBounds(110, 32, 142, 23);
+//
+//		labelInfoTitle = new Label(groupInfoGroup, SWT.NONE);
+//		labelInfoTitle.setBounds(311, 32, 24, 17);
+//		labelInfoTitle.setText("头衔");
+//
+//		textInfoTitle = new Text(groupInfoGroup, SWT.BORDER);
+//		textInfoTitle.setBounds(360, 32, 142, 23);
+//
+//		labelInfoCompanyPhone = new Label(groupInfoGroup, SWT.NONE);
+//		labelInfoCompanyPhone.setBounds(35, 70, 48, 17);
+//		labelInfoCompanyPhone.setText("单位电话");
+//
+//		textInfoCompanyPhone = new Text(groupInfoGroup, SWT.BORDER);
+//		textInfoCompanyPhone.setBounds(110, 72, 142, 23);
+//		textInfoCompanyPhone.addFocusListener(new TextInfoCompanyPhoneFocusListener());
+//
+//		labelInfoCompanyAddress = new Label(groupInfoGroup, SWT.NONE);
+//		labelInfoCompanyAddress.setBounds(35, 107, 48, 17);
+//		labelInfoCompanyAddress.setText("单位地址");
+//
+//		textInfoCompanyAddress = new Text(groupInfoGroup, SWT.BORDER);
+//		textInfoCompanyAddress.setBounds(110, 109, 282, 23);
+//
+//		groupInfoCustom = new Group(compositeInfo, SWT.NONE);
+//		final FormData fd_groupInfoCustom = new FormData();
+//		fd_groupInfoCustom.right = new FormAttachment(groupInfoGroup, 0, SWT.RIGHT);
+//		fd_groupInfoCustom.top = new FormAttachment(0, 800);
+//		fd_groupInfoCustom.left = new FormAttachment(groupInfoPersonal, 0, SWT.LEFT);
+//		groupInfoCustom.setLayoutData(fd_groupInfoCustom);
+//		groupInfoCustom.setLayout(new FormLayout());
+//		groupInfoCustom.setText("自定义");
+//
+//		labelInfoStatus = new Label(compositeInfo, SWT.NONE);
+//		final FormData fd_labelInfoStatus = new FormData();
+//		fd_labelInfoStatus.top = new FormAttachment(canvasInfoAvatar, 0, SWT.TOP);
+//		fd_labelInfoStatus.left = new FormAttachment(0, 170);
+//		labelInfoStatus.setLayoutData(fd_labelInfoStatus);
+//		labelInfoStatus.setText("我的状态");
+//
+//		textInfoStatus = new Text(compositeInfo, SWT.BORDER);
+//		final FormData fd_textInfoStatus = new FormData();
+//		fd_textInfoStatus.bottom = new FormAttachment(buttonInfoChangeAvatar, 0, SWT.BOTTOM);
+//		fd_textInfoStatus.right = new FormAttachment(groupInfoPersonal, 0, SWT.RIGHT);
+//		fd_textInfoStatus.top = new FormAttachment(labelInfoStatus, 5, SWT.BOTTOM);
+//		fd_textInfoStatus.left = new FormAttachment(labelInfoStatus, 0, SWT.LEFT);
+//		textInfoStatus.setLayoutData(fd_textInfoStatus);
+//
+//		toolBarInfo = new ToolBar(compositeInfo, SWT.NONE);
+//		final FormData fd_toolBarInfo = new FormData();
+//		fd_toolBarInfo.top = new FormAttachment(0, 5);
+//		fd_toolBarInfo.left = new FormAttachment(0, 5);
+//		toolBarInfo.setLayoutData(fd_toolBarInfo);
+//
+//		toolItemInfoSave = new ToolItem(toolBarInfo, SWT.PUSH);
+//		toolItemInfoSave.addSelectionListener(new ToolItemInfoSaveSelectionListener());
+//		toolItemInfoSave.setToolTipText("保存对个人信息的修改");
+//		toolItemInfoSave.setText("存");
+//
+//		toolItemInfoReset = new ToolItem(toolBarInfo, SWT.PUSH);
+//		toolItemInfoReset.addSelectionListener(new ToolItemInfoResetSelectionListener());
+//		toolItemInfoReset.setToolTipText("放弃所有修改");
+//		toolItemInfoReset.setText("重");
+//
+//		toolItemInfoUpload = new ToolItem(toolBarInfo, SWT.PUSH);
+//		toolItemInfoUpload.addSelectionListener(new ToolItemInfoUploadSelectionListener());
+//		toolItemInfoUpload.setToolTipText("将个人信息更新到服务器");
+//		toolItemInfoUpload.setText("上");
+//
+//		toolItemInfoDownload = new ToolItem(toolBarInfo, SWT.PUSH);
+//		toolItemInfoDownload.addSelectionListener(new ToolItemInfoDownloadSelectionListener());
+//		toolItemInfoDownload.setToolTipText("从服务器上下载个人信息");
+//		toolItemInfoDownload.setText("下");
+//
+//		compositeInfo.setSize(630, 1000);
+//		scrolledCompositeInfo.setContent(compositeInfo);
 
 		// [end]
 
@@ -624,8 +632,7 @@ public class MainWindow
 		toolItemAddressSyncRemote = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressSyncRemote.addSelectionListener(new ToolItemAddressSyncRemoteSelectionListener());
 		toolItemAddressSyncRemote.setToolTipText("与服务器进行远程同步");
-		toolItemAddressSyncRemote.setText(Messages.getString("MainWindow.SyncRemote")); //$NON-NLS-1$
-		compositeMainStackLayout.topControl = compositeAddress;
+		toolItemAddressSyncRemote.setText(Messages.getString("MainWindow.SyncRemote")); //$NON-teAddress;
 
 		labelAddressSearch = new Button(compositeAddress, SWT.NONE);
 		labelAddressSearch.addSelectionListener(new LabelAddressSearchSelectionListener());
@@ -770,30 +777,20 @@ public class MainWindow
 
 		// [start] 主工具栏按钮
 		toolItemMainRegister = new ToolItem(toolBarMain, SWT.PUSH);
-		toolItemMainRegister.addSelectionListener(new SelectionAdapter()
-		{
-			public void widgetSelected(SelectionEvent e)
-			{
-				// MessageDialog.openInformation(shell, "hello", "regist");
-				// Shell regist=new Shell();
-				// regist.open();
-				// Dialog a=new Dialog(shell);
-				RegistDialog r = new RegistDialog(shell, SWT.None);
-				r.open();
-			}
-		});
+		toolItemMainRegister.addSelectionListener(new ToolItemMainRegisterSelectionListener());
 		toolItemMainRegister.setText(Messages.getString("MainWindow.Register")); //$NON-NLS-1$
 
 		toolItemMainLogin = new ToolItem(toolBarMain, SWT.PUSH);
+		toolItemMainLogin.addSelectionListener(new ToolItemMainLoginSelectionListener());
 		toolItemMainLogin.setText(Messages.getString("MainWindow.Login")); //$NON-NLS-1$
 
 		toolItemMainLogout = new ToolItem(toolBarMain, SWT.PUSH);
+		toolItemMainLogout.addSelectionListener(new ToolItemMainLogoutSelectionListener());
 		toolItemMainLogout.setText(Messages.getString("MainWindow.Logout")); //$NON-NLS-1$
 		// [end]
 
 		// [start] 左侧按钮
-		listButtonUserInfo = new Button(compositeLeftList, SWT.TOGGLE);
-		listButtonUserInfo.setSelection(true);
+		listButtonUserInfo = new Button(compositeLeftList, SWT.NONE);
 		listButtonUserInfo.addSelectionListener(new ListButtonUserInfoSelectionListener());
 		final GridData gd_listButtonUserInfo = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd_listButtonUserInfo.heightHint = 35;
@@ -801,6 +798,7 @@ public class MainWindow
 		listButtonUserInfo.setText(Messages.getString("MainWindow.UserInfo")); //$NON-NLS-1$
 
 		listButtonAddressBook = new Button(compositeLeftList, SWT.TOGGLE);
+		listButtonAddressBook.setSelection(true);
 		listButtonAddressBook.addSelectionListener(new ListButtonAddressBookSelectionListener());
 		final GridData gd_listButtonAddressBook = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		gd_listButtonAddressBook.heightHint = 35;
@@ -832,24 +830,32 @@ public class MainWindow
 		// [start] MessageBox Composite
 		// (new ListButtonUserInfoSelectionListener()).widgetSelected(null);
 		// MessageBox
-		messageCompsite = new MessageBoxDialog(compositeMain, SWT.NONE);
+		compositeMessage = new MessageBoxDialog(compositeMain, SWT.NONE);
 		// [end]
 
 		// [start] 人立方版面
 		// !TODO
-		renlifang = new Renlifang(compositeMain, SWT.NONE);
-		listButtonUserInfo.setSelection(true);
-		scrolledCompositeInfo.setVisible(true);
-		compositeMainStackLayout.topControl = scrolledCompositeInfo;
-		listButtonAddressBook.setSelection(false);
-		compositeAddress.setVisible(false);
-		renlifang.setVisible(false);
-		messageCompsite.setVisible(false);
-		listButtonGroup.setSelection(false);
-		listButtonSearch.setSelection(false);
-		listButtonMessageBox.setSelection(false);
+		compositeSearch = new Renlifang(compositeMain, SWT.NONE);
+
+		//compositeMainStackLayout.topControl = compositeGroup;
+		//istButtonUserInfo.setSelection(true);
+		//scrolledCompositeInfo.setVisible(true);
+		//compositeMainStackLayout.topControl = scrolledCompositeInfo;
+		//listButtonAddressBook.setSelection(false);
+		//compositeAddress.setVisible(false);
+		//listButtonRenlifang.setVisible(false);
+		//compositeMessage.setVisible(false);
+		//compositeMainStackLayout.topControl = compositeMessage;
+		//compositeMainStackLayout.topControl = scrolledCompositeInfo;
+		//listButtonGroup.setSelection(false);
+		//listButtonSearch.setSelection(false);
+		//listButtonMessageBox.setSelection(false);
 		// [end]
 
+		// [start] 群组Composite
+		compositeGroup = new GroupComposite(compositeMain, SWT.NONE);
+		compositeMainStackLayout.topControl = compositeAddress;
+		// [end]	
 	}
 
 	/**
@@ -946,22 +952,9 @@ public class MainWindow
 		// [end]
 
 		// [start] 被授权联系人
-		//TODO: 被授权联系人
-		//allPermContactsBox = logicCenter.getAllPerContatcsBox();
-		//allPermContactsBox.addObserver(new ContactPermRefreshObserver());
-		
-		
-//		treeAddressPermitItemNoGroup = new TreeItem(treeAddressPermit, SWT.NONE);
-//		treeAddressPermitItemNoGroup.setText("未分组");
-//
-//		// TODO 从数据库中读取被授权联系人，填入相关控件（考虑DataBinding）
-//		// Sample Code:
-//		TreeItem item2 = new TreeItem(treeAddressPermit, SWT.NONE);
-//		item2.setText("业务");
-//		createTreeSubItem(item2, "许忠信", "", "许妈", "老师", "13600000000", "xzx@tsinghua.edu.cn");
-//		item2.setExpanded(true);
-//		// Sample Code End.
-//		treeAddressPermitItemNoGroup.setExpanded(true);
+		allPerContactsBox = logicCenter.getAllPerContatcsBox();
+		if(allPerContactsBox != null)
+			allPerContactsBox.addObserver(new ContactPerRefreshObserver());
 		// [end]
 
 		// [start] MessageBox
@@ -973,21 +966,97 @@ public class MainWindow
 		// [end]
 	}
 
+	
+	// [start] 主工具栏 事件
+	/**
+	 * 注册
+	 */
+	private class ToolItemMainRegisterSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			UserInfo newUser = new UserInfo();
+			UserInfoDialog userInfoDialog = new UserInfoDialog(shell,"新用户注册",
+					UserInfoTableType.Register, newUser);
+			
+			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
+			{
+				logicCenter.register(newUser.getBaseInfo(), new Password(userInfoDialog.getPassword()));
+				//TODO: 登录
+			}
+		}
+	}
+	
+	/**
+	 * 注销
+	 * @author Wander
+	 *
+	 */
+	private class ToolItemMainLogoutSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			if(logicCenter.getLoginUser() != null &&
+					MessageDialog.openConfirm(shell, "退出登录确认", "确实要退出登录吗？"))
+			{
+				try
+				{
+					logicCenter.logout();
+				} catch (RemoteException e1)
+				{
+					MessageDialog.openWarning(shell, "退出登录失败", "退出登录失败！");
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 登录
+	 * @author Wander
+	 *
+	 */
+	private class ToolItemMainLoginSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			LoginDialog loginDialog = new LoginDialog(shell);
+			loginDialog.open();
+		}
+	}
+	
+	// [end]
+	
 	// [start] 左侧选择按钮 事件
 	private class ListButtonUserInfoSelectionListener extends SelectionAdapter
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			listButtonUserInfo.setSelection(true);
-			scrolledCompositeInfo.setVisible(true);
-			compositeMainStackLayout.topControl = scrolledCompositeInfo;
-			listButtonAddressBook.setSelection(false);
-			compositeAddress.setVisible(false);
-			renlifang.setVisible(false);
-			messageCompsite.setVisible(false);
-			listButtonGroup.setSelection(false);
-			listButtonSearch.setSelection(false);
-			listButtonMessageBox.setSelection(false);
+//			listButtonUserInfo.setSelection(true);
+//			scrolledCompositeInfo.setVisible(true);
+//			compositeMainStackLayout.topControl = scrolledCompositeInfo;
+//			listButtonAddressBook.setSelection(false);
+//			compositeAddress.setVisible(false);
+//			listButtonRenlifang.setVisible(false);
+//			compositeMessage.setVisible(false);
+//			listButtonGroup.setSelection(false);
+//			listButtonSearch.setSelection(false);
+//			listButtonMessageBox.setSelection(false);
+			
+			BaseUserInfo loginBaseUserInfo = logicCenter.getLoginUser();
+			if(loginBaseUserInfo == null)
+			{
+				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
+				//TODO: 转到登录对话框
+			}
+			else
+			{
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "个人信息", 
+						UserInfoTableType.Owner,
+						new UserInfo(loginBaseUserInfo));
+				if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
+				{
+					logicCenter.editMyBaseInfo(loginBaseUserInfo, new Password(userInfoDialog.getPassword()));
+				}
+			}
+		
 		}
 	}
 
@@ -995,17 +1064,19 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			listButtonUserInfo.setSelection(false);
-			scrolledCompositeInfo.setVisible(false);
+			//listButtonUserInfo.setSelection(false);
+			//scrolledCompositeInfo.setVisible(false);
 			listButtonAddressBook.setSelection(true);
 			compositeAddress.setVisible(true);
-			renlifang.setVisible(false);
-			messageCompsite.setVisible(false);
-			compositeMainStackLayout.topControl = compositeAddress;
-			listButtonGroup.setSelection(false);
 			listButtonSearch.setSelection(false);
+			compositeSearch.setVisible(false);
 			listButtonMessageBox.setSelection(false);
+			compositeMessage.setVisible(false);
+			
+			//compositeMainStackLayout.topControl = compositeAddress;
 
+			listButtonGroup.setSelection(false);
+			compositeGroup.setVisible(false);
 		}
 	}
 
@@ -1013,15 +1084,16 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			listButtonUserInfo.setSelection(false);
-			scrolledCompositeInfo.setVisible(false);
+			//listButtonUserInfo.setSelection(false);
+			//scrolledCompositeInfo.setVisible(false);
 			listButtonAddressBook.setSelection(false);
 			compositeAddress.setVisible(false);
 			listButtonGroup.setSelection(true);
+			compositeGroup.setVisible(true);
 			listButtonSearch.setSelection(false);
 			listButtonMessageBox.setSelection(false);
-			renlifang.setVisible(false);
-			messageCompsite.setVisible(false);
+			compositeSearch.setVisible(false);
+			compositeMessage.setVisible(false);
 		}
 	}
 
@@ -1030,16 +1102,17 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			listButtonUserInfo.setSelection(false);
-			scrolledCompositeInfo.setVisible(false);
+			//listButtonUserInfo.setSelection(false);
+			//scrolledCompositeInfo.setVisible(false);
 			listButtonAddressBook.setSelection(false);
 			compositeAddress.setVisible(false);
 			listButtonGroup.setSelection(false);
+			compositeGroup.setVisible(false);
 			listButtonSearch.setSelection(true);
 			listButtonMessageBox.setSelection(false);
-			renlifang.setVisible(true);
-			messageCompsite.setVisible(false);
-			compositeMainStackLayout.topControl = renlifang;
+			compositeSearch.setVisible(true);
+			compositeMessage.setVisible(false);
+			compositeMainStackLayout.topControl = compositeSearch;
 			// System.out.println("renlifang");
 		}
 	}
@@ -1048,16 +1121,17 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			listButtonUserInfo.setSelection(false);
-			scrolledCompositeInfo.setVisible(false);
+			//listButtonUserInfo.setSelection(false);
+			//scrolledCompositeInfo.setVisible(false);
 			listButtonAddressBook.setSelection(false);
 			compositeAddress.setVisible(false);
 			listButtonGroup.setSelection(false);
+			compositeGroup.setVisible(false);
 			listButtonSearch.setSelection(false);
 			listButtonMessageBox.setSelection(true);
-			renlifang.setVisible(false);
-			messageCompsite.setVisible(true);
-			compositeMainStackLayout.topControl = messageCompsite;
+			compositeSearch.setVisible(false);
+			compositeMessage.setVisible(true);
+			compositeMainStackLayout.topControl = compositeMessage;
 			// System.out.println("messagebox");
 		}
 	}
@@ -1065,188 +1139,188 @@ public class MainWindow
 	// [end]
 
 	// [start] 个人信息 相关事件
-	/**
-	 * 绘制头像
-	 */
-	private class CanvasInfoAvatarPaintListener implements PaintListener
-	{
-		public void paintControl(final PaintEvent e)
-		{
-			Image image = (Image) canvasInfoAvatar.getData();
-			if (image != null)
-				e.gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, canvasInfoAvatar
-						.getBounds().width, canvasInfoAvatar.getBounds().height);
-		}
-	}
-
-	/**
-	 * 更换新头像
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class ButtonInfoChangeAvatarSelectionListener extends SelectionAdapter
-	{
-		public void widgetSelected(final SelectionEvent e)
-		{
-			FileDialog dlg = new FileDialog(shell, SWT.OPEN);
-			String fileName = dlg.open();
-			if (fileName != null)
-			{
-				Image image = new Image(null, fileName);
-				canvasInfoAvatar.setData(image);
-				canvasInfoAvatar.redraw();
-				// TODO: 检查图片格式，保存用户头像到数据库
-			}
-		}
-	}
-
-	/**
-	 * 检查手机号合法性
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class TextInfoCellphoneFocusListener extends FocusAdapter
-	{
-		public void focusLost(final FocusEvent e)
-		{
-			// TODO: 检查手机号合法性
-		}
-	}
-
-	/**
-	 * 检查E-mail合法性
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class TextInfoEmailFocusListener extends FocusAdapter
-	{
-		public void focusLost(final FocusEvent e)
-		{
-			// TODO: 检查E-mail合法性
-		}
-	}
-
-	/**
-	 * 检查QQ号合法性
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class TextInfoQQNumberFocusListener extends FocusAdapter
-	{
-		public void focusLost(final FocusEvent e)
-		{
-			// TODO: 检查QQ号合法性
-		}
-	}
-
-	/**
-	 * 检查家庭电话合法性
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class TextInfoFamilyPhoneFocusListener extends FocusAdapter
-	{
-		public void focusLost(final FocusEvent e)
-		{
-			// TODO: 检查家庭电话合法性
-		}
-	}
-
-	/**
-	 * 检查单位电话合法性
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class TextInfoCompanyPhoneFocusListener extends FocusAdapter
-	{
-		public void focusLost(final FocusEvent e)
-		{
-			// TODO: 检查单位电话合法性
-		}
-	}
-
-	/**
-	 * 检查MSN合法性
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class LabelInfoMSNFocusListener extends FocusAdapter
-	{
-		public void focusLost(final FocusEvent e)
-		{
-			// TODO: 检查MSN合法性
-		}
-	}
-
-	/**
-	 * 放弃对个人信息的修改
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class ToolItemInfoResetSelectionListener extends SelectionAdapter
-	{
-		public void widgetSelected(final SelectionEvent e)
-		{
-			if (MessageDialog.openConfirm(shell, "确认重置", "确实要放弃所有修改吗？"))
-			{
-				// TODO: 放弃所有修改
-			}
-		}
-	}
-
-	/**
-	 * 保存对个人信息的修改
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class ToolItemInfoSaveSelectionListener extends SelectionAdapter
-	{
-		public void widgetSelected(final SelectionEvent e)
-		{
-			// TODO: 将个人信息保存在本地数据库
-		}
-	}
-
-	/**
-	 * 将个人信息上传到服务器
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class ToolItemInfoUploadSelectionListener extends SelectionAdapter
-	{
-		public void widgetSelected(final SelectionEvent e)
-		{
-			// TODO: 将个人信息上传到服务器
-		}
-	}
-
-	/**
-	 * 从服务器上下载个人信息
-	 * 
-	 * @author Wander
-	 * 
-	 */
-	private class ToolItemInfoDownloadSelectionListener extends SelectionAdapter
-	{
-		public void widgetSelected(final SelectionEvent e)
-		{
-			if (false || // true = 本地的个人信息最后修改时间比服务器的新
-			MessageDialog.openConfirm(shell, "确认下载", "本地的个人信息比服务器的新，确实要用服务器上的数据覆盖本地数据吗？"))
-			{
-				// TODO: 从服务器上下载个人信息
-			}
-		}
-	}
+//	/**
+//	 * 绘制头像
+//	 */
+//	private class CanvasInfoAvatarPaintListener implements PaintListener
+//	{
+//		public void paintControl(final PaintEvent e)
+//		{
+//			Image image = (Image) canvasInfoAvatar.getData();
+//			if (image != null)
+//				e.gc.drawImage(image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, canvasInfoAvatar
+//						.getBounds().width, canvasInfoAvatar.getBounds().height);
+//		}
+//	}
+//
+//	/**
+//	 * 更换新头像
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class ButtonInfoChangeAvatarSelectionListener extends SelectionAdapter
+//	{
+//		public void widgetSelected(final SelectionEvent e)
+//		{
+//			FileDialog dlg = new FileDialog(shell, SWT.OPEN);
+//			String fileName = dlg.open();
+//			if (fileName != null)
+//			{
+//				Image image = new Image(null, fileName);
+//				canvasInfoAvatar.setData(image);
+//				canvasInfoAvatar.redraw();
+//				// TODO: 检查图片格式，保存用户头像到数据库
+//			}
+//		}
+//	}
+//
+//	/**
+//	 * 检查手机号合法性
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class TextInfoCellphoneFocusListener extends FocusAdapter
+//	{
+//		public void focusLost(final FocusEvent e)
+//		{
+//			// TODO: 检查手机号合法性
+//		}
+//	}
+//
+//	/**
+//	 * 检查E-mail合法性
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class TextInfoEmailFocusListener extends FocusAdapter
+//	{
+//		public void focusLost(final FocusEvent e)
+//		{
+//			// TODO: 检查E-mail合法性
+//		}
+//	}
+//
+//	/**
+//	 * 检查QQ号合法性
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class TextInfoQQNumberFocusListener extends FocusAdapter
+//	{
+//		public void focusLost(final FocusEvent e)
+//		{
+//			// TODO: 检查QQ号合法性
+//		}
+//	}
+//
+//	/**
+//	 * 检查家庭电话合法性
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class TextInfoFamilyPhoneFocusListener extends FocusAdapter
+//	{
+//		public void focusLost(final FocusEvent e)
+//		{
+//			// TODO: 检查家庭电话合法性
+//		}
+//	}
+//
+//	/**
+//	 * 检查单位电话合法性
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class TextInfoCompanyPhoneFocusListener extends FocusAdapter
+//	{
+//		public void focusLost(final FocusEvent e)
+//		{
+//			// TODO: 检查单位电话合法性
+//		}
+//	}
+//
+//	/**
+//	 * 检查MSN合法性
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class LabelInfoMSNFocusListener extends FocusAdapter
+//	{
+//		public void focusLost(final FocusEvent e)
+//		{
+//			// TODO: 检查MSN合法性
+//		}
+//	}
+//
+//	/**
+//	 * 放弃对个人信息的修改
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class ToolItemInfoResetSelectionListener extends SelectionAdapter
+//	{
+//		public void widgetSelected(final SelectionEvent e)
+//		{
+//			if (MessageDialog.openConfirm(shell, "确认重置", "确实要放弃所有修改吗？"))
+//			{
+//				// TODO: 放弃所有修改
+//			}
+//		}
+//	}
+//
+//	/**
+//	 * 保存对个人信息的修改
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class ToolItemInfoSaveSelectionListener extends SelectionAdapter
+//	{
+//		public void widgetSelected(final SelectionEvent e)
+//		{
+//			// TODO: 将个人信息保存在本地数据库
+//		}
+//	}
+//
+//	/**
+//	 * 将个人信息上传到服务器
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class ToolItemInfoUploadSelectionListener extends SelectionAdapter
+//	{
+//		public void widgetSelected(final SelectionEvent e)
+//		{
+//			// TODO: 将个人信息上传到服务器
+//		}
+//	}
+//
+//	/**
+//	 * 从服务器上下载个人信息
+//	 * 
+//	 * @author Wander
+//	 * 
+//	 */
+//	private class ToolItemInfoDownloadSelectionListener extends SelectionAdapter
+//	{
+//		public void widgetSelected(final SelectionEvent e)
+//		{
+//			if (false || // true = 本地的个人信息最后修改时间比服务器的新
+//			MessageDialog.openConfirm(shell, "确认下载", "本地的个人信息比服务器的新，确实要用服务器上的数据覆盖本地数据吗？"))
+//			{
+//				// TODO: 从服务器上下载个人信息
+//			}
+//		}
+//	}
 
 	// [end]
 
@@ -1377,6 +1451,9 @@ public class MainWindow
 							(getCurrentContactTab() == ContactTabType.Permission) ? 
 									UserInfoTableType.Permission : UserInfoTableType.Synchronization,
 							(UserInfo)current.getData());
+					if(getCurrentContactTab() == ContactTabType.Permission)
+						userInfoDialog.setAllPerContactsBox(allPerContactsBox);
+					userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
 					userInfoDialog.OpenEditInfo();
 					
 //					// Debug:
@@ -1404,12 +1481,12 @@ public class MainWindow
 		{
 			TreeItem current = getCurrentTreeItem();
 
-			if (current != null && current.getParentItem() != null)
+			if (current != null && current.getParentItem() != null && getCurrentContactTab() == ContactTabType.Permission)
 			{
 				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
-						(getCurrentContactTab() == ContactTabType.Permission) ? 
-								UserInfoTableType.Permission : UserInfoTableType.Synchronization,
+						UserInfoTableType.Permission,
 						(UserInfo)current.getData());
+				userInfoDialog.setAllPerContactsBox(allPerContactsBox);
 				userInfoDialog.OpenPermission();
 			}
 		}
@@ -1452,6 +1529,7 @@ public class MainWindow
 							(getCurrentContactTab() == ContactTabType.Permission) ? 
 									UserInfoTableType.Permission : UserInfoTableType.Synchronization,
 							(UserInfo)current.getData());
+					userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
 					userInfoDialog.open();
 				}
 			}
@@ -1472,6 +1550,9 @@ public class MainWindow
 			if (current == null || current.getParentItem() == null)
 				return;
 
+			MenuItem currentMenuItem = (MenuItem)e.getSource();
+			if(!currentMenuItem.getSelection()) return;
+			
 			UserInfo user = (UserInfo)current.getData();
 			InfoFieldFactory factory = InfoFieldFactory.getFactory();
 			
@@ -1483,15 +1564,15 @@ public class MainWindow
 			} 
 			else
 			{
-				for (MenuItem item : toolItemAddressCustomGroupItems)
-				{
-					if (item.getSelection())
-					{
-						InfoField cate = factory.makeInfoField("Category", item.getText());
+//				for (MenuItem item : toolItemAddressCustomGroupItems)
+//				{
+//					if (item.getSelection())
+//					{
+						InfoField cate = factory.makeInfoField("Category", currentMenuItem.getText());
 						user.getCustomInfo().setInfoField("Category", cate);
 						//MessageDialog.openInformation(shell, "设置分组", "id = " + ((Integer) item.getData()).toString());
-					}
-				}
+//					}
+//				}
 			}
 			
 			logicCenter.editContactInfo(user);
@@ -1564,10 +1645,12 @@ public class MainWindow
 		{
 			UserInfo user = new UserInfo();
 			UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "本地搜索", UserInfoTableType.SearchForm, user);
-			userInfoDialog.OpenEditInfo();
-			LocalSearchContactsResult result = logicCenter.localSearchContacts(user, userInfoDialog.getStrategy());
-			result.addObserver(new LocalSearchResultObserver());
-			//TODO: 如果从搜索结果中更新联系人，则搜索结果的显示不会自动更新
+			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
+			{
+				LocalSearchContactsResult result = logicCenter.localSearchContacts(user, userInfoDialog.getStrategy());
+				result.addObserver(new LocalSearchResultObserver());
+				//TODO: 如果从搜索结果中更新联系人，则搜索结果的显示不会自动更新
+			}
 		}
 	}
 	
@@ -1604,7 +1687,7 @@ public class MainWindow
 		@Override
 		public void run()
 		{
-			localSearchResult = users;
+			//localSearchResult = users;
 			(new ContactRefreshTask(users, ContactTabType.SearchResult)).run();
 			tabFolderAddress.setSelection(tabItemAddressSearchResult);
 		}
@@ -1631,7 +1714,7 @@ public class MainWindow
 	 * @author Wander
 	 *
 	 */
-	class ContactPermRefreshObserver implements Observer
+	class ContactPerRefreshObserver implements Observer
 	{
 		@Override
 		public void update(Observable o, Object arg)
@@ -1656,6 +1739,7 @@ public class MainWindow
 		public void run()
 		{
 			int n = users.size();
+			if(n <= 0) return;
 			// tabItemAddressContact.
 			// treeAddressContactItemNoGroup.clearAll(true);
 			/*
@@ -1687,6 +1771,10 @@ public class MainWindow
 			
 			currentTree.removeAll();
 			contactsCategory.clear();
+			
+			TreeItem noGroupItem = new TreeItem(currentTree, SWT.NONE);
+			noGroupItem.setText("未分组");
+			noGroupItem.setData(new Integer(-1));
 
 			List<TreeItem> cateList = new ArrayList<TreeItem>();
 			// TreeItem item1 = new TreeItem(treeAddressContact, SWT.NONE);
@@ -1699,11 +1787,6 @@ public class MainWindow
 				String email = users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
 				String tag = users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
 				String bir = users.get(i).getBaseInfo().getInfoField("Birthday").getStringValue();
-
-
-				TreeItem noGroupItem = new TreeItem(currentTree, SWT.NONE);
-				noGroupItem.setText("未分组");
-				noGroupItem.setData(new Integer(-1));
 				
 				TreeItem parentItem;
 				if (tag == null || tag.isEmpty())
@@ -1747,6 +1830,7 @@ public class MainWindow
 				int key = contactsCategory.get(cate);
 				toolItemAddressCustomGroupItems[key] = new MenuItem(toolItemAddressCustomGroupMenu, SWT.RADIO);
 				toolItemAddressCustomGroupItems[key].setText(cate);
+				toolItemAddressCustomGroupItems[key].addSelectionListener(new ToolItemAddressCustomGroupSelectionListener());
 			}
 
 			new MenuItem(toolItemAddressCustomGroupMenu, SWT.SEPARATOR);
@@ -1856,7 +1940,6 @@ public class MainWindow
 		}
 	}
 
-
 	// [end]
 
 	// [start] Observer相关事件
@@ -1874,7 +1957,7 @@ public class MainWindow
 		@Override
 		public void run()
 		{
-			messageCompsite.setMessage(messages);
+			compositeMessage.setMessage(messages);
 		}
 
 		public RefreshMessageTask(List<Message> messages)
