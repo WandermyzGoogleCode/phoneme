@@ -28,6 +28,8 @@ public class Password implements Serializable {
 	}
 
 	public Password(String value) {
+		if (value.equals(""))
+			return;//不合法
 		//TODO 检查
 		nullFlag = false;
 		encodedValue = new String(encoder.digest(value.getBytes()));
