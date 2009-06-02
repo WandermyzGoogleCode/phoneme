@@ -9,6 +9,7 @@ import java.util.Set;
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.ID;
 import entity.MyRemoteException;
 import entity.Password;
@@ -24,7 +25,10 @@ public class LoginResult extends OneTimeVirtualResult {
 		super(center);
 		this.identicalInfo = identicalInfo;
 		this.pwd = pwd;
-		thread.start();
+		if (!noLoginUser())
+			setError(ErrorType.ALREADY_ONLINE);
+		else
+			thread.start();
 	}
 
 	@Override

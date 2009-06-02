@@ -950,6 +950,8 @@ public class DataCenterImp implements DataCenter {
 						}
 						fieldNameIter = userInfoWriteBuffer.get(i)
 								.getCustomInfo().getKeySet().iterator();
+						if (userInfoWriteBuffer.get(i).getCustomInfo() == null)//∑¿÷πnull
+							userInfoWriteBuffer.get(i).setCustomInfo(new CustomUserInfo());
 						while (fieldNameIter.hasNext()) {
 							pstatement2.setString(keyNum, userInfoWriteBuffer
 									.get(i).getCustomInfo().getInfoField(
