@@ -3,6 +3,8 @@ package serverLogicCenter.sdataCenter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -51,5 +53,25 @@ public class PermissionTable {
 		pStatement.setLong(2, uid.getValue());
 		pStatement.setLong(3, id.getValue());
 		pStatement.execute();
+	}
+	
+	public List<Permission> getPermissions(ID uid, List<ID> idList) throws SQLException{
+		List<Permission> res = new ArrayList<Permission>();
+		String psql = "SELECT permission FROM Permission WHERE uid=? AND (";
+		for(ID id: idList){
+			if (psql.charAt(psql.length()-1) != '(')
+				psql += " OR ";
+			psql += "id=?";
+		}
+		psql += ")";
+		PreparedStatement pStatement = connection.prepareStatement(psql);
+		pStatement.setLong(1, uid.getValue());
+		for(int i=0; i<idList.size(); i++)
+			pStatement.setLong(i+2, idList.get(i).getValue());
+		ResultSet rows = pStatement.executeQuery();
+		while (rows.next()){
+			res.add((Permission)Serializer.unserialize(rows.getBlob(1)));
+		}
+		return res;
 	}
 }
