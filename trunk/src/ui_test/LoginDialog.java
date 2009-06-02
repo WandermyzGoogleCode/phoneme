@@ -30,7 +30,9 @@ import entity.MyError;
 import entity.Password;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.IdenticalInfoFieldName;
+import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
+import entity.infoField.InfoFieldName;
 
 public class LoginDialog extends Dialog
 {
@@ -49,7 +51,7 @@ public class LoginDialog extends Dialog
 	private LoginDialog thisDialog = this;	//给内部类调用
 	
 	private LogicCenter logicCenter = LogicCenterImp.getInstance();
-		
+	private Observer observer;
 	/**
 	 * Create the dialog
 	 * @param parentShell
@@ -130,6 +132,7 @@ public class LoginDialog extends Dialog
 			
 			LoginResult result = logicCenter.login(ident, new Password(password));
 			result.addObserver(new LoginResultObserver());
+			if(observer != null) result.addObserver(observer);
 		
 			return;
 		}
@@ -169,11 +172,17 @@ public class LoginDialog extends Dialog
 			{
 				BaseUserInfo loginUser = logicCenter.getLoginUser();
 				MessageDialog.openInformation(parentShell, "登录成功","登录成功");
-				//getShell().setText("PhoneMe" + String.format(" - \"%s\" 已登录");
+				getShell().setText("PhoneMe" + String.format(" - \"%s\" 已登录", loginUser.getInfoField("Name")));
+				//TODO: 上句好像没用
 				thisDialog.close();
 			}
 		}
 		
+	}
+	
+	public void addObserver(Observer o)
+	{
+		this.observer = o;
 	}
 
 }

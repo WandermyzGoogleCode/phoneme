@@ -189,12 +189,12 @@ public class GroupComposite extends Composite
 			{
 				//!TODO: 参数表怎么回事？; Observer未被调用
 				CreateGroupResult result = logicCenter.createGroup(newGroup, permission, 0);
-				result.addObserver(new CreateGrouopResultObserver());
+				result.addObserver(new CreateGroupResultObserver());
 			}
 		}
 	}
 	
-	class CreateGrouopResultObserver implements Observer
+	class CreateGroupResultObserver implements Observer
 	{
 
 		@Override

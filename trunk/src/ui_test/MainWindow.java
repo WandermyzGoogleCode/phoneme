@@ -17,6 +17,7 @@ import logiccenter.VirtualResult.AllContactsBox;
 import logiccenter.VirtualResult.AllPerContactsBox;
 import logiccenter.VirtualResult.GetStatResultResult;
 import logiccenter.VirtualResult.LocalSearchContactsResult;
+import logiccenter.VirtualResult.LoginResult;
 import logiccenter.VirtualResult.MessageBox;
 import logiccenter.VirtualResult.RegisterResult;
 import logiccenter.VirtualResult.RemoveGroupResult;
@@ -71,6 +72,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import ui_test.GroupInfoDialog.RemoveGroupResultTask;
+import ui_test.LoginDialog.LoginResultTask;
 import ui_test.UserInfoTable.UserInfoTableType;
 
 import com.ibm.icu.impl.ICUService.Factory;
@@ -839,23 +841,6 @@ public class MainWindow
 		// MessageBox
 		// [end]
 
-		// [start] 人立方版面
-		// !TODO
-
-		//compositeMainStackLayout.topControl = compositeGroup;
-		//istButtonUserInfo.setSelection(true);
-		//scrolledCompositeInfo.setVisible(true);
-		//compositeMainStackLayout.topControl = scrolledCompositeInfo;
-		//listButtonAddressBook.setSelection(false);
-		//compositeAddress.setVisible(false);
-		//listButtonRenlifang.setVisible(false);
-		//compositeMessage.setVisible(false);
-		//compositeMainStackLayout.topControl = compositeMessage;
-		//compositeMainStackLayout.topControl = scrolledCompositeInfo;
-		//listButtonGroup.setSelection(false);
-		//listButtonSearch.setSelection(false);
-		//listButtonMessageBox.setSelection(false);
-		// [end]
 
 		// [start] 群组Composite
 		compositeGroup = new GroupComposite(compositeMain, SWT.NONE);
@@ -1058,6 +1043,9 @@ public class MainWindow
 					MessageDialog.openWarning(shell, "退出登录失败", "退出登录失败！");
 					e1.printStackTrace();
 				}
+				
+				shell.setText("PhoneMe");
+				//TODO: 这行代码好像没用
 			}
 		}
 	}
@@ -1071,7 +1059,38 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			LoginDialog loginDialog = new LoginDialog(shell);
+			loginDialog.addObserver(new LoginResultObserver());
 			loginDialog.open();
+		}
+	}
+	
+	class LoginResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			// TODO Auto-generated method stub
+			Display.getDefault().syncExec(new LoginResultTask((LoginResult)o));
+		}
+	}
+	
+	class LoginResultTask implements Runnable
+	{
+		private LoginResult loginResult;
+
+		public LoginResultTask(LoginResult loginResult)
+		{
+			this.loginResult = loginResult;
+		}
+		@Override
+		public void run()
+		{
+			VirtualState state = loginResult.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				compositeMessageBox.GetMessage();
+			}
 		}
 	}
 	
@@ -1457,10 +1476,6 @@ public class MainWindow
 				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.NewLocal, newUser);
 				userInfoDialog.OpenEditInfo();
 				
-			}
-			else if(getCurrentContactTab() == ContactTabType.Permission)
-			{
-				//!TODO 添加被授权联系人
 			}
 		}
 	}
@@ -2007,46 +2022,12 @@ public class MainWindow
 				logicCenter.logout();
 			} catch (RemoteException e1)
 			{
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
 	}
 
 	// [start] Observer相关事件
-
-
-	void refreshMessageBox(List<Message> messages)
-	{
-		Display.getDefault().syncExec(new RefreshMessageTask(messages));
-	}
-
-	class RefreshMessageTask implements Runnable
-	{
-		private List<Message> messages;
-
-		@Override
-		public void run()
-		{
-		}
-
-		public RefreshMessageTask(List<Message> messages)
-		{
-			this.messages = messages;
-		}
-	}
-
-	class MessageBoxObserver implements Observer
-	{
-		Date lastUpdateTime = null;
-
-		@Override
-		public void update(Observable o, Object arg1)
-		{
-			MessageBox box = (MessageBox) o;
-			refreshMessageBox(box.getMessages());
-		}
-	}
 
 	class DisplayStatTask implements Runnable
 	{
