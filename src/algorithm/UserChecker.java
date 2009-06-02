@@ -6,6 +6,7 @@ import serverLogicCenter.ServerLogicCenter;
 import entity.BaseUserInfo;
 import entity.BoolInfo;
 import entity.ErrorType;
+import entity.ID;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.IdenticalInfoFieldName;
 import entity.infoField.InfoField;
@@ -32,8 +33,11 @@ public class UserChecker implements Checker {
 		for(IdenticalInfoFieldName name: IdenticalInfoFieldName.values()){
 			IdenticalInfoField field = (IdenticalInfoField)b.getInfoField(name.name());
 			try {
-				if (field != null && !field.isEmpty() && !center.getDataCenter().searchUserID(field).equals(b.getID()))
-					return false;
+				if (field != null && !field.isEmpty()){
+					ID oid = center.getDataCenter().searchUserID(field);
+					if (oid != null && !oid.isNull() && !oid.equals(b.getID()))
+						return false;
+				}
 			} catch (SQLException e) {
 				System.out.println(e);
 				e.printStackTrace();
