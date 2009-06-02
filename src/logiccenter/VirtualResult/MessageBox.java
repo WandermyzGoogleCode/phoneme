@@ -106,4 +106,13 @@ public class MessageBox extends VirtualResult {
 	public void close(){
 		retrieveThread.interrupt();
 	}
+
+	public void removeMessage(Message msg) {
+		for(int i=0; i<messages.size(); i++)
+			if (messages.get(i).getID().equals(msg.getID())){
+				messages.remove(i);
+				break;
+			}
+		setUpdateNow();
+	}
 }

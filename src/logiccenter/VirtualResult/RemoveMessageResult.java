@@ -12,7 +12,10 @@ public class RemoveMessageResult extends OneTimeVirtualResult {
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException{
-		return center.getServer().removeMessage(center.getLoginUser().getID(), msg);
+		BoolInfo res = center.getServer().removeMessage(center.getLoginUser().getID(), msg);
+		if (res.isTrue())
+			center.getMessageBox().removeMessage(msg);
+		return res;
 	}
 
 	public RemoveMessageResult(Message msg, LogicCenter center){
