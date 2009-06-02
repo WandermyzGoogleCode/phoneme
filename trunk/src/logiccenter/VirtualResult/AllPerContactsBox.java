@@ -83,4 +83,8 @@ public class AllPerContactsBox extends VirtualResult {
 	public void setPermission(ID id, Permission p) {
 		permissions.put(id, p);
 	}
+	
+	public Permission getPermission(ID id){
+		return permissions.get(id);
+	}
 }

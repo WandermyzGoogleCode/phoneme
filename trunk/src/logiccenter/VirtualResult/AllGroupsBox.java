@@ -97,4 +97,8 @@ public class AllGroupsBox extends VirtualResult {
 	public void setPermission(ID targetID, Permission p) {
 		permissions.put(targetID, p);
 	}
+
+	public Permission getPermission(ID id){
+		return permissions.get(id);
+	}
 }
