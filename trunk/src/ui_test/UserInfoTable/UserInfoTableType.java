@@ -48,7 +48,7 @@ public enum UserInfoTableType
 	Register,
 	
 	/**
-	 * 添加新联系人
+	 * 添加新本地联系人
 	 */
-	New,
+	NewLocal,
 }

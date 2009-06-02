@@ -1447,13 +1447,13 @@ public class MainWindow
 			if(getCurrentContactTab() == ContactTabType.Synchronization)
 			{
 				UserInfo newUser = UserInfo.getNewLocalUser();
-				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.New, newUser);
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.NewLocal, newUser);
 				userInfoDialog.OpenEditInfo();
-				//!TODO 如何判断一个UserInfo是同步联系人还是被授权联系人？
+				
 			}
 			else if(getCurrentContactTab() == ContactTabType.Permission)
 			{
-				
+				//!TODO 添加被授权联系人
 			}
 		}
 	}
@@ -2032,7 +2032,6 @@ public class MainWindow
 		@Override
 		public void run()
 		{
-			// TODO Lijing Fill
 			System.out.println("run");
 			statDialog.setStatics(result);
 		}

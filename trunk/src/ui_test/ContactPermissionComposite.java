@@ -25,7 +25,7 @@ import entity.Permission;
 import entity.UserInfo;
 import entity.infoField.InfoField;
 
-public class ContactPermissionComposition extends Composite
+public class ContactPermissionComposite extends Composite
 {	
 	private TableColumn tableColumnValue;
 	private TableColumn tableColumnField;
@@ -40,7 +40,7 @@ public class ContactPermissionComposition extends Composite
 	 * @param parent
 	 * @param style
 	 */
-	public ContactPermissionComposition(Composite parent, int style, Permission permission)
+	public ContactPermissionComposite(Composite parent, int style, Permission permission)
 	{
 		super(parent, style);
 		setLayout(new FillLayout());
