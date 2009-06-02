@@ -13,10 +13,10 @@ import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.TableTreeViewer;
+//import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTree;
+//import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -37,6 +37,7 @@ import ui_test.GroupTableTree.GroupTableTreeLabelProvider;
 import ui_test.UserInfoTable.UserInfoTableType;
 
 import entity.Group;
+import entity.Permission;
 import entity.UserInfo;
 
 public class GroupComposite extends Composite
@@ -185,7 +186,7 @@ public class GroupComposite extends Composite
 			if(groupInfoDialog.open() == IDialogConstants.OK_ID)
 			{
 				//!TODO: 参数表怎么回事？; Observer未被调用
-				CreateGroupResult result = logicCenter.createGroup(newGroup, null, 0);
+				CreateGroupResult result = logicCenter.createGroup(newGroup, new Permission(), 0);
 				result.addObserver(new CreateGrouopResultObserver());
 			}
 		}
