@@ -1,5 +1,7 @@
 package algorithm;
 
+import java.sql.SQLException;
+
 import serverLogicCenter.ServerLogicCenter;
 import entity.Group;
 
@@ -23,7 +25,14 @@ public class GroupChecker implements Checker {
 		 * ½øÐÐÔö¼õ¡£
 		 */
 		if (g.getID() != null && !g.getID().isNull()){
-			Group oldG = center.getDataCenter().getGroup(g.getID());
+			Group oldG;
+			try {
+				oldG = center.getDataCenter().getGroup(g.getID());
+			} catch (SQLException e) {
+				System.out.println(e);
+				e.printStackTrace();
+				return false;
+			}
 			if (!g.getUserSet().equals(oldG.getUserSet()))
 				return false;
 		}

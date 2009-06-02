@@ -1,5 +1,7 @@
 package algorithm;
 
+import java.sql.SQLException;
+
 import serverLogicCenter.ServerLogicCenter;
 import entity.BaseUserInfo;
 import entity.BoolInfo;
@@ -29,8 +31,14 @@ public class UserChecker implements Checker {
 		int idCnt = 0;
 		for(IdenticalInfoFieldName name: IdenticalInfoFieldName.values()){
 			IdenticalInfoField field = (IdenticalInfoField)b.getInfoField(name.name());
-			if (field != null && !field.isEmpty() && center.getDataCenter().searchUserID(field) != b.getID())
+			try {
+				if (field != null && !field.isEmpty() && !center.getDataCenter().searchUserID(field).equals(b.getID()))
+					return false;
+			} catch (SQLException e) {
+				System.out.println(e);
+				e.printStackTrace();
 				return false;
+			}
 			if (field != null && !field.isEmpty())
 				idCnt++;
 		}
