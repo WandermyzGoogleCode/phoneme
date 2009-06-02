@@ -195,7 +195,9 @@ public class MessageBoxComposite extends Composite
 			
 			if(MessageDialog.openConfirm(getShell(), "确认删除", "确实要删除此消息吗？"))
 			{
-				msg.remove(logicCenter);
+				logicCenter.removeMessage(msg);	
+				//TODO: Error处理
+				
 			}
 		}
 	}

@@ -71,6 +71,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
+import ui.Gui;
 import ui_test.GroupInfoDialog.RemoveGroupResultTask;
 import ui_test.UserInfoTable.UserInfoTableType;
 
@@ -89,7 +90,7 @@ import ui_test.GroupComposite;
 import ui_test.SearchComposite;
 import ui_test.MessageBoxComposite;
 
-public class MainWindow
+public class MainWindow 
 {
 
 	// [start] UI Components Properties
@@ -933,7 +934,8 @@ public class MainWindow
 	 */
 	private void dataInit()
 	{
-
+		
+		
 		// [start] 个人信息 初始化
 		// [end]
 
@@ -1044,7 +1046,7 @@ public class MainWindow
 					e1.printStackTrace();
 				}
 				
-				shell.setText("PhoneMe");
+				//shell.setText("PhoneMe");
 				//TODO: 这行代码好像没用
 			}
 		}
