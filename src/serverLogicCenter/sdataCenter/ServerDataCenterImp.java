@@ -270,7 +270,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 
 		// 建立新的映射
 		for (IdenticalInfoFieldName name : IdenticalInfoFieldName.values()) {
-			InfoField field = oldB.getInfoField(name.name());
+			InfoField field = b.getInfoField(name.name());
 			if (!field.isEmpty())
 				idMapTable.setID((IdenticalInfoField) field, uid);
 		}
@@ -347,17 +347,17 @@ public class ServerDataCenterImp implements ServerDataCenter {
 			 */
 
 			// TEST USERINFO
-			BaseUserInfo user = new BaseUserInfo();
-			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-					InfoFieldName.Name.name(), "TestUser"));
-			center.setBaseUserInfo(user.getID(), user);
-			List<ID> idList = new ArrayList<ID>();
-			idList.add(ID.getNullID());
-			BaseUserInfo su = new BaseUserInfo();
-			su.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-					InfoFieldName.Name.name(), "stU"));
-			List<BaseUserInfo> ru = center.searchUser(su);
-			System.out.println(ru.get(0).getName());
+			/*
+			 * BaseUserInfo user = new BaseUserInfo();
+			 * user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+			 * InfoFieldName.Name.name(), "TestUser"));
+			 * center.setBaseUserInfo(user.getID(), user); List<ID> idList = new
+			 * ArrayList<ID>(); idList.add(ID.getNullID()); BaseUserInfo su =
+			 * new BaseUserInfo();
+			 * su.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+			 * InfoFieldName.Name.name(), "stU")); List<BaseUserInfo> ru =
+			 * center.searchUser(su); System.out.println(ru.get(0).getName());
+			 */
 
 			// TEST VISIBILITY
 			/*
@@ -367,23 +367,22 @@ public class ServerDataCenterImp implements ServerDataCenter {
 			 */
 
 			// TEST REGISTER LOGIN
-			/*
-			 * BaseUserInfo user = new BaseUserInfo();
-			 * user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-			 * InfoFieldName.Name.name(), "TestUser"));
-			 * user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-			 * InfoFieldName.Cellphone, "13888888888")); user.setID(new
-			 * ID(198979)); Password pwd = new Password("lala");
-			 * center.register(user, pwd); ID id = center
-			 * .loginGetInfo((IdenticalInfoField
-			 * )InfoFieldFactory.getFactory().makeInfoField(
-			 * InfoFieldName.Cellphone, "13888888888"), pwd); ID id2 =
-			 * center.loginGetInfo
-			 * ((IdenticalInfoField)InfoFieldFactory.getFactory()
-			 * .makeInfoField(InfoFieldName.Cellphone, "13888888888"), new
-			 * Password("test")); System.out.println(id);
-			 * System.out.println(id2);
-			 */
+			BaseUserInfo user = new BaseUserInfo();
+			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+					InfoFieldName.Name.name(), "TestUser"));
+			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+					InfoFieldName.Cellphone, "13888888888"));
+			user.setID(new ID(198979));
+			Password pwd = new Password("lala");
+			center.register(user, pwd);
+			ID id = center.loginGetInfo((IdenticalInfoField) InfoFieldFactory
+					.getFactory().makeInfoField(InfoFieldName.Cellphone,
+							"13888888888"), pwd);
+			ID id2 = center.loginGetInfo((IdenticalInfoField) InfoFieldFactory
+					.getFactory().makeInfoField(InfoFieldName.Cellphone,
+							"13888888888"), new Password("test"));
+			System.out.println(id);
+			System.out.println(id2);
 
 			// TEST REMOVE RELATION
 			// center.removeFromGroup(new Group(), new ID(0));

@@ -39,6 +39,8 @@ import entity.Password;
 import entity.Permission;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.IdenticalInfoFieldName;
+import entity.infoField.InfoFieldFactory;
+import entity.infoField.InfoFieldName;
 import entity.message.*;
 
 public class ServerLogicCenterImp implements ServerLogicCenter {
@@ -433,7 +435,11 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		if (!userChecker.check(b))
 			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
 		try {
+			b.setID(idFactory.getNewUserID());
 			dataCenter.register(b, pwd);
+			// 加入默认的Global Permission
+			dataCenter.setPermission(b.getID(), ID.GLOBAL_ID, Permission
+					.getDefaultGlobalPermission());
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new BoolInfo(ErrorType.SQL_ERROR);
@@ -788,9 +794,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		List<BaseUserInfo> res;
 		try {
 			res = dataCenter.searchUser(b);
-		for (int i = 0; i < res.size(); i++)
-			res.set(i, filter(res.get(i), getGlobalPermission(res.get(i)
-					.getID())));
+			for (int i = 0; i < res.size(); i++)
+				res.set(i, filter(res.get(i), getGlobalPermission(res.get(i)
+						.getID())));
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new MyRemoteException(ErrorType.SQL_ERROR);
@@ -841,9 +847,50 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throw new MyRemoteException(ErrorType.SQL_ERROR);
 		}
 	}
-	
-	public static void main(String args[]){
-		
+
+	public static void main(String args[]) {
+		ServerLogicCenter center = ServerLogicCenterImp.getInstance();
+
+		BaseUserInfo newUser = new BaseUserInfo();
+		newUser.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+				InfoFieldName.Name.name(), "SpaceFlyer"));
+		newUser.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+				InfoFieldName.Cellphone, "13888888881"));
+		Password pwd = new Password("test");
+		try {
+//			BoolInfo rRes = center.register(newUser, pwd);
+//			if (!rRes.isTrue()) {
+//				System.out.println(rRes.getInfo());
+//			}
+			BaseUserInfo user = center.login(
+					(IdenticalInfoField) (InfoFieldFactory.getFactory()
+							.makeInfoField(InfoFieldName.Cellphone,
+									"13888888887")), pwd);
+			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+					InfoFieldName.Cellphone, "13888888887"));
+			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+					InfoFieldName.EmailAddress, "test2@test.com"));
+			BoolInfo res = center.editMyBaseInfo(user, null);
+			if (!res.isTrue())
+				System.out.println(res.getInfo());
+			res = center.addPerContact(user.getID(),
+					(IdenticalInfoField) (InfoFieldFactory.getFactory()
+							.makeInfoField(InfoFieldName.EmailAddress,
+									"test2@test.com")), new Permission());
+			if (!res.isTrue())
+				System.out.println(res.getInfo());
+			res = center.addSynContact(user.getID(),
+					(IdenticalInfoField) (InfoFieldFactory.getFactory()
+							.makeInfoField(InfoFieldName.EmailAddress,
+									"test2@test.com")), 3);
+			if (!res.isTrue())
+				System.out.println(res.getInfo());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (MyRemoteException e) {
+			System.out.println(e.getErr());
+			e.printStackTrace();
+		}
 	}
 
 	@Override
