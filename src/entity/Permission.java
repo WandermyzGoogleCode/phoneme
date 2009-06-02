@@ -73,6 +73,7 @@ public class Permission implements Serializable{
 	public static Permission getDefaultGlobalPermission() {
 		Permission res = new Permission();
 		res.setField(InfoFieldName.Name.name(), true);
+		res.setField(InfoFieldName.Cellphone.name(), true);
 		return res;
 	}
 }

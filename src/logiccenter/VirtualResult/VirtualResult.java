@@ -71,7 +71,7 @@ public abstract class VirtualResult extends Observable {
 	@Override
 	public void addObserver(Observer observer){
 		super.addObserver(observer);
-		if (state == PREPARED)
+		if (state != LOADING)
 		{
 			setChanged();
 			super.notifyObservers();

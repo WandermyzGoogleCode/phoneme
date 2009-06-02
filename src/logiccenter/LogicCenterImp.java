@@ -236,54 +236,6 @@ public class LogicCenterImp implements LogicCenter {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		LogicCenter logicCenter = LogicCenterImp.getInstance();
-		LoginResult res = logicCenter.login(null, null);
-		try {
-			Thread.sleep(1000);
-		} catch (Exception e) {
-		}
-		MessageBox messageBox = logicCenter.getMessageBox();
-		Tester tester = new Tester();
-		messageBox.addObserver(tester);
-		String cmd = "";
-		BufferedReader stdin = new BufferedReader(new InputStreamReader(
-				System.in));
-		while (!cmd.equals("exit")) {
-			System.out.println("Type something...('exit' to exit)");
-			try {
-				cmd = stdin.readLine();
-				System.out.println("'" + cmd + "' read...\n");
-			} catch (Exception e) {
-			}
-		}
-		long id;
-		System.out.println("Input id:");
-		String temp = null;
-		try{
-			temp = stdin.readLine();
-		}
-		catch (Exception e) {
-		}
-		id = Long.valueOf(temp);
-		try {
-			logicCenter.getServer().logout(new ID(id));
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-		// UserInfo newUser1 = UserInfo.getNewLocalUser();
-		// EditContactInfoResult editRes =
-		// logicCenter.editContactInfo(newUser1);
-		// out.println(editRes.getState());
-		// try{
-		// Thread.sleep(1000);
-		// }
-		// catch (Exception e){}
-		// out.println(editRes.getState());
-		// if (editRes.getState() == VirtualState.ERRORED)
-		// out.println(editRes.getError().toString());
-		// out.println("Bye~");
-		System.exit(0);// 当前MessageBox的线程不能自己消除。实现好了以后，该线程应该在退出登录的时候就自动消除。
 	}
 
 	@Override
