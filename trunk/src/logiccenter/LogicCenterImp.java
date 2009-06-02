@@ -93,8 +93,8 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo) {
-		return new EditMyBaseInfoResult(baseInfo, this);
+	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo, Password pwd) {
+		return new EditMyBaseInfoResult(baseInfo, pwd, this);
 	}
 
 	@Override
@@ -335,6 +335,8 @@ public class LogicCenterImp implements LogicCenter {
 			messageBox.close();
 		messageBox = new MessageBox(loginUser.getID(), this);
 		allPerContactsBox = new AllPerContactsBox(this);
+		//刷新群组，以获取群组权限
+		allGroupBox.updateAll();		
 	}
 
 	@Override

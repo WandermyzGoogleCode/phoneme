@@ -62,7 +62,7 @@ public class LoginResult extends OneTimeVirtualResult {
 			if (!perIDSet.contains(id))
 				center.getDataCenter().removePerRelationship(id);
 		
-		center.setLoginUser(loginUser);
+		center.setLoginUser(loginUser);		
 		return new BoolInfo();
 	}
 }

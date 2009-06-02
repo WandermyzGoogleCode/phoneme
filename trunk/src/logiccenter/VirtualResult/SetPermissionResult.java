@@ -32,8 +32,13 @@ public class SetPermissionResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() throws RemoteException{
 		BoolInfo res = center.getServer().setPermission(center.getLoginUser().getID(), targetID, p);
-		if (res.isTrue())
+		if (res.isTrue()){
 			center.getDataCenter().setPermission(targetID, p);
+			if (ID.isGroupID(targetID))
+				center.getAllGroupsBox().setPermission(targetID, p);
+			else
+				center.getAllPerContatcsBox().setPermission(targetID, p);
+		}
 		return res;
 	}
 
