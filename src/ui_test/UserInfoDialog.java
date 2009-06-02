@@ -11,6 +11,8 @@ import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.AllGroupsBox;
 import logiccenter.VirtualResult.AllPerContactsBox;
 import logiccenter.VirtualResult.EditGroupResult;
+import logiccenter.VirtualResult.InviteToGroupResult;
+import logiccenter.VirtualResult.RemoveGroupMemberResult;
 import logiccenter.VirtualResult.SetPermissionResult;
 import logiccenter.VirtualResult.VirtualState;
 
@@ -259,6 +261,7 @@ public class UserInfoDialog extends Dialog
 			if(userInfoTableType == UserInfoTableType.SearchResult)
 			{
 				buttonAddSync = new Button(compositeTools, SWT.NONE);
+				buttonAddSync.addSelectionListener(new ButtonAddSyncSelectionListener());
 				buttonAddSync.setText("加为同步联系人");
 	
 				buttonSetPerm = new Button(compositeTools, SWT.NONE);
@@ -710,7 +713,59 @@ public class UserInfoDialog extends Dialog
 	private class ButtonDeleteFromGroupSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			//TODO: 从群组中删除用户
+			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell(), allGroupsBox);
+			if(groupSelectDialog.open() == IDialogConstants.OK_ID)
+			{
+				//!TODO: Identical
+				RemoveGroupMemberResult removeGroupMemberResult = logicCenter.removeGroupMember(null, groupSelectDialog.getSelectedGroup());
+				removeGroupMemberResult.addObserver(new RemoveGroupMemberResultObserver());
+			}
+		}
+	}
+	
+	/**
+	 * 从群组删除用户 Observer
+	 * @author Wander
+	 *
+	 */
+	class RemoveGroupMemberResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getCurrent().syncExec(new RemoveGroupMemberResultTask((RemoveGroupMemberResult)o));
+		}
+		
+	}
+	
+	/**
+	 * 从群组删除用户 Task
+	 * @author Wander
+	 *
+	 */
+	class RemoveGroupMemberResultTask implements Runnable
+	{
+		private RemoveGroupMemberResult result;
+		
+		public RemoveGroupMemberResultTask(RemoveGroupMemberResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				MessageDialog.openInformation(shell, "删除成功", String.format("已将\"%s\"从群组删除", user.getInfoField(InfoFieldName.Name)));
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(shell, "删除失败", result.getError().toString());
+			}
+			
 		}
 	}
 	
@@ -725,9 +780,63 @@ public class UserInfoDialog extends Dialog
 			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell(), allGroupsBox);
 			if(groupSelectDialog.open() == IDialogConstants.OK_ID)
 			{
-				Group group = groupSelectDialog.getSelectedGroup();
-				//logicCenter.inviteToGroup(un, g, inviteInfo);
+				//!TODO: Identical
+				InviteToGroupResult inviteToGroupResult = logicCenter.inviteToGroup(null, groupSelectDialog.getSelectedGroup(), groupSelectDialog.getMessage());
+				inviteToGroupResult.addObserver(new InviteToGroupResultObserver());
 			}
+		}
+	}
+	
+	/**
+	 * 邀请加入群组 Observer
+	 * @author Wander
+	 *
+	 */
+	class InviteToGroupResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getCurrent().syncExec(new InviteToGroupResultTask((InviteToGroupResult)o));
+		}
+		
+	}
+	
+	/**
+	 * 邀请加入群组 Task
+	 * @author Wander
+	 *
+	 */
+	class InviteToGroupResultTask implements Runnable
+	{
+		private InviteToGroupResult result;
+		
+		public InviteToGroupResultTask(InviteToGroupResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				MessageDialog.openInformation(shell, "邀请成功", String.format("已向\"%s\"发出邀请请求，请等待回复", user.getInfoField(InfoFieldName.Name)));
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(shell, "邀请加入群组失败", result.getError().toString());
+			}
+			
+		}
+	}
+	
+	private class ButtonAddSyncSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			
 		}
 	}
 	//[end]
