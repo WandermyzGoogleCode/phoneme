@@ -23,7 +23,7 @@ public class IDMapTable {
 			statement.execute(sql);
 		}
 		catch (Exception e) {
-			sql = "CREATE TABLE idMap(idField VARCHAR(120) NOT NULL, uid BIGINT NOT NULL, PRIMARY KEY(idField), INDEX(uid)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql = "CREATE TABLE idMap(idField VARCHAR(120) NOT NULL, uid BIGINT NOT NULL, PRIMARY KEY(idField), INDEX(uid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.execute(sql);
 		}
 	}

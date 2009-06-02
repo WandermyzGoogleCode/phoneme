@@ -29,7 +29,7 @@ public abstract class RelationTable {
 			statement.execute(sql);
 		}
 		catch (Exception e) {
-			sql = "CREATE TABLE "+getTableName()+"(id1 BIGINT NOT NULL, id2 BIGINT NOT NULL, INDEX(id1, id2)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql = "CREATE TABLE "+getTableName()+"(id1 BIGINT NOT NULL, id2 BIGINT NOT NULL, INDEX(id1, id2)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.execute(sql);
 		}
 	}

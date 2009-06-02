@@ -27,7 +27,7 @@ public class MessageTable {
 		try {
 			statement.execute(sql);
 		} catch (Exception e) {
-			sql = "CREATE TABLE Message(mid BIGINT NOT NULL, uid BIGINT NOT NULL, msg BLOB NOT NULL, PRIMARY KEY(mid), INDEX(uid)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql = "CREATE TABLE Message(mid BIGINT NOT NULL, uid BIGINT NOT NULL, msg BLOB NOT NULL, PRIMARY KEY(mid), INDEX(uid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.execute(sql);
 		}
 	}

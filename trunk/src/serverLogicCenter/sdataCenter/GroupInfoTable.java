@@ -69,7 +69,7 @@ public class GroupInfoTable {
 				}
 			sql += ")";
 
-			sql += ", PRIMARY KEY(gid)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql += ", PRIMARY KEY(gid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.executeUpdate(sql);
 		}
 
