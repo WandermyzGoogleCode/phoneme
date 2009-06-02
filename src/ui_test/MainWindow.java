@@ -84,11 +84,13 @@ import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 import entity.message.Message;
 import ui_test.GroupComposite;
+import ui_test.SearchComposite;
 
 public class MainWindow
 {
 
 	// [start] UI Components Properties
+	private SearchComposite compositeSearch;
 	private GroupComposite compositeGroup;
 	private Tree treeAddressSearchResult;
 	private TabItem tabItemAddressSearchResult;
@@ -192,7 +194,6 @@ public class MainWindow
 	private Button listButtonAddressBook;
 	private Button listButtonGroup;
 	private Button listButtonSearch;
-	private Composite compositeSearch;
 	private Button listButtonMessageBox;
 	private MessageBoxDialog compositeMessage;
 	private MenuItem menuFile;
@@ -698,7 +699,6 @@ public class MainWindow
 		tabItemAddressPermit.setText("被授权联系人");
 
 		treeAddressPermit = new Tree(tabFolderAddress, SWT.BORDER);
-		treeAddressPermit.setEnabled(false);
 		treeAddressPermit.addSelectionListener(new TreeAddressContactSelectionListener());
 		treeAddressPermit.setHeaderVisible(true);
 		tabItemAddressPermit.setControl(treeAddressPermit);
@@ -841,7 +841,6 @@ public class MainWindow
 
 		// [start] 人立方版面
 		// !TODO
-		compositeSearch = new Renlifang(compositeMain, SWT.NONE);
 
 		//compositeMainStackLayout.topControl = compositeGroup;
 		//istButtonUserInfo.setSelection(true);
@@ -860,6 +859,8 @@ public class MainWindow
 
 		// [start] 群组Composite
 		compositeGroup = new GroupComposite(compositeMain, SWT.NONE);
+
+		compositeSearch = new SearchComposite(compositeMain, SWT.NONE);
 		compositeMainStackLayout.topControl = compositeAddress;
 		// [end]	
 	}
@@ -1104,6 +1105,7 @@ public class MainWindow
 				if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 				{
 					logicCenter.editMyBaseInfo(loginBaseUserInfo, new Password(userInfoDialog.getPassword()));
+					//TODO: Add Observer
 				}
 			}
 		

@@ -123,11 +123,12 @@ public class SearchComposite extends Composite
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
 				SearchUserResult result = logicCenter.searchUser(user.getBaseInfo());
+				result.addObserver(new SearchUserResultObserver());
 			}
 		}
 	}
 	
-	class CreateGrouopResultObserver implements Observer
+	class SearchUserResultObserver implements Observer
 	{
 
 		@Override
@@ -156,6 +157,7 @@ public class SearchComposite extends Composite
 				if(usersList.size() > 0)
 				{
 					tableViewer.setInput(usersList);
+					tableViewer.refresh();
 				}
 				else
 				{
