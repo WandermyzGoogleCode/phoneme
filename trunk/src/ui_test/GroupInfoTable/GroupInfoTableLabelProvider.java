@@ -19,11 +19,11 @@ public class GroupInfoTableLabelProvider implements ITableLabelProvider
 	@Override
 	public String getColumnText(Object element, int col)
 	{
-		InfoField filed = (InfoField)element;
+		InfoField field = (InfoField)element;
 		if(col == 0)
-			return filed.getName();
+			return field.getName();
 		else if(col == 1)
-			return filed.getStringValue();
+			return field.getStringValue();
 		return null;
 	}
 

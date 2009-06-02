@@ -5,6 +5,8 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import entity.infoField.InfoField;
+
 public class GroupInfoTableContentProvider implements IStructuredContentProvider
 {
 
@@ -13,7 +15,7 @@ public class GroupInfoTableContentProvider implements IStructuredContentProvider
 	{
 		if (element instanceof List)
 		{
-			return ((List) element).toArray();
+			return ((List<InfoField>) element).toArray();
 		}
 		else
 		{
