@@ -381,6 +381,11 @@ public class LogicCenterImp implements LogicCenter {
 		allPerContactsBox = null;
 		messageBox = null;
 	}
+
+	@Override
+	public void editLoginUser(BaseUserInfo baseInfo) {
+		this.loginUser = baseInfo;
+	}
 }
 
 class Tester implements Observer {

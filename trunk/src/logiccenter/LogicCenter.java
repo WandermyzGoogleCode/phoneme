@@ -312,4 +312,10 @@ public interface LogicCenter {
 	 * 被服务器锁着不放。
 	 */
 	public void logout() throws RemoteException;
+
+	/**
+	 * 当登录用户修改了自己信息的时候调用
+	 * @param baseInfo
+	 */
+	public void editLoginUser(BaseUserInfo baseInfo);
 }
