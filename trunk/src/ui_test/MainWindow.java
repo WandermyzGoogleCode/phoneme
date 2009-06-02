@@ -18,6 +18,8 @@ import logiccenter.VirtualResult.AllPerContactsBox;
 import logiccenter.VirtualResult.GetStatResultResult;
 import logiccenter.VirtualResult.LocalSearchContactsResult;
 import logiccenter.VirtualResult.MessageBox;
+import logiccenter.VirtualResult.RegisterResult;
+import logiccenter.VirtualResult.RemoveGroupResult;
 import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -66,6 +68,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
+import ui_test.GroupInfoDialog.RemoveGroupResultTask;
 import ui_test.UserInfoTable.UserInfoTableType;
 
 import com.ibm.icu.impl.ICUService.Factory;
@@ -980,9 +983,55 @@ public class MainWindow
 			
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
-				logicCenter.register(newUser.getBaseInfo(), new Password(userInfoDialog.getPassword()));
-				//TODO: µÇÂ¼
+				RegisterResult result = logicCenter.register(newUser.getBaseInfo(), new Password(userInfoDialog.getPassword()));
+				result.addObserver(new RegisterResultObserver());
 			}
+		}
+	}
+	
+	/**
+	 * ×¢²á Observer
+	 * @author Wander
+	 *
+	 */
+	class RegisterResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getCurrent().syncExec(new RegisterResultTask((RegisterResult)o));
+		}
+		
+	}
+	
+	/**
+	 * ×¢²á Task
+	 * @author Wander
+	 *
+	 */
+	class RegisterResultTask implements Runnable
+	{
+		private RegisterResult result;
+		
+		public RegisterResultTask(RegisterResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				MessageDialog.openWarning(shell, "×¢²á³É¹¦", "×¢²á³É¹¦");
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(shell, "×¢²áÊ§°Ü", result.getError().toString());
+			}
+			
 		}
 	}
 	
