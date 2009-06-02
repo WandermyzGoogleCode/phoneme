@@ -31,12 +31,8 @@ public class EditMyBaseInfoResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
 		BoolInfo res = center.getServer().editMyBaseInfo(baseInfo, pwd);
-		if (res.isTrue()){
-			UserInfo newInfo = new UserInfo(baseInfo);
-			newInfo.setCustomInfo(null);//不改变custom的字段
-			center.getDataCenter().setUserInfo(newInfo);
-			center.getAllContactsBox().editContact(newInfo);
-		}
+		if (res.isTrue())
+			center.editLoginUser(baseInfo);
 		return res;
 	}
 }
