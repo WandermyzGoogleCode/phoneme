@@ -790,7 +790,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throws RemoteException, MyRemoteException {
 		if (b == null)
 			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
-		if (!searchGroupChecker.check(b))
+		if (!searchUserChecker.check(b))
 			throw new MyRemoteException(ErrorType.ILLEGAL_SEARCH);
 		List<BaseUserInfo> res;
 		try {
