@@ -204,14 +204,14 @@ public class UserInfoDialog extends Dialog
 			labelName.setLayoutData(gd_labelName);
 			labelName.setText(user.getBaseInfo().getInfoField("Name").getStringValue() + " - " + userType);
 			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
+			new Label(compositeTools, SWT.NONE);
 			
 			if(userInfoTableType == UserInfoTableType.Synchronization
 					|| userInfoTableType == UserInfoTableType.Permission
 					|| userInfoTableType == UserInfoTableType.Owner
 					|| userInfoTableType == UserInfoTableType.Local)
 			{
-			new Label(compositeTools, SWT.NONE);
-			new Label(compositeTools, SWT.NONE);
 				buttonEdit = new Button(compositeTools, SWT.NONE);
 				buttonEdit.setLayoutData(new GridData());
 				buttonEdit.addSelectionListener(new ButtonEditSelectionListener());
