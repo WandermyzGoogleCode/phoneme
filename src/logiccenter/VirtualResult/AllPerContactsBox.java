@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
@@ -25,7 +26,7 @@ import entity.UserInfo;
 public class AllPerContactsBox extends VirtualResult {
 	private LogicCenter center;
 	private List<UserInfo> contacts;
-	private Map<ID, Permission> permissions = new HashMap<ID, Permission>();
+	private Map<ID, Permission> permissions = new ConcurrentHashMap<ID, Permission>();
 
 	class GetThread extends Thread {
 		@Override

@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import algorithm.BFSRelationCube;
 import algorithm.Checker;
@@ -58,7 +59,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	protected ServerLogicCenterImp() {
 		idFactory = IDFactory.getInstance();
 		dataCenter = ServerDataCenterImp.getInstance();
-		senders = new HashMap<ID, MessageSender>();
+		senders = new ConcurrentHashMap<ID, MessageSender>();
 		onlineUsers = new HashSet<ID>();
 		groupChecker = new GroupChecker(dataCenter);
 		userChecker = new UserChecker(dataCenter);
