@@ -182,7 +182,12 @@ public class GroupInfoDialog extends Dialog
 		tableViewerInfo.setCellEditors(cellEditors);
 		tableViewerInfo.setCellModifier(new GroupInfoCellModifier(shell, groupInfoTableType, tableViewerInfo));
 		
-		tableViewerInfo.setInput(InfoFieldFactory.getFactory().makeAllGroupEmptyField());
+		List<InfoField> fieldsList = new ArrayList<InfoField>();
+		for(GroupFieldName fieldName : GroupFieldName.values())
+		{
+			fieldsList.add(group.getInfoField(fieldName.name()));
+		}
+		tableViewerInfo.setInput(fieldsList);
 		//[end]
 		
 		//[start] х╗оч
