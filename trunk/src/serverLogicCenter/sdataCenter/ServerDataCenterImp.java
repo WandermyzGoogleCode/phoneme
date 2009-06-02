@@ -173,6 +173,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 	public ID loginGetInfo(IdenticalInfoField idField, Password pwd)
 			throws SQLException {
 		ID res = idMapTable.getID(idField);
+		System.out.println("login:"+res);//TODO TEST
 		Password realPwd = pwdTable.getPwd(res);
 		if (realPwd == null || !realPwd.equals(pwd))
 			return ID.getNullID();
