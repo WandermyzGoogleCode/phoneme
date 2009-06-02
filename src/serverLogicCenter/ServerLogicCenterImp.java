@@ -580,7 +580,6 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			if (onlineUsers.contains(thisUser))
 				throw new MyRemoteException(ErrorType.ALREADY_ONLINE);
 			onlineUsers.add(thisUser);
-			System.out.println("online:"+thisUser);//TODO TEST
 			senders.put(thisUser, new MessageSender(thisUser));
 
 			return getUserInfo(thisUser);
