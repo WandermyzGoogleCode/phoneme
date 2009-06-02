@@ -86,6 +86,11 @@ public class ID implements Serializable{
 		return hash;
 	}
 	
+	@Override
+	public String toString() {
+		return Long.toString(id);
+	}
+	
 	//≤‚ ‘
 	public static void main(String args[]){
 		ID id1 = new ID(1000), id2 = new ID(1000);

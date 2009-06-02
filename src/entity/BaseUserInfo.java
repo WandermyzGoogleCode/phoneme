@@ -24,6 +24,10 @@ public class BaseUserInfo implements Serializable{
 		return fieldMap.get(name);
 	}
 
+	/**
+	 * 返回所有infoField的name的set
+	 * @return
+	 */
 	public Set<String> getKeySet(){
 		return fieldMap.keySet();
 	}
@@ -46,6 +50,14 @@ public class BaseUserInfo implements Serializable{
 	}
 	public void setInfoField(String name,InfoField info){
 		fieldMap.put(name, info);
+	}
+	
+	/**
+	 * 方便setInfoField
+	 * @param info
+	 */
+	public void setInfoField(InfoField info){
+		setInfoField(info.getName(), info);
 	}
 	
 	public boolean isNull(){

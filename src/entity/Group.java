@@ -75,6 +75,14 @@ public class Group implements Serializable {
 	}
 	
 	/**
+	 * 方便setInfoField
+	 * @param into
+	 */
+	public void setInfoField(InfoField info){
+		setInfoField(info.getName(), info);
+	}
+	
+	/**
 	 * 方便获取名字……
 	 * @return
 	 */
