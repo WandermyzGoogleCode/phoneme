@@ -211,7 +211,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherPer:=? where UserID=?";
+				String sql = "UPDATE UserInfo WhetherPer=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < perIDWriteBuffer.size(); i++) {
@@ -242,7 +242,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherSync:=? where UserID=?";
+				String sql = "UPDATE UserInfo WhetherSync=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < syncIDWriteBuffer.size(); i++) {
@@ -602,7 +602,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherPer:=? where UserID=?";
+				String sql = "UPDATE UserInfo WhetherPer=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < perIDDeleteBuffer.size(); i++) {
@@ -633,7 +633,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherSync:=? where UserID=?";
+				String sql = "UPDATE UserInfo WhetherSync=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < syncIDDeleteBuffer.size(); i++) {
@@ -670,12 +670,12 @@ public class DataCenterImp_test implements DataCenter {
 				String sql2 = "INSERT INTO GroupInfo (GroupID,";
 				Iterator<String> fieldNameIter = g.getKeySet().iterator();
 				String temp = fieldNameIter.next();
-				sql1 += (temp + ":=?");
+				sql1 += (temp + "=?");
 				sql2 += temp;
 				int count = 0;
 				while (fieldNameIter.hasNext()) {
 					temp = fieldNameIter.next();
-					sql1 += ("," + temp + ":=?");
+					sql1 += ("," + temp + "=?");
 					sql2 += ("," + temp);
 					count++;
 				}
@@ -764,7 +764,7 @@ public class DataCenterImp_test implements DataCenter {
 				int count = 0;
 				while (fieldNameIter.hasNext()) {
 					String temp = fieldNameIter.next();
-					sql1 += ("," + temp + ":=?");
+					sql1 += ("," + temp + "=?");
 					sql2 += ("," + temp);
 					count++;
 				}
@@ -857,14 +857,14 @@ public class DataCenterImp_test implements DataCenter {
 				Iterator<String> fieldNameIter = UserInfo.getNewLocalUser()
 						.getBaseInfo().getKeySet().iterator();
 				String temp = fieldNameIter.next();
-				sql1 += (temp + ":=?");
-				sqlCustomNull += (temp + ":=?");// 处理当传入的CustomUserInfo为空的时候用
+				sql1 += (temp + "=?");
+				sqlCustomNull += (temp + "=?");// 处理当传入的CustomUserInfo为空的时候用
 				sql2 += temp;
 				int count = 0;
 				while (fieldNameIter.hasNext()) {
 					temp = fieldNameIter.next();
-					sql1 += ("," + temp + ":=?");
-					sqlCustomNull += ("," + temp + ":=?");
+					sql1 += ("," + temp + "=?");
+					sqlCustomNull += ("," + temp + "=?");
 					sql2 += ("," + temp);
 					count++;
 				}
@@ -872,7 +872,7 @@ public class DataCenterImp_test implements DataCenter {
 						.getKeySet().iterator();
 				while (fieldNameIter.hasNext()) {
 					temp = fieldNameIter.next();
-					sql1 += ("," + temp + ":=?");
+					sql1 += ("," + temp + "=?");
 					sql2 += ("," + temp);
 					count++;
 				}
