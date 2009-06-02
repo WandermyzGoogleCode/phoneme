@@ -12,6 +12,8 @@ import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -23,6 +25,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -71,6 +74,7 @@ public class SearchComposite extends Composite
 		toolItemRelationCube.setText("搜索人立方");
 
 		tableViewer = new TableViewer(this, SWT.BORDER);
+		tableViewer.addDoubleClickListener(new TableViewerIDoubleClickListener());
 		table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
@@ -125,6 +129,25 @@ public class SearchComposite extends Composite
 				SearchUserResult result = logicCenter.searchUser(user.getBaseInfo());
 				result.addObserver(new SearchUserResultObserver());
 			}
+		}
+	}
+	
+	/**
+	 * 显示用户信息
+	 * @author Wander
+	 *
+	 */
+	private class TableViewerIDoubleClickListener implements IDoubleClickListener {
+		public void doubleClick(final DoubleClickEvent arg0)
+		{
+			if(tableViewer.getTable().getSelection().length <= 0) return;
+			
+			TableItem currentItem = tableViewer.getTable().getSelection()[0];
+			
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "用户信息",
+					UserInfoTableType.SearchRemoteResult,
+					new UserInfo((BaseUserInfo)currentItem.getData()));
+			userInfoDialog.open();
 		}
 	}
 	
