@@ -161,7 +161,9 @@ public class AllContactsBox extends VirtualResult {
 	 */
 	public synchronized void clearRemovedContacts() {
 		for(ID id: contacts.keySet())
-			if (((Relation)contacts.get(id).getInfoField(InfoFieldName.Relation)).isRemoved())
+			if (((Relation)contacts.get(id).getInfoField(InfoFieldName.Relation)).isRemoved()){
 				contacts.remove(id);
+				center.getDataCenter().removeUserInfo(id);
+			}
 	}
 }
