@@ -8,6 +8,7 @@ import java.util.Observer;
 
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
+import logiccenter.VirtualResult.AddPerContactResult;
 import logiccenter.VirtualResult.AddSynContactResult;
 import logiccenter.VirtualResult.AllGroupsBox;
 import logiccenter.VirtualResult.AllPerContactsBox;
@@ -268,6 +269,7 @@ public class UserInfoDialog extends Dialog
 				buttonAddSync.setText("加为同步联系人");
 	
 				buttonSetPerm = new Button(compositeTools, SWT.NONE);
+				buttonSetPerm.addSelectionListener(new ButtonSetPermSelectionListener());
 				buttonSetPerm.setText("设为被授权联系人");
 			}
 			
@@ -843,17 +845,22 @@ public class UserInfoDialog extends Dialog
 		}
 	}
 	
+	/**
+	 * 添加为同步联系人
+	 * @author Wander
+	 *
+	 */
 	private class ButtonAddSyncSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
 			AddSynContactResult result =logicCenter.addSynContact(user.getBaseInfo().getIdenticalField(), 0);
 			//TODO: visibility
 			
-			result.addObserver(new CreateGrouopResultObserver());
+			result.addObserver(new AddSynContactResultObserver());
 		}
 	}
 	
-	class CreateGrouopResultObserver implements Observer
+	class AddSynContactResultObserver implements Observer
 	{
 
 		@Override
@@ -879,6 +886,53 @@ public class UserInfoDialog extends Dialog
 			if(state == VirtualState.PREPARED)
 			{
 				MessageDialog.openInformation(getShell(), "操作成功", "请求已发送，请等待对方验证");
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(getShell(), "操作失败", result.getError().toString());
+			}
+		}
+		
+	}
+	
+	/**
+	 * 添加为被授权联系人 
+	 * @author Wander
+	 *
+	 */
+	private class ButtonSetPermSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			AddPerContactResult result = logicCenter.addPerContact(user.getBaseInfo().getIdenticalField(), new Permission());
+		}
+	}
+	
+	class AddPerContactResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getDefault().syncExec(new AddPerContactResultTask((AddPerContactResult)o));
+		}
+	}
+	
+	class AddPerContactResultTask implements Runnable
+	{
+		private AddPerContactResult result;
+		
+		public AddPerContactResultTask(AddPerContactResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				MessageDialog.openInformation(getShell(), "操作成功", String.format("已将\"%s\"添加为被授权联系人",user.getInfoField(InfoFieldName.Name)));
 			}
 			else if(state == VirtualState.ERRORED)
 			{

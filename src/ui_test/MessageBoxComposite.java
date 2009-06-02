@@ -93,7 +93,6 @@ public class MessageBoxComposite extends Composite
 		tableViewer.setContentProvider(new MessageBoxTableContentProvider());
 		tableViewer.setLabelProvider(new MessageBoxTableLabelProvider());
 		
-		messageBox = logicCenter.getMessageBox();
 	}
 	
 	class MessageBoxRefreshObserver implements Observer
@@ -199,6 +198,12 @@ public class MessageBoxComposite extends Composite
 				msg.remove(logicCenter);
 			}
 		}
+	}
+	
+	public void GetMessage()
+	{
+		messageBox = logicCenter.getMessageBox();
+		messageBox.addObserver(new MessageBoxRefreshObserver());
 	}
 
 }
