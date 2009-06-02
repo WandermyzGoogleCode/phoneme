@@ -162,6 +162,7 @@ public class GroupComposite extends Composite
 		public void run()
 		{
 			treeViewer.setInput(groupsList);
+			treeViewer.refresh();
 		}
 		
 	}

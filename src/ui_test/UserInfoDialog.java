@@ -8,8 +8,10 @@ import java.util.Observer;
 
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
+import logiccenter.VirtualResult.AddSynContactResult;
 import logiccenter.VirtualResult.AllGroupsBox;
 import logiccenter.VirtualResult.AllPerContactsBox;
+import logiccenter.VirtualResult.CreateGroupResult;
 import logiccenter.VirtualResult.EditGroupResult;
 import logiccenter.VirtualResult.InviteToGroupResult;
 import logiccenter.VirtualResult.RemoveGroupMemberResult;
@@ -61,6 +63,7 @@ import entity.infoField.InfoFieldName;
 import entity.message.Message;
 
 //import ui_test.MainWindow.ToolItemAddressCustomGroupNewSelectionListener;
+import ui_test.GroupComposite.CreateGroupResultTask;
 import ui_test.GroupInfoDialog.EditGroupResultTask;
 import ui_test.UserInfoTable.UserInfoCellModifier;
 import ui_test.UserInfoTable.UserInfoContentProvider;
@@ -191,7 +194,7 @@ public class UserInfoDialog extends Dialog
 			else if(userInfoTableType == UserInfoTableType.Permission)
 				userType = "被授权联系人";
 			else if(userInfoTableType == UserInfoTableType.Group)
-				userType = "群组联系人";	//TODO: 群组名
+				userType = String.format("群组联系人(%s)", user.getInfoField(InfoFieldName.GroupName));
 			else if(userInfoTableType == UserInfoTableType.Owner)
 				userType = "所有者";
 			else if(userInfoTableType == UserInfoTableType.SearchRemoteResult)
@@ -583,7 +586,9 @@ public class UserInfoDialog extends Dialog
 	{
 		if (buttonId == IDialogConstants.OK_ID) {
 			if(userInfoTableType == UserInfoTableType.Synchronization
-					|| userInfoTableType == UserInfoTableType.Local)
+					|| userInfoTableType == UserInfoTableType.Local
+					|| userInfoTableType == UserInfoTableType.NewLocal
+			)
 			{
 				modifyUser();
 				logicCenter.editContactInfo(user);
@@ -841,8 +846,48 @@ public class UserInfoDialog extends Dialog
 	private class ButtonAddSyncSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
+			AddSynContactResult result =logicCenter.addSynContact(user.getBaseInfo().getIdenticalField(), 0);
+			//TODO: visibility
 			
+			result.addObserver(new CreateGrouopResultObserver());
 		}
 	}
+	
+	class CreateGrouopResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getDefault().syncExec(new AddSynContactResultTask((AddSynContactResult)o));
+		}
+	}
+	
+	class AddSynContactResultTask implements Runnable
+	{
+		private AddSynContactResult result;
+		
+		public AddSynContactResultTask(AddSynContactResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				MessageDialog.openInformation(getShell(), "操作成功", "请求已发送，请等待对方验证");
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(getShell(), "操作失败", result.getError().toString());
+			}
+		}
+		
+	}
+	
+	
 	//[end]
 }
