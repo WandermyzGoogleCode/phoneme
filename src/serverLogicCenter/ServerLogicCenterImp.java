@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import algorithm.BFSRelationCube;
 import algorithm.Checker;
 import algorithm.GroupChecker;
 import algorithm.RelationCube;
@@ -24,6 +26,7 @@ import algorithm.UserChecker;
 import logiccenter.VirtualResult.AddSynContactResult;
 
 import serverLogicCenter.sdataCenter.ServerDataCenter;
+import serverLogicCenter.sdataCenter.ServerDataCenterImp;
 
 import entity.BaseUserInfo;
 import entity.BoolInfo;
@@ -51,7 +54,6 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			searchUserChecker;
 
 	protected ServerLogicCenterImp() {
-		// TODO 各种初始化
 		idFactory = IDFactory.getInstance();
 		senders = new HashMap<ID, MessageSender>();
 		onlineUsers = new HashSet<ID>();
@@ -59,6 +61,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		userChecker = new UserChecker(this);
 		searchGroupChecker = new SearchGroupChecker();
 		searchUserChecker = new SearchUserChecker();
+		relationCube = new BFSRelationCube();
+		dataCenter = ServerDataCenterImp.getInstance();
 	}
 
 	synchronized static public ServerLogicCenter getInstance() {
@@ -67,7 +71,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		return instance;
 	}
 
-	protected BaseUserInfo getUserInfo(ID id) {
+	protected BaseUserInfo getUserInfo(ID id) throws SQLException {
 		List<ID> idList = new ArrayList<ID>();
 		idList.add(id);
 		List<BaseUserInfo> res = dataCenter.getUsersInfo(idList);
@@ -93,7 +97,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	public List<Message> getAllMessages(ID user) throws MyRemoteException {
 		if (!onlineUsers.contains(user))
 			throw new MyRemoteException(ErrorType.NOT_ONLINE);
-		return dataCenter.getMessageBuffer(user);
+		try {
+			return dataCenter.getMessageBuffer(user);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	/**
@@ -125,8 +134,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 * 
 	 * @param targetUser
 	 * @param msg
+	 * @throws SQLException
 	 */
-	protected void pushMessage(ID targetUser, Message msg) {
+	protected void pushMessage(ID targetUser, Message msg) throws SQLException {
 		dataCenter.addMessageBuffer(targetUser, msg);
 		if (onlineUsers.contains(targetUser))
 			senders.get(targetUser).addMessage(msg);
@@ -139,10 +149,16 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetUser == null || permission == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		ID targetID = dataCenter.searchUserID(targetUser);
-		if (targetID == null || targetID.isNull())
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		dataCenter.addPerRelationship(thisUser, targetID, permission);
+		ID targetID;
+		try {
+			targetID = dataCenter.searchUserID(targetUser);
+			if (targetID == null || targetID.isNull())
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			dataCenter.addPerRelationship(thisUser, targetID, permission);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -153,16 +169,23 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetUser == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		ID targetID = dataCenter.searchUserID(targetUser);
-		if (targetID == null || targetID.isNull())
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		if (dataCenter.isPerContact(thisUser, targetID)) {
-			admitSynContact(targetID, thisUser, visibility);
-			return new BoolInfo();
+		ID targetID;
+		try {
+			targetID = dataCenter.searchUserID(targetUser);
+			if (targetID == null || targetID.isNull())
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (dataCenter.isPerContact(thisUser, targetID)) {
+				admitSynContact(targetID, thisUser, visibility);
+				return new BoolInfo();
+			}
+			Message newMessage = new ApplySynContactMessage(
+					getUserInfo(thisUser), targetID, visibility, idFactory
+							.getNewMessageID());
+			pushMessage(thisUser, newMessage);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
 		}
-		Message newMessage = new ApplySynContactMessage(getUserInfo(thisUser),
-				targetID, visibility, idFactory.getNewMessageID());
-		pushMessage(thisUser, newMessage);
 		return new BoolInfo();
 	}
 
@@ -173,21 +196,27 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (gid == null || uid == null || p == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (g == null)
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		if (!g.getAdminUserID().equals(thisUser))
-			return new BoolInfo(ErrorType.NOT_ADMIN);
-		dataCenter.addToGroup(g, uid, p);
-		dataCenter.setVisiblity(thisUser, gid, visibility);
-		g.addToGroup(thisUser);
-		pushMessage(thisUser, new GroupAppAdmitMessage(uid, g, p, visibility,
-				idFactory.getNewMessageID()));
-		String detail = "群组有新用户加入：" + getUserInfo(uid).getStringValue();
-		for (ID id : g.getUserSet())
-			if (!id.equals(uid))
-				pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
-						.getNewMessageID()));
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (g == null)
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (!g.getAdminUserID().equals(thisUser))
+				return new BoolInfo(ErrorType.NOT_ADMIN);
+			dataCenter.addToGroup(g, uid, p);
+			dataCenter.setVisiblity(thisUser, gid, visibility);
+			g.addToGroup(thisUser);
+			pushMessage(thisUser, new GroupAppAdmitMessage(uid, g, p,
+					visibility, idFactory.getNewMessageID()));
+			String detail = "群组有新用户加入：" + getUserInfo(uid).getStringValue();
+			for (ID id : g.getUserSet())
+				if (!id.equals(uid))
+					pushMessage(id, new GroupUpdatedMessage(g, detail,
+							idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -198,19 +227,26 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (gid == null || p == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (g == null)
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		dataCenter.addToGroup(g, thisUser, p);
-		dataCenter.setVisiblity(thisUser, gid, visibility);
-		g.addToGroup(thisUser);
-		pushMessage(thisUser, new GroupUpdatedMessage(g, "您已经加入该群组", idFactory
-				.getNewMessageID()));
-		String detail = "群组有新用户加入：" + getUserInfo(thisUser).getStringValue();
-		for (ID id : g.getUserSet())
-			if (!id.equals(thisUser))
-				pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
-						.getNewMessageID()));
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (g == null)
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			dataCenter.addToGroup(g, thisUser, p);
+			dataCenter.setVisiblity(thisUser, gid, visibility);
+			g.addToGroup(thisUser);
+			pushMessage(thisUser, new GroupUpdatedMessage(g, "您已经加入该群组",
+					idFactory.getNewMessageID()));
+			String detail = "群组有新用户加入："
+					+ getUserInfo(thisUser).getStringValue();
+			for (ID id : g.getUserSet())
+				if (!id.equals(thisUser))
+					pushMessage(id, new GroupUpdatedMessage(g, detail,
+							idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return null;
 	}
 
@@ -221,16 +257,23 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (gid == null || p == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (g == null)
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (g == null)
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
 
-		Permission tempP = getFinalPermission(thisUser, g.getAdminUserID());
-		tempP.union(p);
-		BaseUserInfo userInfo = getUserInfo(thisUser);
-		userInfo = filter(userInfo, tempP);
-		pushMessage(g.getAdminUserID(), new ApplyJoinGroupMessage(userInfo, g,
-				p, visibility, g.getAdminUserID(), idFactory.getNewMessageID()));
+			Permission tempP = getFinalPermission(thisUser, g.getAdminUserID());
+			tempP.union(p);
+			BaseUserInfo userInfo = getUserInfo(thisUser);
+			userInfo = filter(userInfo, tempP);
+			pushMessage(g.getAdminUserID(), new ApplyJoinGroupMessage(userInfo,
+					g, p, visibility, g.getAdminUserID(), idFactory
+							.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -245,9 +288,14 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throw new MyRemoteException(ErrorType.ILLEGAL_NEW_INSTANCE);
 		g.setID(idFactory.getNewGroupID());
 		g.setAdminID(thisUser);
-		dataCenter.setGroup(g);
-		dataCenter.setPermission(thisUser, g.getID(), p);
-		dataCenter.setVisiblity(thisUser, g.getID(), visibility);
+		try {
+			dataCenter.setGroup(g);
+			dataCenter.setPermission(thisUser, g.getID(), p);
+			dataCenter.setVisiblity(thisUser, g.getID(), visibility);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 		return g;
 	}
 
@@ -259,43 +307,54 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
 		if (g.getID() == null || g.getID().isNull() || !groupChecker.check(g))
 			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
-		dataCenter.setGroup(g);
-		for (ID id : g.getUserSet())
-			if (id != g.getAdminUserID())
-				pushMessage(id, new GroupUpdatedMessage(g, "管理员修改了群组信息",
-						idFactory.getNewMessageID()));
+		try {
+			dataCenter.setGroup(g);
+			for (ID id : g.getUserSet())
+				if (id != g.getAdminUserID())
+					pushMessage(id, new GroupUpdatedMessage(g, "管理员修改了群组信息",
+							idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
 	@Override
-	public BoolInfo editMyBaseInfo(BaseUserInfo baseInfo)
+	public BoolInfo editMyBaseInfo(BaseUserInfo baseInfo, Password pwd)
 			throws RemoteException {
-		if (baseInfo == null)
-			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		if (!onlineUsers.contains(baseInfo.getID()))
-			return new BoolInfo(ErrorType.NOT_ONLINE);
-		if (!userChecker.check(baseInfo))
-			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
-		dataCenter.setBaseUserInfo(baseInfo.getID(), baseInfo);
+		try {
+			if (baseInfo == null)
+				return new BoolInfo(ErrorType.ILLEGAL_NULL);
+			if (!onlineUsers.contains(baseInfo.getID()))
+				return new BoolInfo(ErrorType.NOT_ONLINE);
+			if (!userChecker.check(baseInfo))
+				return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
+			dataCenter.setBaseUserInfo(baseInfo.getID(), baseInfo);
 
-		Set<ID> idSet = new HashSet<ID>();
+			Set<ID> idSet = new HashSet<ID>();
 
-		// 通知被授权联系人
-		List<ID> perIDList = dataCenter.getPerContactID(baseInfo.getID());
-		for (ID id : perIDList)
-			idSet.add(id);
+			if (pwd != null && !pwd.isNull())
+				dataCenter.setPwd(baseInfo.getID(), pwd);
 
-		// 通知同群组的联系人
-		List<Group> groups = dataCenter.getGroups(baseInfo.getID());
-		for (Group g : groups)
-			idSet.addAll(g.getUserSet());
+			// 通知被授权联系人
+			List<ID> perIDList = dataCenter.getPerContactID(baseInfo.getID());
+			for (ID id : perIDList)
+				idSet.add(id);
 
-		// 发送消息
-		idSet.remove(baseInfo.getID());
-		for (ID id : idSet)
-			pushMessage(id, new ContactUpdatedMessage(baseInfo, idFactory
-					.getNewMessageID()));
+			// 通知同群组的联系人
+			List<Group> groups = dataCenter.getGroups(baseInfo.getID());
+			for (Group g : groups)
+				idSet.addAll(g.getUserSet());
 
+			// 发送消息
+			idSet.remove(baseInfo.getID());
+			for (ID id : idSet)
+				pushMessage(id, new ContactUpdatedMessage(baseInfo, idFactory
+						.getNewMessageID()));
+		} catch (SQLException e) {
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -304,7 +363,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			MyRemoteException {
 		if (identicalInfo == null)
 			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
-		return dataCenter.searchUserID(identicalInfo);
+		try {
+			return dataCenter.searchUserID(identicalInfo);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override
@@ -314,16 +378,22 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (un == null || gid == null || inviteInfo == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (g == null)
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		if (g.getAdminUserID() != thisUser)
-			return new BoolInfo(ErrorType.NOT_ADMIN);
-		ID targetID = dataCenter.searchUserID(un);
-		if (targetID == null || targetID.isNull())
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		pushMessage(targetID, new InviteToGroupMessage(targetID, g, inviteInfo,
-				idFactory.getNewMessageID()));
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (g == null)
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (g.getAdminUserID() != thisUser)
+				return new BoolInfo(ErrorType.NOT_ADMIN);
+			ID targetID = dataCenter.searchUserID(un);
+			if (targetID == null || targetID.isNull())
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			pushMessage(targetID, new InviteToGroupMessage(targetID, g,
+					inviteInfo, idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -334,16 +404,23 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (gid == null || reason == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (g == null)
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		if (g.getUserSet().contains(thisUser)) {
-			g.removeFromGroup(thisUser);
-			dataCenter.removeFromGroup(g, thisUser);
-			String detail = "用户：" + getUserInfo(thisUser).getName() + "退出了群组";
-			for (ID id : g.getUserSet())
-				pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
-						.getNewMessageID()));
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (g == null)
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (g.getUserSet().contains(thisUser)) {
+				g.removeFromGroup(thisUser);
+				dataCenter.removeFromGroup(g, thisUser);
+				String detail = "用户：" + getUserInfo(thisUser).getName()
+						+ "退出了群组";
+				for (ID id : g.getUserSet())
+					pushMessage(id, new GroupUpdatedMessage(g, detail,
+							idFactory.getNewMessageID()));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
 		}
 		return new BoolInfo();
 	}
@@ -355,7 +432,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
 		if (!userChecker.check(b))
 			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
-		dataCenter.register(b, pwd);
+		try {
+			dataCenter.register(b, pwd);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -365,15 +447,21 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (gid == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (!g.getAdminUserID().equals(thisUser))
-			return new BoolInfo(ErrorType.NOT_ADMIN);
-		dataCenter.removeGroup(g);
-		String detail = "管理员删除了群组";
-		for (ID id : g.getUserSet())
-			if (!id.equals(thisUser))
-				pushMessage(id, new GroupRemovedMessage(g, detail, idFactory
-						.getNewMessageID()));
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (!g.getAdminUserID().equals(thisUser))
+				return new BoolInfo(ErrorType.NOT_ADMIN);
+			dataCenter.removeGroup(g);
+			String detail = "管理员删除了群组";
+			for (ID id : g.getUserSet())
+				if (!id.equals(thisUser))
+					pushMessage(id, new GroupRemovedMessage(g, detail,
+							idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -384,20 +472,26 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (gid == null || un == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		Group g = dataCenter.getGroup(gid);
-		if (!g.getAdminUserID().equals(thisUser))
-			return new BoolInfo(ErrorType.NOT_ADMIN);
-		ID targetUser = dataCenter.searchUserID(un);
-		if (targetUser == null || targetUser.isNull())
-			return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-		g.removeFromGroup(targetUser);
-		dataCenter.removeFromGroup(g, targetUser);
-		String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
-		for (ID id : g.getUserSet())
-			pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
-					.getNewMessageID()));
-		pushMessage(targetUser, new GroupRemovedMessage(g, "管理员将您从群组中删除",
-				idFactory.getNewMessageID()));
+		Group g;
+		try {
+			g = dataCenter.getGroup(gid);
+			if (!g.getAdminUserID().equals(thisUser))
+				return new BoolInfo(ErrorType.NOT_ADMIN);
+			ID targetUser = dataCenter.searchUserID(un);
+			if (targetUser == null || targetUser.isNull())
+				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			g.removeFromGroup(targetUser);
+			dataCenter.removeFromGroup(g, targetUser);
+			String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
+			for (ID id : g.getUserSet())
+				pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
+						.getNewMessageID()));
+			pushMessage(targetUser, new GroupRemovedMessage(g, "管理员将您从群组中删除",
+					idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -408,9 +502,15 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetID == null || targetID.isNull())
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		dataCenter.removePerRelationship(thisUser, targetID);
-		pushMessage(targetID, new SynRelationLostMessage(thisUser, getUserInfo(
-				thisUser).getName(), idFactory.getNewMessageID()));
+		try {
+			dataCenter.removePerRelationship(thisUser, targetID);
+			pushMessage(targetID, new SynRelationLostMessage(thisUser,
+					getUserInfo(thisUser).getName(), idFactory
+							.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -421,7 +521,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetID == null || targetID.isNull())
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		dataCenter.removeSynRelationship(thisUser, targetID);
+		try {
+			dataCenter.removeSynRelationship(thisUser, targetID);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -432,7 +537,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetID == null || targetID.isNull() || p == null)
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		dataCenter.setPermission(thisUser, targetID, p);
+		try {
+			dataCenter.setPermission(thisUser, targetID, p);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
@@ -443,22 +553,33 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetID == null || targetID.isNull())
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
-		dataCenter.setVisiblity(thisUser, targetID, visibility);
+		try {
+			dataCenter.setVisiblity(thisUser, targetID, visibility);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		return new BoolInfo();
 	}
 
 	@Override
 	public BaseUserInfo login(IdenticalInfoField identicalInfo, Password pwd)
 			throws RemoteException, MyRemoteException {
-		ID thisUser = dataCenter.loginGetInfo(identicalInfo, pwd);
-		if (thisUser.isNull())
-			throw new MyRemoteException(ErrorType.LOGIN_FAILED);
-		if (onlineUsers.contains(thisUser))
-			throw new MyRemoteException(ErrorType.ALREADY_ONLINE);
-		onlineUsers.add(thisUser);
-		senders.put(thisUser, new MessageSender(thisUser));
+		ID thisUser;
+		try {
+			thisUser = dataCenter.loginGetInfo(identicalInfo, pwd);
+			if (thisUser.isNull())
+				throw new MyRemoteException(ErrorType.LOGIN_FAILED);
+			if (onlineUsers.contains(thisUser))
+				throw new MyRemoteException(ErrorType.ALREADY_ONLINE);
+			onlineUsers.add(thisUser);
+			senders.put(thisUser, new MessageSender(thisUser));
 
-		return getUserInfo(thisUser);
+			return getUserInfo(thisUser);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override
@@ -466,12 +587,17 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throws RemoteException {
 		if (!onlineUsers.contains(thisUser))
 			return new BoolInfo(ErrorType.NOT_ONLINE);
-		dataCenter.removeMessageBuffer(thisUser, msg);
+		try {
+			dataCenter.removeMessageBuffer(thisUser, msg);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return new BoolInfo(ErrorType.SQL_ERROR);
+		}
 		idFactory.putbackID(msg.getID());
 		return new BoolInfo();
 	}
 
-	protected Permission getGlobalPermission(ID thisUser) {
+	protected Permission getGlobalPermission(ID thisUser) throws SQLException {
 		List<ID> idList = new ArrayList<ID>();
 		idList.add(ID.GLOBAL_ID);
 		List<Permission> res = dataCenter.getPermissions(thisUser, idList);
@@ -490,9 +616,11 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 * @param p2pPermission
 	 *            thisUser给targetUser设定的单独权限
 	 * @return
+	 * @throws SQLException
 	 */
 	protected Permission getFinalPermision(ID thisUser, ID targetUser,
-			Permission p2pPermission, List<Group> groups, List<Permission> gPs) {
+			Permission p2pPermission, List<Group> groups, List<Permission> gPs)
+			throws SQLException {
 		Permission res = (p2pPermission == null) ? new Permission()
 				: p2pPermission.clone();
 		List<Group> gList2 = dataCenter.getGroups(targetUser);
@@ -530,8 +658,10 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 * @param thisUser
 	 * @param targetUser
 	 * @return
+	 * @throws SQLException
 	 */
-	protected Permission getPermission(ID thisUser, ID targetUser) {
+	protected Permission getPermission(ID thisUser, ID targetUser)
+			throws SQLException {
 		List<ID> idList = new ArrayList<ID>();
 		idList.add(targetUser);
 		return dataCenter.getPermissions(thisUser, idList).get(0);
@@ -543,8 +673,10 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 * @param thisUser
 	 * @param targetUser
 	 * @return
+	 * @throws SQLException
 	 */
-	protected Permission getFinalPermission(ID thisUser, ID targetUser) {
+	protected Permission getFinalPermission(ID thisUser, ID targetUser)
+			throws SQLException {
 		List<Group> gList1 = dataCenter.getGroups(thisUser);
 		List<ID> gidList = new ArrayList<ID>();
 		for (Group g : gList1)
@@ -558,26 +690,34 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	@Override
 	public List<BaseUserInfo> getContactsInfo(ID thisUser, List<ID> idList)
 			throws RemoteException, MyRemoteException {
-		List<BaseUserInfo> contacts = dataCenter.getUsersInfo(idList);
-		List<Permission> finalPermissions = new ArrayList<Permission>();
+		List<BaseUserInfo> contacts;
+		try {
+			contacts = dataCenter.getUsersInfo(idList);
+			List<Permission> finalPermissions = new ArrayList<Permission>();
 
-		if (!onlineUsers.contains(thisUser)) {
-			List<Group> gList1 = dataCenter.getGroups(thisUser);
-			List<ID> gidList = new ArrayList<ID>();
-			for (Group g : gList1)
-				gidList.add(g.getID());
-			List<Permission> gPs = dataCenter.getPermissions(thisUser, gidList);
-			List<Permission> p2pPermissions = dataCenter.getPermissions(
-					thisUser, idList);
-			for (int i = 0; i < idList.size(); i++)
-				finalPermissions.add(getFinalPermision(thisUser, idList.get(i),
-						p2pPermissions.get(i), gList1, gPs));
-		} else
-			for (int i = 0; i < idList.size(); i++)
-				finalPermissions.add(getGlobalPermission(idList.get(i)));
+			if (!onlineUsers.contains(thisUser)) {
+				List<Group> gList1 = dataCenter.getGroups(thisUser);
+				List<ID> gidList = new ArrayList<ID>();
+				for (Group g : gList1)
+					gidList.add(g.getID());
+				List<Permission> gPs = dataCenter.getPermissions(thisUser,
+						gidList);
+				List<Permission> p2pPermissions = dataCenter.getPermissions(
+						thisUser, idList);
+				for (int i = 0; i < idList.size(); i++)
+					finalPermissions.add(getFinalPermision(thisUser, idList
+							.get(i), p2pPermissions.get(i), gList1, gPs));
+			} else
+				for (int i = 0; i < idList.size(); i++)
+					finalPermissions.add(getGlobalPermission(idList.get(i)));
 
-		for (int i = 0; i < contacts.size(); i++)
-			contacts.set(i, filter(contacts.get(i), finalPermissions.get(i)));
+			for (int i = 0; i < contacts.size(); i++)
+				contacts.set(i,
+						filter(contacts.get(i), finalPermissions.get(i)));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 		return contacts;
 	}
 
@@ -606,7 +746,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
 		if (!searchGroupChecker.check(g))
 			throw new MyRemoteException(ErrorType.ILLEGAL_SEARCH);
-		return dataCenter.searchGroup(g);
+		try {
+			return dataCenter.searchGroup(g);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override
@@ -614,15 +759,23 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			IdenticalInfoField to) throws RemoteException, MyRemoteException {
 		if (from == null || to == null)
 			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
-		ID fromID = dataCenter.searchUserID(from), toID = dataCenter
-				.searchUserID(to);
-		if (fromID == null || fromID.isNull() || toID == null || toID.isNull())
-			throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
-		List<ID> idRes = relationCube.getSearchRes(fromID, toID, this);
-		List<BaseUserInfo> res = dataCenter.getUsersInfo(idRes);
-		for (int i = 0; i < res.size(); i++)
-			res.set(i, filter(res.get(i), getGlobalPermission(idRes.get(i))));
-		return res;
+		ID fromID, toID;
+		try {
+			fromID = dataCenter.searchUserID(from);
+			toID = dataCenter.searchUserID(to);
+			if (fromID == null || fromID.isNull() || toID == null
+					|| toID.isNull())
+				throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
+			List<ID> idRes = relationCube.getSearchRes(fromID, toID, this);
+			List<BaseUserInfo> res = dataCenter.getUsersInfo(idRes);
+			for (int i = 0; i < res.size(); i++)
+				res.set(i,
+						filter(res.get(i), getGlobalPermission(idRes.get(i))));
+			return res;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override
@@ -632,10 +785,16 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
 		if (!searchGroupChecker.check(b))
 			throw new MyRemoteException(ErrorType.ILLEGAL_SEARCH);
-		List<BaseUserInfo> res = dataCenter.searchUser(b);
+		List<BaseUserInfo> res;
+		try {
+			res = dataCenter.searchUser(b);
 		for (int i = 0; i < res.size(); i++)
 			res.set(i, filter(res.get(i), getGlobalPermission(res.get(i)
 					.getID())));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 		return res;
 	}
 
@@ -649,7 +808,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			MyRemoteException {
 		if (!onlineUsers.contains(id))
 			throw new MyRemoteException(ErrorType.NOT_ONLINE);
-		return dataCenter.getPerContactID(id);
+		try {
+			return dataCenter.getPerContactID(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override
@@ -657,7 +821,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			MyRemoteException {
 		if (!onlineUsers.contains(id))
 			throw new MyRemoteException(ErrorType.NOT_ONLINE);
-		return dataCenter.getSynContactID(id);
+		try {
+			return dataCenter.getSynContactID(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override
@@ -665,6 +834,28 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			MyRemoteException {
 		if (!onlineUsers.contains(id))
 			throw new MyRemoteException(ErrorType.NOT_ONLINE);
-		return dataCenter.getGroups(id);
+		try {
+			return dataCenter.getGroups(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
+	}
+	
+	public static void main(String args[]){
+		
+	}
+
+	@Override
+	public List<Permission> getPermissions(ID uid, List<ID> idList)
+			throws RemoteException, MyRemoteException {
+		if (!onlineUsers.contains(uid))
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
+		try {
+			return dataCenter.getPermissions(uid, idList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 }
