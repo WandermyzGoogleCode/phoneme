@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import entity.ErrorType;
 import entity.Group;
@@ -17,12 +18,12 @@ import logiccenter.LogicCenter;
 public class AllGroupsBox extends VirtualResult {
 	private LogicCenter center;
 	private Map<ID, Group> groups;
-	private Map<ID, Permission> permissions = new HashMap<ID, Permission>();
+	private Map<ID, Permission> permissions = new ConcurrentHashMap<ID, Permission>();
 	
 	class GetThread extends Thread{
 		@Override
 		public void run() {
-			groups = new HashMap<ID, Group>();
+			groups = new ConcurrentHashMap<ID, Group>();
 			if (center.getDataCenter().getAllGroups() != null){
 				List<ID> idList = new ArrayList<ID>();
 				for(Group g: center.getDataCenter().getAllGroups()){
