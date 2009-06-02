@@ -32,6 +32,7 @@ public class RemoveContactInfoResult extends OneTimeVirtualResult {
 				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
 			Relation r = (Relation)info.getInfoField(InfoFieldName.Relation);
 			r.setRemoved(true);
+			center.getDataCenter().setUserInfo(info);
 			center.getAllContactsBox().setUpdateNow();
 		}
 		return new BoolInfo();

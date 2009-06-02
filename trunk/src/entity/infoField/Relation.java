@@ -49,7 +49,7 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	public Relation(){}
 	
 	public Relation(String value){
-		if (value == "removed")
+		if (value.equals("removed"))
 			removed = true;
 	}
 	
