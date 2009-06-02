@@ -34,7 +34,7 @@ public abstract class RelationTable {
 		}
 	}
 	
-	public boolean hasRelation(ID id1, ID id2) throws SQLException{
+	synchronized public boolean hasRelation(ID id1, ID id2) throws SQLException{
 		String psql = "SELECT * FROM "+getTableName()+" WHERE id1=? AND id2=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, id1.getValue());
@@ -53,7 +53,7 @@ public abstract class RelationTable {
 		pStatement.execute();
 	}
 	
-	public List<ID> getRelations(ID id1) throws SQLException{
+	synchronized public List<ID> getRelations(ID id1) throws SQLException{
 		String psql = "SELECT id2 FROM "+getTableName()+" WHERE id1=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, id1.getValue());
@@ -65,7 +65,7 @@ public abstract class RelationTable {
 		return res;
 	}
 	
-	public List<ID> getBackRelations(ID id2) throws SQLException{
+	synchronized public List<ID> getBackRelations(ID id2) throws SQLException{
 		String psql = "SELECT id1 FROM "+getTableName()+" WHERE id2=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, id2.getValue());
@@ -77,7 +77,7 @@ public abstract class RelationTable {
 		return res;		
 	}	
 	
-	public void removeRelation(ID id1, ID id2) throws SQLException{
+	synchronized public void removeRelation(ID id1, ID id2) throws SQLException{
 		String psql = "DELETE FROM "+getTableName()+" WHERE id1=? AND id2=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, id1.getValue());

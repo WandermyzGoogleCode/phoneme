@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -33,7 +35,7 @@ public class PermissionTable {
 		}
 	}
 
-	private boolean hasPermission(ID uid, ID id) throws SQLException{
+	synchronized private boolean hasPermission(ID uid, ID id) throws SQLException{
 		String psql = "SELECT COUNT(*) FROM Permission WHERE uid=? AND id=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, uid.getValue());
@@ -42,7 +44,7 @@ public class PermissionTable {
 		return (res.next() && res.getInt(1) > 0);
 	}
 	
-	public void setPermission(ID uid, ID id, Permission p) throws SQLException{
+	synchronized public void setPermission(ID uid, ID id, Permission p) throws SQLException{
 		String psql;
 		if (hasPermission(uid, id))
 			psql = "UPDATE Permission SET permission=? WHERE uid=? AND id=?";
@@ -55,11 +57,11 @@ public class PermissionTable {
 		pStatement.execute();
 	}
 	
-	public List<Permission> getPermissions(ID uid, List<ID> idList) throws SQLException{
+	synchronized public List<Permission> getPermissions(ID uid, List<ID> idList) throws SQLException{
 		List<Permission> res = new ArrayList<Permission>();
 		if (idList == null || idList.isEmpty())
 			return res;
-		String psql = "SELECT permission FROM Permission WHERE uid=? AND (";
+		String psql = "SELECT id, permission FROM Permission WHERE uid=? AND (";
 		for(ID id: idList){
 			if (psql.charAt(psql.length()-1) != '(')
 				psql += " OR ";
@@ -71,8 +73,14 @@ public class PermissionTable {
 		for(int i=0; i<idList.size(); i++)
 			pStatement.setLong(i+2, idList.get(i).getValue());
 		ResultSet rows = pStatement.executeQuery();
-		while (rows.next()){
-			res.add((Permission)Serializer.unserialize(rows.getBlob(1)));
+		Map<ID, Permission> tempMap = new HashMap<ID, Permission>();
+		while (rows.next())
+			tempMap.put(new ID(rows.getLong(1)), (Permission)Serializer.unserialize(rows.getBlob(2)));
+		for(int i=0; i<idList.size(); i++){
+			Permission now = tempMap.get(idList.get(i));
+			if (now == null)
+				now = new Permission();//²¹¿ÕÎ»
+			res.add(now);
 		}
 		return res;
 	}

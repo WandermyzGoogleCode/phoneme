@@ -73,7 +73,7 @@ public class UserInfoTable {
 		}
 	}
 
-	public List<BaseUserInfo> getUsersInfo(List<ID> idList) throws SQLException {
+	synchronized public List<BaseUserInfo> getUsersInfo(List<ID> idList) throws SQLException {
 		if (idList.isEmpty())
 			return new ArrayList<BaseUserInfo>();
 		String psql = "SELECT * FROM UserInfo WHERE ";
@@ -102,7 +102,7 @@ public class UserInfoTable {
 		return res;
 	}
 
-	public void setUserInfo(ID uid, BaseUserInfo b) throws SQLException {
+	synchronized public void setUserInfo(ID uid, BaseUserInfo b) throws SQLException {
 		String psql = "REPLACE INTO UserInfo VALUES(?";
 		BaseUserInfo emptyInfo = new BaseUserInfo();
 		Iterator<String> fieldNameIter = emptyInfo.getKeySet().iterator();
@@ -124,7 +124,7 @@ public class UserInfoTable {
 		pStatement.execute();
 	}
 
-	public List<BaseUserInfo> searchUser(BaseUserInfo info) throws SQLException{
+	synchronized public List<BaseUserInfo> searchUser(BaseUserInfo info) throws SQLException{
 		String psql = "SELECT * FROM UserInfo WHERE ";
 		for(String name: info.getKeySet()){
 			InfoField field = info.getInfoField(name);

@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
@@ -30,7 +32,7 @@ public class VisibilityTable {
 		}
 	}
 
-	private boolean hasVisibility(ID uid, ID id) throws SQLException{
+	synchronized private boolean hasVisibility(ID uid, ID id) throws SQLException{
 		String psql = "SELECT COUNT(*) FROM Visibility WHERE uid=? AND id=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, uid.getValue());
@@ -39,7 +41,7 @@ public class VisibilityTable {
 		return (res.next() && res.getInt(1) > 0);
 	}
 
-	public void setVisibility(ID uid, ID id, int visibility) throws SQLException{
+	synchronized public void setVisibility(ID uid, ID id, int visibility) throws SQLException{
 		String psql;
 		if (hasVisibility(uid, id))
 			psql = "UPDATE Visibility SET v=? WHERE uid=? AND id=?";
@@ -52,9 +54,9 @@ public class VisibilityTable {
 		pStatement.execute();
 	}
 
-	public List<Integer> getVisibilities(ID uid, List<ID> idList) throws SQLException{
+	synchronized public List<Integer> getVisibilities(ID uid, List<ID> idList) throws SQLException{
 		List<Integer> res = new ArrayList<Integer>();
-		String psql = "SELECT v FROM Visibility WHERE uid=? AND (";
+		String psql = "SELECT id, v FROM Visibility WHERE uid=? AND (";
 		for(ID id: idList){
 			if (psql.charAt(psql.length()-1) != '(')
 				psql += " OR ";
@@ -66,9 +68,14 @@ public class VisibilityTable {
 		for(int i=0; i<idList.size(); i++)
 			pStatement.setLong(i+2, idList.get(i).getValue());
 		ResultSet rows = pStatement.executeQuery();
-		while (rows.next()){
-			res.add(rows.getInt(1));
-		}
+		Map<ID, Integer> tempMap = new HashMap<ID, Integer>();
+		while (rows.next())
+			tempMap.put(new ID(rows.getLong("id")), rows.getInt("v"));
+		for(int i=0; i<idList.size(); i++)
+			if (tempMap.containsKey(idList.get(i)))
+				res.add(tempMap.get(idList.get(i)));
+			else
+				res.add(0);
 		return res;
 	}
 }

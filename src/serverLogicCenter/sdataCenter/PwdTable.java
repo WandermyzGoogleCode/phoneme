@@ -30,7 +30,7 @@ public class PwdTable {
 		}
 	}
 
-	public Password getPwd(ID uid) throws SQLException{
+	synchronized public Password getPwd(ID uid) throws SQLException{
 		String psql = "SELECT pwd FROM Pwd WHERE uid=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, uid.getValue());
@@ -41,7 +41,7 @@ public class PwdTable {
 			return null;
 	}
 
-	public void setPwd(ID uid, Password pwd) throws SQLException{
+	synchronized public void setPwd(ID uid, Password pwd) throws SQLException{
 		String psql = "REPLACE INTO Pwd VALUES(?, ?)";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, uid.getValue());

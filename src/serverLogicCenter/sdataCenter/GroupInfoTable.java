@@ -75,7 +75,7 @@ public class GroupInfoTable {
 
 	}
 
-	public void setGroup(Group g) throws SQLException {
+	synchronized public void setGroup(Group g) throws SQLException {
 		String psql = "REPLACE INTO GroupInfo VALUES(?,?";
 
 		// 为了保持KeySet的一致性，所以还是用emptyGroup来获取KeySet
@@ -99,7 +99,7 @@ public class GroupInfoTable {
 		pStatement.execute();
 	}
 
-	public Group getGroupInfo(ID gid) throws SQLException {
+	synchronized public Group getGroupInfo(ID gid) throws SQLException {
 		Group res = new Group();
 		String psql = "SELECT * FROM GroupInfo WHERE gid=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
@@ -122,14 +122,14 @@ public class GroupInfoTable {
 		return res;
 	}
 
-	public void removeGroup(Group g) throws SQLException{
+	synchronized public void removeGroup(Group g) throws SQLException{
 		String psql = "DELETE FROM GroupInfo WHERE gid=?";
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, g.getID().getValue());
 		pStatement.execute();
 	}
 
-	public List<Group> searchGroup(Group info) throws SQLException{
+	synchronized public List<Group> searchGroup(Group info) throws SQLException{
 		String psql = "SELECT * FROM GroupInfo WHERE ";
 		for(String name: info.getKeySet()){
 			InfoField field = info.getInfoField(name);

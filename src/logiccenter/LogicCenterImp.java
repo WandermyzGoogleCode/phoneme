@@ -217,7 +217,7 @@ public class LogicCenterImp implements LogicCenter {
 		// allPerContactsBox = new AllPerContactsBox(this);
 		allGroupBox = new AllGroupsBox(this);
 		allContactsBox = new AllContactsBox(this);// 必须放在allGroupBox后面，
-													// 因为他会调用allGroupBox
+		// 因为他会调用allGroupBox
 		try {
 			Registry registry = LocateRegistry.getRegistry("Localhost");// TODO
 			// 当前只是本机网络测试
@@ -247,16 +247,13 @@ public class LogicCenterImp implements LogicCenter {
 		try {
 			LogicCenter center = LogicCenterImp.getInstance();
 			IdenticalInfoField idField = (IdenticalInfoField) InfoFieldFactory
-					.getFactory().makeInfoField("Cellphone", "13333333333");
-			Password pwd = new Password("23");
+					.getFactory().makeInfoField("QQNumber", "11");
+			Password pwd = new Password("test");
 			center.login(idField, pwd);
-			
-			Group g = new Group();
-			g.setInfoField(InfoFieldFactory.getFactory().makeInfoField(InfoFieldName.GroupName, "TestGroup"));
-			center.createGroup(g, new Permission(), 3);
-			center.addPerContact(idField, new Permission());
-			center.inviteToGroup(idField, g, "lala");
-			Thread.sleep(3000);
+
+			Group g = center.getAllGroupsBox().getGroups().get(0);
+			center.inviteToGroup((IdenticalInfoField) InfoFieldFactory
+					.getFactory().makeInfoField("QQNumber", "11"), g, "lala");
 			center.logout();
 		} catch (Exception e) {
 			System.out.println(e);
