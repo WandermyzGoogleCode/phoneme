@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import logiccenter.LogicCenter;
 
@@ -32,7 +33,7 @@ public class AllContactsBox extends VirtualResult {
 	class GetThread extends Thread {
 		@Override
 		public void run() {
-			contacts = new HashMap<ID, UserInfo>();
+			contacts = new ConcurrentHashMap<ID, UserInfo>();
 			List<UserInfo> temp = center.getDataCenter().getAllUserInfo(null);
 			for(UserInfo info: temp)
 				contacts.put(info.getBaseInfo().getID(), info); 

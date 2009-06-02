@@ -57,6 +57,8 @@ public class PermissionTable {
 	
 	public List<Permission> getPermissions(ID uid, List<ID> idList) throws SQLException{
 		List<Permission> res = new ArrayList<Permission>();
+		if (idList == null || idList.isEmpty())
+			return res;
 		String psql = "SELECT permission FROM Permission WHERE uid=? AND (";
 		for(ID id: idList){
 			if (psql.charAt(psql.length()-1) != '(')
