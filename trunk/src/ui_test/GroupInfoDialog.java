@@ -46,6 +46,7 @@ import ui_test.UserInfoTable.UserInfoTableType;
 //import entity.UserInfo;
 import entity.infoField.EmptyGroupDescription;
 import entity.infoField.EmptyGroupName;
+import entity.infoField.GroupFieldName;
 import entity.infoField.InfoFieldFactory;
 //import entity.infoField.GroupName;
 import entity.infoField.InfoField;
@@ -176,12 +177,7 @@ public class GroupInfoDialog extends Dialog
 		tableViewerInfo.setCellEditors(cellEditors);
 		tableViewerInfo.setCellModifier(new GroupInfoCellModifier(shell, groupInfoTableType, tableViewerInfo));
 		
-		List<InfoField> fieldsList = new ArrayList<InfoField>();
-		//!TODO: 怎样获得所有group fields?
-		fieldsList.add(new EmptyGroupName());
-		fieldsList.add(new EmptyGroupDescription());
-		
-		tableViewerInfo.setInput(fieldsList);
+		tableViewerInfo.setInput(InfoFieldFactory.getFactory().makeAllGroupEmptyField());
 		//[end]
 		
 		//[start] 权限
