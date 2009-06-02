@@ -245,7 +245,7 @@ public class GroupInfoDialog extends Dialog
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new EditGroupResultTask((EditGroupResult)o));
+			Display.getDefault().syncExec(new EditGroupResultTask((EditGroupResult)o));
 		}
 		
 	}
@@ -335,7 +335,7 @@ public class GroupInfoDialog extends Dialog
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new RemoveGroupResultTask((RemoveGroupResult)o));
+			Display.getDefault().syncExec(new RemoveGroupResultTask((RemoveGroupResult)o));
 		}
 		
 	}

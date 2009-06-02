@@ -944,8 +944,6 @@ public class MainWindow
 	{
 
 		// [start] 个人信息 初始化
-		// TODO 绘制个人信息中自定义字段的控件
-		// TODO 从数据库中读取个人信息，填入相关控件（考虑DataBinding）
 		// [end]
 
 		// [start] 同步联系人
@@ -1000,7 +998,7 @@ public class MainWindow
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new RegisterResultTask((RegisterResult)o));
+			Display.getDefault().syncExec(new RegisterResultTask((RegisterResult)o));
 		}
 		
 	}
@@ -1093,7 +1091,7 @@ public class MainWindow
 			if(loginBaseUserInfo == null)
 			{
 				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
-				//TODO: 转到登录对话框
+				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
 			}
 			else
 			{
@@ -1219,7 +1217,7 @@ public class MainWindow
 //				Image image = new Image(null, fileName);
 //				canvasInfoAvatar.setData(image);
 //				canvasInfoAvatar.redraw();
-//				// TODO: 检查图片格式，保存用户头像到数据库
+//				// 检查图片格式，保存用户头像到数据库
 //			}
 //		}
 //	}
@@ -1234,7 +1232,7 @@ public class MainWindow
 //	{
 //		public void focusLost(final FocusEvent e)
 //		{
-//			// TODO: 检查手机号合法性
+//			// 检查手机号合法性
 //		}
 //	}
 //
@@ -1248,7 +1246,7 @@ public class MainWindow
 //	{
 //		public void focusLost(final FocusEvent e)
 //		{
-//			// TODO: 检查E-mail合法性
+//			// 检查E-mail合法性
 //		}
 //	}
 //
@@ -1262,7 +1260,7 @@ public class MainWindow
 //	{
 //		public void focusLost(final FocusEvent e)
 //		{
-//			// TODO: 检查QQ号合法性
+//			// 检查QQ号合法性
 //		}
 //	}
 //
@@ -1276,7 +1274,7 @@ public class MainWindow
 //	{
 //		public void focusLost(final FocusEvent e)
 //		{
-//			// TODO: 检查家庭电话合法性
+//			// 检查家庭电话合法性
 //		}
 //	}
 //
@@ -1290,7 +1288,7 @@ public class MainWindow
 //	{
 //		public void focusLost(final FocusEvent e)
 //		{
-//			// TODO: 检查单位电话合法性
+//			// 检查单位电话合法性
 //		}
 //	}
 //
@@ -1304,7 +1302,7 @@ public class MainWindow
 //	{
 //		public void focusLost(final FocusEvent e)
 //		{
-//			// TODO: 检查MSN合法性
+//			// 检查MSN合法性
 //		}
 //	}
 //
@@ -1320,7 +1318,7 @@ public class MainWindow
 //		{
 //			if (MessageDialog.openConfirm(shell, "确认重置", "确实要放弃所有修改吗？"))
 //			{
-//				// TODO: 放弃所有修改
+//				// 放弃所有修改
 //			}
 //		}
 //	}
@@ -1335,7 +1333,7 @@ public class MainWindow
 //	{
 //		public void widgetSelected(final SelectionEvent e)
 //		{
-//			// TODO: 将个人信息保存在本地数据库
+//			// 将个人信息保存在本地数据库
 //		}
 //	}
 //
@@ -1349,7 +1347,7 @@ public class MainWindow
 //	{
 //		public void widgetSelected(final SelectionEvent e)
 //		{
-//			// TODO: 将个人信息上传到服务器
+//			// 将个人信息上传到服务器
 //		}
 //	}
 //
@@ -1366,7 +1364,7 @@ public class MainWindow
 //			if (false || // true = 本地的个人信息最后修改时间比服务器的新
 //			MessageDialog.openConfirm(shell, "确认下载", "本地的个人信息比服务器的新，确实要用服务器上的数据覆盖本地数据吗？"))
 //			{
-//				// TODO: 从服务器上下载个人信息
+//				// 从服务器上下载个人信息
 //			}
 //		}
 //	}
@@ -1449,7 +1447,7 @@ public class MainWindow
 			if(getCurrentContactTab() == ContactTabType.Synchronization)
 			{
 				UserInfo newUser = UserInfo.getNewLocalUser();
-				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.Synchronization, newUser);
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.New, newUser);
 				userInfoDialog.OpenEditInfo();
 				//!TODO 如何判断一个UserInfo是同步联系人还是被授权联系人？
 			}

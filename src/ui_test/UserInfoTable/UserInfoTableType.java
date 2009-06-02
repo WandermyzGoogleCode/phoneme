@@ -45,5 +45,10 @@ public enum UserInfoTableType
 	/**
 	 * 新用户注册
 	 */
-	Register
+	Register,
+	
+	/**
+	 * 添加新联系人
+	 */
+	New,
 }

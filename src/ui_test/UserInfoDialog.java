@@ -639,7 +639,7 @@ public class UserInfoDialog extends Dialog
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new SetPermissionResultTask((SetPermissionResult)o));
+			Display.getDefault().syncExec(new SetPermissionResultTask((SetPermissionResult)o));
 		}
 		
 	}
@@ -734,7 +734,7 @@ public class UserInfoDialog extends Dialog
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new RemoveGroupMemberResultTask((RemoveGroupMemberResult)o));
+			Display.getDefault().syncExec(new RemoveGroupMemberResultTask((RemoveGroupMemberResult)o));
 		}
 		
 	}
@@ -798,7 +798,7 @@ public class UserInfoDialog extends Dialog
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getCurrent().syncExec(new InviteToGroupResultTask((InviteToGroupResult)o));
+			Display.getDefault().syncExec(new InviteToGroupResultTask((InviteToGroupResult)o));
 		}
 		
 	}
