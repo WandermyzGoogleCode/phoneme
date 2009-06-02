@@ -211,7 +211,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherPer=? where UserID=?";
+				String sql = "UPDATE UserInfo SET WhetherPer=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < perIDWriteBuffer.size(); i++) {
@@ -242,7 +242,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherSync=? where UserID=?";
+				String sql = "UPDATE UserInfo SET WhetherSync=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < syncIDWriteBuffer.size(); i++) {
@@ -602,7 +602,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherPer=? where UserID=?";
+				String sql = "UPDATE UserInfo SET WhetherPer=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < perIDDeleteBuffer.size(); i++) {
@@ -633,7 +633,7 @@ public class DataCenterImp_test implements DataCenter {
 				Connection connection = (Connection) DriverManager
 						.getConnection(url);
 				connection.setAutoCommit(false);
-				String sql = "UPDATE UserInfo WhetherSync=? where UserID=?";
+				String sql = "UPDATE UserInfo SET WhetherSync=? where UserID=?";
 				PreparedStatement pstatement = (PreparedStatement) connection
 						.prepareStatement(sql);
 				for (int i = 0; i < syncIDDeleteBuffer.size(); i++) {
