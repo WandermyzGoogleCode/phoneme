@@ -124,15 +124,12 @@ public class LoginDialog extends Dialog
 	{
 		if (buttonId == IDialogConstants.OK_ID)
 		{
-			 //!TODO: Identical Field怎么新建？？
-			ident = null;
+			ident = (IdenticalInfoField)InfoFieldFactory.getFactory().makeInfoField(comboIdentType.getText(), textIdent.getText());
 			password = textPassword.getText();
 			
 			LoginResult result = logicCenter.login(ident, new Password(password));
 			result.addObserver(new LoginResultObserver());
-			
-			//!TODO	 调试！！
-			
+		
 			return;
 		}
 		super.buttonPressed(buttonId);
@@ -169,6 +166,7 @@ public class LoginDialog extends Dialog
 			}
 			else if(state == VirtualState.PREPARED)
 			{
+				MessageDialog.openInformation(parentShell, "登录成功","登录成功");
 				thisDialog.close();
 			}
 		}

@@ -67,12 +67,12 @@ import ui_test.UserInfoTable.UserInfoContentProvider;
 import ui_test.UserInfoTable.UserInfoLabelProvider;
 import ui_test.UserInfoTable.UserInfoTableElem;
 import ui_test.UserInfoTable.UserInfoTableType;
-import ui_test.ContactPermissionComposition;
+import ui_test.ContactPermissionComposite;
 
 public class UserInfoDialog extends Dialog
 {
 	//[start] Component Properties
-	private ContactPermissionComposition contactPermissionComposition;
+	private ContactPermissionComposite contactPermissionComposition;
 	private Button buttonSetPerm;
 	private Button buttonAddSync;
 	private Button buttonInviteGroup;
@@ -402,7 +402,7 @@ public class UserInfoDialog extends Dialog
 				permission = allPerContactsBox.getPermission(user.getBaseInfo().getID());
 			}
 			
-			contactPermissionComposition = new ContactPermissionComposition(tabFolder, SWT.NONE, permission);
+			contactPermissionComposition = new ContactPermissionComposite(tabFolder, SWT.NONE, permission);
 
 		}
 		//[end]

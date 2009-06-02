@@ -68,7 +68,7 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.New)
+		else if(userInfoTableType == UserInfoTableType.NewLocal)
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
@@ -111,7 +111,7 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else if(userInfoTableType == UserInfoTableType.New)
+		else if(userInfoTableType == UserInfoTableType.NewLocal)
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
