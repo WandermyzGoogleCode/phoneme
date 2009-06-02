@@ -24,6 +24,8 @@ import entity.MyRemoteException;
 import entity.Password;
 import entity.Permission;
 import entity.infoField.IdenticalInfoField;
+import entity.infoField.InfoFieldFactory;
+import entity.infoField.InfoFieldName;
 import entity.message.Message;
 import entity.message.MessageSender;
 import entity.message.SimpleStringMessage;
@@ -45,42 +47,48 @@ public class TestServerLogicCenter extends ServerLogicCenterImp {
 		return thisUser;
 	}
 	
-	public static void main(String args[])
-	{
-		try
-		{
-			TestServerLogicCenter obj = new TestServerLogicCenter();
-			ServerLogicCenter stub = (ServerLogicCenter) UnicastRemoteObject.exportObject(obj, 0);
+	public static void main(String args[]) {
+		ServerLogicCenter center = ServerLogicCenterImp.getInstance();
 
-		    // Bind the remote object's stub in the registry
-		    Registry registry = LocateRegistry.getRegistry();
-		    registry.bind("logicCenterServer", stub);
-
-		    System.err.println("Server ready");
-
-			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-			while (true){
-				System.out.println("f-fresh, now users:");
-				for(ID id: obj.onlineUsers)
-					System.out.println(id.getValue());
-				String command = stdin.readLine();
-				if (command.equals("f"))
-					continue;
-				Long idValue = Long.valueOf(command);
-				MessageSender sender = obj.senders.get(new ID(idValue));
-				if (sender == null){					
-					System.out.println("Wrong ID:"+idValue);
-					continue;
-				}
-				System.out.println("input a message:");
-				String msg = stdin.readLine();
-				sender.addMessage(new SimpleStringMessage(msg, obj.idFactory.getNewMessageID()));
-			}
-		}
-		catch (Exception e)
-		{
-			System.err.println("Exception: "+e.toString());
+		BaseUserInfo newUser = new BaseUserInfo();
+		newUser.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+				InfoFieldName.Name.name(), "SpaceFlyer"));
+		newUser.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+				InfoFieldName.Cellphone, "13888888881"));
+		Password pwd = new Password("test");
+		try {
+//			BoolInfo rRes = center.register(newUser, pwd);
+//			if (!rRes.isTrue()) {
+//				System.out.println(rRes.getInfo());
+//			}
+			BaseUserInfo user = center.login(
+					(IdenticalInfoField) (InfoFieldFactory.getFactory()
+							.makeInfoField(InfoFieldName.Cellphone,
+									"13888888887")), pwd);
+			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+					InfoFieldName.Cellphone, "13888888887"));
+			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
+					InfoFieldName.EmailAddress, "test2@test.com"));
+			BoolInfo res = center.editMyBaseInfo(user, null);
+			if (!res.isTrue())
+				System.out.println(res.getInfo());
+			res = center.addPerContact(user.getID(),
+					(IdenticalInfoField) (InfoFieldFactory.getFactory()
+							.makeInfoField(InfoFieldName.EmailAddress,
+									"test2@test.com")), new Permission());
+			if (!res.isTrue())
+				System.out.println(res.getInfo());
+			res = center.addSynContact(user.getID(),
+					(IdenticalInfoField) (InfoFieldFactory.getFactory()
+							.makeInfoField(InfoFieldName.EmailAddress,
+									"test2@test.com")), 3);
+			if (!res.isTrue())
+				System.out.println(res.getInfo());
+		} catch (RemoteException e) {
 			e.printStackTrace();
-		}		
+		} catch (MyRemoteException e) {
+			System.out.println(e.getErr());
+			e.printStackTrace();
+		}
 	}
 }

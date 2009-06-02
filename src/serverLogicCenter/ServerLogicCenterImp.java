@@ -57,14 +57,14 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 
 	protected ServerLogicCenterImp() {
 		idFactory = IDFactory.getInstance();
+		dataCenter = ServerDataCenterImp.getInstance();
 		senders = new HashMap<ID, MessageSender>();
 		onlineUsers = new HashSet<ID>();
-		groupChecker = new GroupChecker(this);
-		userChecker = new UserChecker(this);
+		groupChecker = new GroupChecker(dataCenter);
+		userChecker = new UserChecker(dataCenter);
 		searchGroupChecker = new SearchGroupChecker();
 		searchUserChecker = new SearchUserChecker();
 		relationCube = new BFSRelationCube();
-		dataCenter = ServerDataCenterImp.getInstance();
 	}
 
 	synchronized static public ServerLogicCenter getInstance() {
@@ -772,7 +772,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			if (fromID == null || fromID.isNull() || toID == null
 					|| toID.isNull())
 				throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
-			List<ID> idRes = relationCube.getSearchRes(fromID, toID, this);
+			List<ID> idRes = relationCube.getSearchRes(fromID, toID, dataCenter);
 			List<BaseUserInfo> res = dataCenter.getUsersInfo(idRes);
 			for (int i = 0; i < res.size(); i++)
 				res.set(i,
@@ -802,11 +802,6 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			throw new MyRemoteException(ErrorType.SQL_ERROR);
 		}
 		return res;
-	}
-
-	@Override
-	public ServerDataCenter getDataCenter() {
-		return dataCenter;
 	}
 
 	@Override
@@ -848,49 +843,43 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		}
 	}
 
-	public static void main(String args[]) {
-		ServerLogicCenter center = ServerLogicCenterImp.getInstance();
+	public static void main(String args[])
+	{
+		try
+		{
+			TestServerLogicCenter obj = new TestServerLogicCenter();
+			ServerLogicCenter stub = (ServerLogicCenter) UnicastRemoteObject.exportObject(obj, 0);
 
-		BaseUserInfo newUser = new BaseUserInfo();
-		newUser.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-				InfoFieldName.Name.name(), "SpaceFlyer"));
-		newUser.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-				InfoFieldName.Cellphone, "13888888881"));
-		Password pwd = new Password("test");
-		try {
-//			BoolInfo rRes = center.register(newUser, pwd);
-//			if (!rRes.isTrue()) {
-//				System.out.println(rRes.getInfo());
-//			}
-			BaseUserInfo user = center.login(
-					(IdenticalInfoField) (InfoFieldFactory.getFactory()
-							.makeInfoField(InfoFieldName.Cellphone,
-									"13888888887")), pwd);
-			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-					InfoFieldName.Cellphone, "13888888887"));
-			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-					InfoFieldName.EmailAddress, "test2@test.com"));
-			BoolInfo res = center.editMyBaseInfo(user, null);
-			if (!res.isTrue())
-				System.out.println(res.getInfo());
-			res = center.addPerContact(user.getID(),
-					(IdenticalInfoField) (InfoFieldFactory.getFactory()
-							.makeInfoField(InfoFieldName.EmailAddress,
-									"test2@test.com")), new Permission());
-			if (!res.isTrue())
-				System.out.println(res.getInfo());
-			res = center.addSynContact(user.getID(),
-					(IdenticalInfoField) (InfoFieldFactory.getFactory()
-							.makeInfoField(InfoFieldName.EmailAddress,
-									"test2@test.com")), 3);
-			if (!res.isTrue())
-				System.out.println(res.getInfo());
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		} catch (MyRemoteException e) {
-			System.out.println(e.getErr());
-			e.printStackTrace();
+		    // Bind the remote object's stub in the registry
+		    Registry registry = LocateRegistry.getRegistry();
+		    registry.bind("logicCenterServer", stub);
+
+		    System.err.println("Server ready");
+
+			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+			while (true){
+				System.out.println("f-fresh, now users:");
+				for(ID id: obj.onlineUsers)
+					System.out.println(id.getValue());
+				String command = stdin.readLine();
+				if (command.equals("f"))
+					continue;
+				Long idValue = Long.valueOf(command);
+				MessageSender sender = obj.senders.get(new ID(idValue));
+				if (sender == null){					
+					System.out.println("Wrong ID:"+idValue);
+					continue;
+				}
+				System.out.println("input a message:");
+				String msg = stdin.readLine();
+				sender.addMessage(new SimpleStringMessage(msg, obj.idFactory.getNewMessageID()));
+			}
 		}
+		catch (Exception e)
+		{
+			System.err.println("Exception: "+e.toString());
+			e.printStackTrace();
+		}		
 	}
 
 	@Override
