@@ -11,7 +11,7 @@ public interface DataCenter {
 	public ReturnType setUserInfo(UserInfo b);
 	
 	/**
-	 * 设立当前用户到id的权限，id可能是群组的id，也可能是用户的id
+	 * 已经废弃，因为当前没有读到接口，所以所有权限都直接去网上弄了
 	 * @param id
 	 * @param p
 	 * @return
@@ -98,21 +98,18 @@ public interface DataCenter {
 	
 	public ReturnType removeUserInfo(ID uid);
 	
-	//TODO 尽快完成
 	/**
 	 * 获取所有被授权联系人的ID
 	 * @return
 	 */
 	public List<ID> getAllPerContactsID();
 	
-	//TODO 尽快完成
 	/**
 	 * 获取所有同步联系人的ID
 	 * @return
 	 */
 	public List<ID> getAllSynContactsID();
 	
-	//TODO 尽快完成
 	/**
 	 * 获取所有已经加入的群组
 	 */
