@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import ui_test.MainWindow.LocalSearchResultTask;
 
+import entity.BaseUserInfo;
 import entity.MyError;
 import entity.Password;
 import entity.infoField.IdenticalInfoField;
@@ -166,7 +167,9 @@ public class LoginDialog extends Dialog
 			}
 			else if(state == VirtualState.PREPARED)
 			{
+				BaseUserInfo loginUser = logicCenter.getLoginUser();
 				MessageDialog.openInformation(parentShell, "登录成功","登录成功");
+				//getShell().setText("PhoneMe" + String.format(" - \"%s\" 已登录");
 				thisDialog.close();
 			}
 		}
