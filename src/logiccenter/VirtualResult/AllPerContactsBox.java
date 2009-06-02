@@ -2,13 +2,17 @@ package logiccenter.VirtualResult;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
 import entity.ErrorType;
 import entity.ID;
 import entity.MyRemoteException;
+import entity.Permission;
 import entity.UserInfo;
 
 /**
@@ -21,6 +25,7 @@ import entity.UserInfo;
 public class AllPerContactsBox extends VirtualResult {
 	private LogicCenter center;
 	private List<UserInfo> contacts;
+	private Map<ID, Permission> permissions = new HashMap<ID, Permission>();
 
 	class GetThread extends Thread {
 		@Override
@@ -31,6 +36,9 @@ public class AllPerContactsBox extends VirtualResult {
 				contacts = new ArrayList<UserInfo>();
 				for(BaseUserInfo baseInfo: temp)
 					contacts.add(new UserInfo(baseInfo));
+				List<Permission> pList = center.getServer().getPermissions(center.getLoginUser().getID(), idList);
+				for(int i=0; i<idList.size(); i++)
+					permissions.put(idList.get(i), pList.get(i));
 			} catch (MyRemoteException e) {
 				setError(e.getErr());
 			} catch (RemoteException e) {
@@ -70,5 +78,9 @@ public class AllPerContactsBox extends VirtualResult {
 	public synchronized void updateAll() {
 		GetThread thread = new GetThread();
 		thread.start();
+	}
+
+	public void setPermission(ID id, Permission p) {
+		permissions.put(id, p);
 	}
 }

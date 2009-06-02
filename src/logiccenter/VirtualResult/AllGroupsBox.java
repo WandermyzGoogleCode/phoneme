@@ -10,20 +10,39 @@ import entity.ErrorType;
 import entity.Group;
 import entity.ID;
 import entity.MyRemoteException;
+import entity.Permission;
 
 import logiccenter.LogicCenter;
 
 public class AllGroupsBox extends VirtualResult {
 	private LogicCenter center;
 	private Map<ID, Group> groups;
+	private Map<ID, Permission> permissions = new HashMap<ID, Permission>();
 	
 	class GetThread extends Thread{
 		@Override
 		public void run() {
 			groups = new HashMap<ID, Group>();
-			if (center.getDataCenter().getAllGroups() != null)
-				for(Group g: center.getDataCenter().getAllGroups())
+			if (center.getDataCenter().getAllGroups() != null){
+				List<ID> idList = new ArrayList<ID>();
+				for(Group g: center.getDataCenter().getAllGroups()){
 					groups.put(g.getID(), g);
+					idList.add(g.getID());
+				}
+				if (!center.getLoginUser().isNull()){
+					try {
+						List<Permission> pList = center.getServer().getPermissions(center.getLoginUser().getID(), idList);
+						for(int i=0; i<idList.size(); i++)
+							permissions.put(idList.get(i), pList.get(i));
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						setError(ErrorType.REMOTE_ERROR);
+					} catch (MyRemoteException e) {
+						e.printStackTrace();
+						setError(e.getErr());
+					}
+				}
+			}
 			setUpdateNow();
 		}
 	}
@@ -73,5 +92,9 @@ public class AllGroupsBox extends VirtualResult {
 	
 	public synchronized Map<ID, Group> getGroupMap(){
 		return groups;
+	}
+
+	public void setPermission(ID targetID, Permission p) {
+		permissions.put(targetID, p);
 	}
 }

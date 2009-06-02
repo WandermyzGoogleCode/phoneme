@@ -48,10 +48,10 @@ public interface LogicCenter {
 	 */
 	public LoginResult login(IdenticalInfoField identicalInfo, Password pwd);
 	/**
-	 * 编辑用户信息
+	 * 编辑用户信息，可以修改密码，如果pwd为空（null或者isNull），那么不修改
 	 * @return
 	 */
-	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo);
+	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo, Password pwd);
 	
 	//!!
 	/**
