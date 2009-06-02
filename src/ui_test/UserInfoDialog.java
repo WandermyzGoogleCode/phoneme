@@ -625,6 +625,10 @@ public class UserInfoDialog extends Dialog
 				result.addObserver(new SetPermissionResultObserver());
 				return;
 			}
+			else if (userInfoTableType == UserInfoTableType.SearchRemoteForm)
+			{
+				modifyUser();
+			}
 		}
 		super.buttonPressed(buttonId);
 	}

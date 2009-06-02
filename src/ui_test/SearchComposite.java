@@ -119,7 +119,7 @@ public class SearchComposite extends Composite
 		{
 			UserInfo user = new UserInfo();
 			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "ËÑË÷",
-					UserInfoTableType.SearchLocalForm, user);
+					UserInfoTableType.SearchRemoteForm, user);
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
 				SearchUserResult result = logicCenter.searchUser(user.getBaseInfo());
