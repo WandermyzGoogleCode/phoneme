@@ -25,7 +25,7 @@ public class VisibilityTable {
 			statement.execute(sql);
 		}
 		catch (Exception e) {
-			sql = "CREATE TABLE Visibility(uid BIGINT NOT NULL, id BIGINT NOT NULL, v INT NOT NULL, INDEX(uid, id)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql = "CREATE TABLE Visibility(uid BIGINT NOT NULL, id BIGINT NOT NULL, v INT NOT NULL, INDEX(uid, id)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.execute(sql);
 		}
 	}

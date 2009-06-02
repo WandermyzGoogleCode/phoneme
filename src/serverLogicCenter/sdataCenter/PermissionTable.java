@@ -28,7 +28,7 @@ public class PermissionTable {
 			statement.execute(sql);
 		}
 		catch (Exception e) {
-			sql = "CREATE TABLE Permission(uid BIGINT NOT NULL, id BIGINT NOT NULL, permission BLOB NOT NULL, INDEX(uid, id)) CHARACTER SET gbk COLLATE gbk_bin;";
+			sql = "CREATE TABLE Permission(uid BIGINT NOT NULL, id BIGINT NOT NULL, permission BLOB NOT NULL, INDEX(uid, id)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.execute(sql);
 		}
 	}
