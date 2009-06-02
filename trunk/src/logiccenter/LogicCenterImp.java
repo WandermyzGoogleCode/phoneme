@@ -17,6 +17,7 @@ import algorithm.Matcher;
 
 import datacenter.DataCenter;
 import datacenter.DataCenterImp;
+import datacenter.DataCenterImp_test;
 
 import serverLogicCenter.ServerLogicCenter;
 import ui.Gui;
@@ -30,6 +31,7 @@ import entity.StatResult;
 import entity.UserInfo;
 import entity.infoField.Birthday;
 import entity.infoField.IdenticalInfoField;
+import entity.infoField.InfoFieldFactory;
 import entity.infoField.InfoFieldName;
 import entity.message.Message;
 
@@ -38,10 +40,10 @@ public class LogicCenterImp implements LogicCenter {
 
 	private BaseUserInfo loginUser = new BaseUserInfo();// 当前登录的用户
 	private ServerLogicCenter server = null;
-	private MessageBox messageBox = null;//登录以后才加载
-	private AllContactsBox allContactsBox;//程序启动就加载
-	private AllPerContactsBox allPerContactsBox = null;//程序启动就加载
-	private AllGroupsBox allGroupBox;//程序启动就加载
+	private MessageBox messageBox = null;// 登录以后才加载
+	private AllContactsBox allContactsBox;// 程序启动就加载
+	private AllPerContactsBox allPerContactsBox = null;// 程序启动就加载
+	private AllGroupsBox allGroupBox;// 程序启动就加载
 	private Gui ui = null;
 
 	private DataCenter dataCenter;
@@ -53,22 +55,26 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public AddSynContactResult addSynContact(IdenticalInfoField un, int visibility) {
+	public AddSynContactResult addSynContact(IdenticalInfoField un,
+			int visibility) {
 		return new AddSynContactResult(loginUser.getID(), un, visibility, this);
 	}
 
 	@Override
-	public AdmitApplicationResult admitApplication(ID gID, ID uID, Permission p, int visibility) {
+	public AdmitApplicationResult admitApplication(ID gID, ID uID,
+			Permission p, int visibility) {
 		return new AdmitApplicationResult(gID, uID, p, visibility, this);
 	}
 
 	@Override
-	public AdmitInvitationResult admitInvitation(ID gid, Permission p, int visibility) {
+	public AdmitInvitationResult admitInvitation(ID gid, Permission p,
+			int visibility) {
 		return new AdmitInvitationResult(gid, p, visibility, this);
 	}
 
 	@Override
-	public ApplyJoinGroupResult applyJoinGroup(ID gid, Permission p, int visibility) {
+	public ApplyJoinGroupResult applyJoinGroup(ID gid, Permission p,
+			int visibility) {
 		return new ApplyJoinGroupResult(gid, p, visibility, this);
 	}
 
@@ -93,7 +99,8 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo, Password pwd) {
+	public EditMyBaseInfoResult editMyBaseInfo(BaseUserInfo baseInfo,
+			Password pwd) {
 		return new EditMyBaseInfoResult(baseInfo, pwd, this);
 	}
 
@@ -206,13 +213,14 @@ public class LogicCenterImp implements LogicCenter {
 
 	private LogicCenterImp(DataCenter dataCenter) {
 		this.dataCenter = dataCenter;
-		//TODO TEST
-		//allPerContactsBox = new AllPerContactsBox(this);
+		// TODO TEST
+		// allPerContactsBox = new AllPerContactsBox(this);
 		allGroupBox = new AllGroupsBox(this);
-		allContactsBox = new AllContactsBox(this);//必须放在allGroupBox后面，因为他会调用allGroupBox
+		allContactsBox = new AllContactsBox(this);// 必须放在allGroupBox后面，
+													// 因为他会调用allGroupBox
 		try {
 			Registry registry = LocateRegistry.getRegistry("Localhost");// TODO
-																		// 当前只是本机网络测试
+			// 当前只是本机网络测试
 			server = (ServerLogicCenter) registry.lookup("logicCenterServer");
 		} catch (Exception e) {
 			System.err.println("Client exception: " + e.toString());
@@ -236,6 +244,24 @@ public class LogicCenterImp implements LogicCenter {
 	 * @param args
 	 */
 	public static void main(String args[]) {
+		try {
+			LogicCenter center = LogicCenterImp.getInstance();
+			IdenticalInfoField idField = (IdenticalInfoField) InfoFieldFactory
+					.getFactory().makeInfoField("Cellphone", "13333333333");
+			Password pwd = new Password("23");
+			center.login(idField, pwd);
+			
+			Group g = new Group();
+			g.setInfoField(InfoFieldFactory.getFactory().makeInfoField(InfoFieldName.GroupName, "TestGroup"));
+			center.createGroup(g, new Permission(), 3);
+			center.addPerContact(idField, new Permission());
+			center.inviteToGroup(idField, g, "lala");
+			Thread.sleep(3000);
+			center.logout();
+		} catch (Exception e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -271,7 +297,7 @@ public class LogicCenterImp implements LogicCenter {
 
 	public synchronized static LogicCenter getInstance() {
 		if (instance == null)
-			instance = new LogicCenterImp(DataCenterImp.Instance());
+			instance = new LogicCenterImp(DataCenterImp_test.Instance());
 		return instance;
 	}
 
@@ -287,8 +313,8 @@ public class LogicCenterImp implements LogicCenter {
 			messageBox.close();
 		messageBox = new MessageBox(loginUser.getID(), this);
 		allPerContactsBox = new AllPerContactsBox(this);
-		//刷新群组，以获取群组权限
-		allGroupBox.updateAll();		
+		// 刷新群组，以获取群组权限
+		allGroupBox.updateAll();
 	}
 
 	@Override
