@@ -76,7 +76,7 @@ import ui_test.ContactPermissionComposite;
 public class UserInfoDialog extends Dialog
 {
 	//[start] Component Properties
-	private ContactPermissionComposite contactPermissionComposition;
+	private ContactPermissionComposite contactPermissionComposite;
 	private Button buttonSetPerm;
 	private Button buttonAddSync;
 	private Button buttonInviteGroup;
@@ -390,25 +390,29 @@ public class UserInfoDialog extends Dialog
 		//[end]
 		
 		//[start] 权限
-		if( !logicCenter.getLoginUser().isNull() &&
-			(userInfoTableType == UserInfoTableType.Permission)
-				//|| userInfoTableType == UserInfoTableType.Owner
-				//TODO: 默认权限
-			)
+		if ( // (!logicCenter.getLoginUser().isNull()) &&
+		(userInfoTableType == UserInfoTableType.Permission)
+		// || userInfoTableType == UserInfoTableType.Owner
+		// TODO: 默认权限
+		)
 		{
 			tabItemPermission = new TabItem(tabFolder, SWT.NONE);
-			
-			if(userInfoTableType == UserInfoTableType.Owner)
+
+			if (userInfoTableType == UserInfoTableType.Owner)
 			{
 				tabItemPermission.setText("默认权限");
 			}
 			else
 			{
 				tabItemPermission.setText("权限");
-				permission = allPerContactsBox.getPermission(user.getBaseInfo().getID());
+				if (allPerContactsBox != null)
+				{
+					permission = allPerContactsBox.getPermission(user.getBaseInfo().getID());
+				}
 			}
-			
-			contactPermissionComposition = new ContactPermissionComposite(tabFolder, SWT.NONE, permission);
+
+			contactPermissionComposite = new ContactPermissionComposite(tabFolder, SWT.NONE, permission);
+			tabItemPermission.setControl(contactPermissionComposite);
 
 		}
 		//[end]
@@ -635,7 +639,7 @@ public class UserInfoDialog extends Dialog
 			}
 			else if(userInfoTableType == UserInfoTableType.Permission)
 			{
-				contactPermissionComposition.ModifyPermission();
+				contactPermissionComposite.ModifyPermission();
 				SetPermissionResult result = logicCenter.setPermission(user.getBaseInfo().getID(), permission);
 				result.addObserver(new SetPermissionResultObserver());
 				return;
