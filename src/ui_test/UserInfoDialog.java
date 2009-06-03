@@ -904,6 +904,7 @@ public class UserInfoDialog extends Dialog
 		public void widgetSelected(final SelectionEvent e)
 		{
 			AddPerContactResult result = logicCenter.addPerContact(user.getBaseInfo().getIdenticalField(), new Permission());
+			result.addObserver(new AddPerContactResultObserver());
 		}
 	}
 	
