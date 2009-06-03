@@ -1056,10 +1056,12 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			LoginDialog loginDialog = new LoginDialog(shell);
-			loginDialog.open();
 			
-			LoginResult result = logicCenter.login(loginDialog.getIdenticalField(), new Password(loginDialog.getPassword()));
-			result.addObserver(new LoginResultObserver());
+			if(loginDialog.open() == IDialogConstants.OK_ID)
+			{
+				LoginResult result = logicCenter.login(loginDialog.getIdenticalField(), new Password(loginDialog.getPassword()));
+				result.addObserver(new LoginResultObserver());
+			}
 		}
 	}
 	

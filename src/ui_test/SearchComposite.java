@@ -189,17 +189,17 @@ public class SearchComposite extends Composite
 			if(tableViewer.getTable().getSelection().length <= 0) return;
 			
 			TableItem item = tableViewer.getTable().getSelection()[0];
-			if(!(item.getData() instanceof UserInfo)) return;
+			if(!(item.getData() instanceof BaseUserInfo)) return;
 			
-			UserInfo user = (UserInfo)item.getData();
+			BaseUserInfo user = (BaseUserInfo)item.getData();
 			
-			UserInfo user2nd = new UserInfo();
+			BaseUserInfo user2nd = new BaseUserInfo();
 			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "ËÑË÷",
-					UserInfoTableType.SearchRemoteForm, user);
+					UserInfoTableType.SearchRemoteForm, new UserInfo(user2nd));
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
-				RelationCubeResult result = logicCenter.relationCube(user.getBaseInfo().getIdenticalField(), user2nd.getBaseInfo().getIdenticalField());
-				result.addObserver(new SearchUserResultObserver());
+				RelationCubeResult result = logicCenter.relationCube(user.getIdenticalField(), user2nd.getIdenticalField());
+				result.addObserver(new RelationCubeResultObserver());
 			}
 		}
 	}
