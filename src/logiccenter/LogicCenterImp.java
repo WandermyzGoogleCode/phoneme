@@ -248,12 +248,12 @@ public class LogicCenterImp implements LogicCenter {
 			LogicCenter center = LogicCenterImp.getInstance();
 			IdenticalInfoField idField = (IdenticalInfoField) InfoFieldFactory
 					.getFactory().makeInfoField("QQNumber", "11");
-			Password pwd = new Password("test");
-			center.login(idField, pwd);
-
-			Group g = center.getAllGroupsBox().getGroups().get(0);
-			center.inviteToGroup((IdenticalInfoField) InfoFieldFactory
-					.getFactory().makeInfoField("QQNumber", "11"), g, "lala");
+//			Password pwd = new Password("test");
+//			center.login(idField, pwd);
+//
+//			Group g = center.getAllGroupsBox().getGroups().get(0);
+//			center.inviteToGroup((IdenticalInfoField) InfoFieldFactory
+//					.getFactory().makeInfoField("QQNumber", "11"), g, "lala");
 			center.logout();
 		} catch (Exception e) {
 			System.out.println(e);

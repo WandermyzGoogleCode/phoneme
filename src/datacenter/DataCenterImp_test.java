@@ -758,13 +758,15 @@ public class DataCenterImp_test implements DataCenter {
 						.getConnection(url);
 				connection.setAutoCommit(false);
 
-				String sql1 = "UPDATAE Permission set";
-				String sql2 = "INSERT INTO Permission (UserID,";
+				String sql1 = "UPDATE Permission set";
+				String sql2 = "INSERT INTO Permission (UserID";
 				Iterator<String> fieldNameIter = p.getKeySet().iterator();
 				int count = 0;
 				while (fieldNameIter.hasNext()) {
 					String temp = fieldNameIter.next();
-					sql1 += ("," + temp + "=?");
+					if (sql1.charAt(sql1.length()-1) != 't')
+						sql1 += ",";
+					sql1 += (" "+temp + "=?");
 					sql2 += ("," + temp);
 					count++;
 				}
@@ -774,6 +776,7 @@ public class DataCenterImp_test implements DataCenter {
 					sql2 += ",?";
 				sql2 += ")";
 
+				System.out.println(sql1);//TODO TEST
 				PreparedStatement pstatement1 = (PreparedStatement) connection
 						.prepareStatement(sql1);
 				PreparedStatement pstatement2 = (PreparedStatement) connection

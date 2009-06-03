@@ -81,11 +81,12 @@ public class AllPerContactsBox extends VirtualResult {
 		thread.start();
 	}
 
-	public void setPermission(ID id, Permission p) {
+	public synchronized void setPermission(ID id, Permission p) {
 		permissions.put(id, p);
+		setUpdateNow();
 	}
 	
-	public Permission getPermission(ID id){
+	public synchronized Permission getPermission(ID id){
 		return permissions.get(id);
 	}
 }
