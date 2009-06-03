@@ -228,6 +228,7 @@ public class GroupInfoDialog extends Dialog
 			group.setInfoField(field.getName(), field);
 		}
 	}
+	
 	protected void buttonPressed(int buttonId)
 	{
 		if (buttonId == IDialogConstants.OK_ID) 
@@ -235,8 +236,12 @@ public class GroupInfoDialog extends Dialog
 			if(groupInfoTableType == GroupInfoTableType.Normal && true)	//TODO: 并且有权限
 			{
 				modifyGroup();
+				contactPermissionComposite.ModifyPermission();
 				EditGroupResult result = logicCenter.editGroup(group);
 				result.addObserver(new EditGroupResultObserver());
+				
+				logicCenter.setPermission(group.getID(), permission);
+				//TODO: Error
 				return;
 			}
 			else if(groupInfoTableType == GroupInfoTableType.New)

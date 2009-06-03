@@ -96,7 +96,7 @@ public class UserInfoTableElem
 		}
 		else if(userInfoTableType == UserInfoTableType.Permission)
 		{
-			return false;
+			return true;
 		}
 		else if(userInfoTableType == UserInfoTableType.Owner)
 		{
