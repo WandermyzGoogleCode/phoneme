@@ -582,6 +582,14 @@ public class UserInfoDialog extends Dialog
 		this.allGroupsBox = allGroupsBox;
 	}
 	
+	/**
+	 * 设置权限
+	 * @param permission
+	 */
+	public void setPermission(Permission permission)
+	{
+		this.permission = permission;
+	}
 	
 	
 	protected void buttonPressed(int buttonId)
@@ -903,8 +911,16 @@ public class UserInfoDialog extends Dialog
 	private class ButtonSetPermSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			AddPerContactResult result = logicCenter.addPerContact(user.getBaseInfo().getIdenticalField(), new Permission());
-			result.addObserver(new AddPerContactResultObserver());
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "设置权限",
+					UserInfoTableType.Permission, user);
+			permission = new Permission();
+			userInfoDialog.setPermission(permission);
+			
+			if(userInfoDialog.OpenPermission() == IDialogConstants.OK_ID)
+			{
+				AddPerContactResult result = logicCenter.addPerContact(user.getBaseInfo().getIdenticalField(), permission);
+				result.addObserver(new AddPerContactResultObserver());
+			}
 		}
 	}
 	
