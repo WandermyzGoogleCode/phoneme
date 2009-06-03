@@ -14,9 +14,8 @@ import logiccenter.LogicCenter;
  * @author Administrator
  * 
  */
-public abstract class Message implements Runnable, Serializable {
+public abstract class Message implements Serializable {
 	protected boolean proceeded = false;
-	protected LogicCenter center;
 
 	/**
 	 * 
@@ -73,17 +72,4 @@ public abstract class Message implements Runnable, Serializable {
 	 * @return
 	 */
 	public abstract String proceedName();
-	public void setCenter(LogicCenter center){
-		this.center = center;
-	}
-
-	@Override
-	public void run() {
-		try {
-			proceed(center);
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
-		}
-	}
 }

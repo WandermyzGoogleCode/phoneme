@@ -48,6 +48,8 @@ public class LogicCenterImp implements LogicCenter {
 	private AllGroupsBox allGroupBox;// 程序启动就加载
 	private Gui ui = null;
 	
+	private BoxContent bc = new BoxContent();
+	
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	private DataCenter dataCenter;
@@ -219,8 +221,8 @@ public class LogicCenterImp implements LogicCenter {
 		this.dataCenter = dataCenter;
 		// TODO TEST
 		// allPerContactsBox = new AllPerContactsBox(this);
-		allGroupBox = new AllGroupsBox(this);
-		allContactsBox = new AllContactsBox(this);// 必须放在allGroupBox后面，
+		allGroupBox = new AllGroupsBox(this, bc);
+		allContactsBox = new AllContactsBox(this, bc);// 必须放在allGroupBox后面，
 		// 因为他会调用allGroupBox
 		try {
 			Registry registry = LocateRegistry.getRegistry("Localhost");// TODO
@@ -313,7 +315,7 @@ public class LogicCenterImp implements LogicCenter {
 		if (messageBox != null)
 			messageBox.close();
 		messageBox = new MessageBox(loginUser.getID(), this);
-		allPerContactsBox = new AllPerContactsBox(this);
+		allPerContactsBox = new AllPerContactsBox(this, bc);
 		// 刷新群组，以获取群组权限
 		allGroupBox.updateAll();
 	}

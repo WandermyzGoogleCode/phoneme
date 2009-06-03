@@ -187,10 +187,7 @@ public class MessageBoxComposite extends Composite
 			Message msg = (Message)currentItem.getData();
 			try
 			{
-				//TODO TEST
-				msg.setCenter(logicCenter);
-				logicCenter.getExecutor().execute(msg);
-				//msg.proceed(logicCenter);
+				msg.proceed(logicCenter);
 			} catch (Exception e1)
 			{
 				// TODO Auto-generated catch block
@@ -199,6 +196,7 @@ public class MessageBoxComposite extends Composite
 			}
 		}
 	}
+	
 	private class ToolItemRemoveSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{			

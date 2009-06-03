@@ -13,28 +13,31 @@ import entity.ID;
 import entity.MyRemoteException;
 import entity.Permission;
 
+import logiccenter.BoxContent;
 import logiccenter.LogicCenter;
 
 public class AllGroupsBox extends VirtualResult {
 	private LogicCenter center;
-	private Map<ID, Group> groups;
-	private Map<ID, Permission> permissions = new ConcurrentHashMap<ID, Permission>();
-	
-	class GetTask implements Runnable{
+	private BoxContent bc;
+
+	class GetTask implements Runnable {
 		@Override
 		public void run() {
-			groups = new ConcurrentHashMap<ID, Group>();
-			if (center.getDataCenter().getAllGroups() != null){
+			bc.setGroups(new ConcurrentHashMap<ID, Group>());
+			if (center.getDataCenter().getAllGroups() != null) {
 				List<ID> idList = new ArrayList<ID>();
-				for(Group g: center.getDataCenter().getAllGroups()){
-					groups.put(g.getID(), g);
+				for (Group g : center.getDataCenter().getAllGroups()) {
+					bc.getGroups().put(g.getID(), g);
 					idList.add(g.getID());
 				}
-				if (!center.getLoginUser().isNull()){
+				if (!center.getLoginUser().isNull()) {
 					try {
-						List<Permission> pList = center.getServer().getPermissions(center.getLoginUser().getID(), idList);
-						for(int i=0; i<idList.size(); i++)
-							permissions.put(idList.get(i), pList.get(i));
+						List<Permission> pList = center.getServer()
+								.getPermissions(center.getLoginUser().getID(),
+										idList);
+						for (int i = 0; i < idList.size(); i++)
+							bc.getGPermissions().put(idList.get(i),
+									pList.get(i));
 					} catch (RemoteException e) {
 						e.printStackTrace();
 						setError(ErrorType.REMOTE_ERROR);
@@ -47,61 +50,60 @@ public class AllGroupsBox extends VirtualResult {
 			setUpdateNow();
 		}
 	}
-	
-	public AllGroupsBox(LogicCenter center){
+
+	public AllGroupsBox(LogicCenter center, BoxContent bc) {
 		this.center = center;
+		this.bc = bc;
 		updateAll();
 	}
-	
-	public synchronized List<Group> getGroups(){
-		return new ArrayList<Group>(groups.values());
+
+	public List<Group> getGroups() {
+		return new ArrayList<Group>(bc.getGroups().values());
 	}
-	
-	//MAY LEAD TO DEADLOCK
+
+	// MAY LEAD TO DEADLOCK
 	/**
-	 * 该方法应该是LogicCenter在修改以后调用的，
-	 * GUI不用这个来修改，而是用LogicCenter的接口来修改
+	 * 该方法应该是LogicCenter在修改以后调用的， GUI不用这个来修改，而是用LogicCenter的接口来修改
+	 * 
 	 * @param newInfo
 	 */
-	public synchronized void editGroup(Group group){
-		groups.put(group.getID(), group);
-		try{
+	public void editGroup(Group group) {
+		bc.getGroups().put(group.getID(), group);
+		try {
 			center.getAllContactsBox().updateGroupMembers(group);
-		}
-		catch (MyRemoteException e) {
+		} catch (MyRemoteException e) {
 			setError(e.getErr());
 			return;
-		}
-		catch (RemoteException e){
+		} catch (RemoteException e) {
 			setError(ErrorType.REMOTE_ERROR);
 			return;
 		}
 		setUpdateNow();
 	}
 
-	public synchronized void removeGroup(ID gid){
-		Group g = groups.get(gid);
-		groups.remove(gid);
+	public void removeGroup(ID gid) {
+		Group g = bc.getGroups().get(gid);
+		bc.getGroups().remove(gid);
 		if (g != null)
-			center.getAllContactsBox().updateRelation(g.getUsersID());//更新所有人的关系
+			center.getAllContactsBox().updateRelation(g.getUsersID());// 更新所有人的关系
 		setUpdateNow();
 	}
-	
-	public synchronized void updateAll(){
+
+	public void updateAll() {
 		GetTask task = new GetTask();
 		center.getExecutor().execute(task);
 	}
-	
-	public synchronized Map<ID, Group> getGroupMap(){
-		return groups;
+
+	public Map<ID, Group> getGroupMap() {
+		return bc.getGroups();
 	}
 
-	public synchronized void setPermission(ID targetID, Permission p) {
-		permissions.put(targetID, p);
+	public void setPermission(ID targetID, Permission p) {
+		bc.getGPermissions().put(targetID, p);
 		setUpdateNow();
 	}
 
-	public synchronized Permission getPermission(ID id){
-		return permissions.get(id);
+	public Permission getPermission(ID id) {
+		return bc.getGPermissions().get(id);
 	}
 }

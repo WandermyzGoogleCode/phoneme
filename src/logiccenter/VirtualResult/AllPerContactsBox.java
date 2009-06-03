@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import logiccenter.BoxContent;
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
 import entity.ErrorType;
@@ -22,25 +23,27 @@ import entity.UserInfo;
  * @author Administrator
  * 
  */
-//TODO 当前所有被授权联系人在本地没有存任何信息
+// TODO 当前所有被授权联系人在本地没有存任何信息
 public class AllPerContactsBox extends VirtualResult {
 	private LogicCenter center;
-	private List<UserInfo> contacts;
-	private Map<ID, Permission> permissions = new ConcurrentHashMap<ID, Permission>();
+	private BoxContent bc;
 
 	class GetTask implements Runnable {
 		@Override
 		public void run() {
 			try {
-				//TODO 本地数据库现在存储有问题，所以只好从远程拿
-				List<ID> idList = center.getServer().getPerRelationis(center.getLoginUser().getID());
-				List<BaseUserInfo> temp = center.getServer().getContactsInfo(center.getLoginUser().getID(), idList);
-				contacts = new ArrayList<UserInfo>();
-				for(BaseUserInfo baseInfo: temp)
-					contacts.add(new UserInfo(baseInfo));
-				List<Permission> pList = center.getServer().getPermissions(center.getLoginUser().getID(), idList);
-				for(int i=0; i<idList.size(); i++)
-					permissions.put(idList.get(i), pList.get(i));
+				// TODO 本地数据库现在存储有问题，所以只好从远程拿
+				List<ID> idList = center.getServer().getPerRelationis(
+						center.getLoginUser().getID());
+				List<BaseUserInfo> temp = center.getServer().getContactsInfo(
+						center.getLoginUser().getID(), idList);
+				bc.setPContacts(new ArrayList<UserInfo>());
+				for (BaseUserInfo baseInfo : temp)
+					bc.getPContacts().add(new UserInfo(baseInfo));
+				List<Permission> pList = center.getServer().getPermissions(
+						center.getLoginUser().getID(), idList);
+				for (int i = 0; i < idList.size(); i++)
+					bc.getPPermissions().put(idList.get(i), pList.get(i));
 			} catch (MyRemoteException e) {
 				setError(e.getErr());
 			} catch (RemoteException e) {
@@ -50,16 +53,17 @@ public class AllPerContactsBox extends VirtualResult {
 		}
 	}
 
-	public synchronized int getCnt() {
-		return contacts.size();
+	public int getCnt() {
+		return bc.getPContacts().size();
 	}
 
 	public List<UserInfo> getContacts() {
-		return contacts;
+		return bc.getPContacts();
 	}
 
-	public AllPerContactsBox(LogicCenter center) {
+	public AllPerContactsBox(LogicCenter center, BoxContent bc) {
 		this.center = center;
+		this.bc = bc;
 		if (center.getLoginUser().isNull())
 			setError(ErrorType.NOT_LOGIN);
 		else {
@@ -68,38 +72,40 @@ public class AllPerContactsBox extends VirtualResult {
 		}
 	}
 
-	public synchronized void removeContact(ID uid) {
-		for (UserInfo userInfo : contacts)
+	public void removeContact(ID uid) {
+		for (UserInfo userInfo : bc.getPContacts())
 			if (userInfo.getBaseInfo().getID().equals(uid)) {
-				contacts.remove(userInfo);
+				bc.getPContacts().remove(userInfo);
 				break;
 			}
 		setUpdateNow();
 	}
 
-	public synchronized void updateAll() {
+	public void updateAll() {
 		GetTask task = new GetTask();
 		center.getExecutor().execute(task);
 	}
 
-	public synchronized void setPermission(ID id, Permission p) {
-		permissions.put(id, p);
+	public void setPermission(ID id, Permission p) {
+		bc.getPPermissions().put(id, p);
 		setUpdateNow();
 	}
-	
-	public synchronized Permission getPermission(ID id){
-		return permissions.get(id);
+
+	public Permission getPermission(ID id) {
+		return bc.getPPermissions().get(id);
 	}
-	
-	//MAY LEAD TO DEADLOCK
-	public synchronized void addContact(ID uid){
+
+	// MAY LEAD TO DEADLOCK
+	public void addContact(ID uid) {
 		List<ID> idList = new ArrayList<ID>();
 		idList.add(uid);
 		try {
-			List<BaseUserInfo> temp = center.getServer().getContactsInfo(center.getLoginUser().getID(), idList);
-			contacts.add(new UserInfo(temp.get(0)));
-			List<Permission> pList = center.getServer().getPermissions(center.getLoginUser().getID(), idList);
-			permissions.put(idList.get(0), pList.get(0));
+			List<BaseUserInfo> temp = center.getServer().getContactsInfo(
+					center.getLoginUser().getID(), idList);
+			bc.getPContacts().add(new UserInfo(temp.get(0)));
+			List<Permission> pList = center.getServer().getPermissions(
+					center.getLoginUser().getID(), idList);
+			bc.getPPermissions().put(idList.get(0), pList.get(0));
 		} catch (MyRemoteException e) {
 			setError(e.getErr());
 		} catch (RemoteException e) {
