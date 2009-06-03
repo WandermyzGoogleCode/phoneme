@@ -30,7 +30,7 @@ public class AllContactsBox extends VirtualResult {
 	private LogicCenter center;
 	private Map<ID, UserInfo> contacts;
 
-	class GetThread extends Thread {
+	class GetTask implements Runnable {
 		@Override
 		public void run() {
 			contacts = new ConcurrentHashMap<ID, UserInfo>();
@@ -67,10 +67,11 @@ public class AllContactsBox extends VirtualResult {
 
 	public AllContactsBox(LogicCenter center) {
 		this.center = center;
-		GetThread thread = new GetThread();
-		thread.start();
+		GetTask task = new GetTask();
+		center.getExecutor().execute(task);
 	}
 
+	//MAY LEAD TO DEAD LOCK
 	protected synchronized void editContactImp(UserInfo newInfo){		
 		//如果customInfo是null，那么不改变原来的customInfo
 		UserInfo oldInfo = contacts.get(newInfo.getBaseInfo().getID());
@@ -106,8 +107,8 @@ public class AllContactsBox extends VirtualResult {
 	}
 
 	public synchronized void updateAll() {
-		GetThread thread = new GetThread();
-		thread.start();
+		GetTask task = new GetTask();
+		center.getExecutor().execute(task);
 	}
 	
 	public synchronized Map<ID, UserInfo> getContactsMap(){

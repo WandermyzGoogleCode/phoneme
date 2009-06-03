@@ -24,7 +24,7 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 	protected abstract BoolInfo getResult() throws RemoteException, MyRemoteException;
 	protected LogicCenter center;
 
-	class GetThread extends Thread
+	class GetTask implements Runnable
 	{
 		@Override
 		public void run() {
@@ -50,12 +50,12 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 		}
 	}
 	
-	protected GetThread thread;
+	protected GetTask task;
 	
 	protected OneTimeVirtualResult(LogicCenter center)
 	{
 		this.center = center;
-		thread = new GetThread();
+		task = new GetTask();
 	}
 	
 	/**

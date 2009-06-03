@@ -25,7 +25,7 @@ public class EditMyBaseInfoResult extends OneTimeVirtualResult {
 		else if (!center.getLoginUser().getID().equals(baseInfo.getID()))
 			setError(ErrorType.ID_NOT_MATCHED);
 		else
-			thread.start();
+			center.getExecutor().execute(task);
 	}
 
 	@Override

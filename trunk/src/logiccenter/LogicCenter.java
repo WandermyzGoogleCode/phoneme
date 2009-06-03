@@ -4,6 +4,7 @@ import entity.*;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import logiccenter.VirtualResult.*;
 
@@ -318,4 +319,10 @@ public interface LogicCenter {
 	 * @param baseInfo
 	 */
 	public void editLoginUser(BaseUserInfo baseInfo);
+	
+	/**
+	 * 获取一个单线程的Executor，负责处理后台任务，避免死锁
+	 * @return
+	 */
+	public ExecutorService getExecutor();
 }

@@ -20,7 +20,7 @@ public class AllGroupsBox extends VirtualResult {
 	private Map<ID, Group> groups;
 	private Map<ID, Permission> permissions = new ConcurrentHashMap<ID, Permission>();
 	
-	class GetThread extends Thread{
+	class GetTask implements Runnable{
 		@Override
 		public void run() {
 			groups = new ConcurrentHashMap<ID, Group>();
@@ -57,6 +57,7 @@ public class AllGroupsBox extends VirtualResult {
 		return new ArrayList<Group>(groups.values());
 	}
 	
+	//MAY LEAD TO DEADLOCK
 	/**
 	 * 该方法应该是LogicCenter在修改以后调用的，
 	 * GUI不用这个来修改，而是用LogicCenter的接口来修改
@@ -87,8 +88,8 @@ public class AllGroupsBox extends VirtualResult {
 	}
 	
 	public synchronized void updateAll(){
-		GetThread thread = new GetThread();
-		thread.start();
+		GetTask task = new GetTask();
+		center.getExecutor().execute(task);
 	}
 	
 	public synchronized Map<ID, Group> getGroupMap(){

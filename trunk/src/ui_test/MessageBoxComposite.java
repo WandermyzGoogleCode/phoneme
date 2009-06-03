@@ -187,7 +187,10 @@ public class MessageBoxComposite extends Composite
 			Message msg = (Message)currentItem.getData();
 			try
 			{
-				msg.proceed(logicCenter);
+				//TODO TEST
+				msg.setCenter(logicCenter);
+				logicCenter.getExecutor().execute(msg);
+				//msg.proceed(logicCenter);
 			} catch (Exception e1)
 			{
 				// TODO Auto-generated catch block

@@ -28,7 +28,7 @@ public class AllPerContactsBox extends VirtualResult {
 	private List<UserInfo> contacts;
 	private Map<ID, Permission> permissions = new ConcurrentHashMap<ID, Permission>();
 
-	class GetThread extends Thread {
+	class GetTask implements Runnable {
 		@Override
 		public void run() {
 			try {
@@ -63,8 +63,8 @@ public class AllPerContactsBox extends VirtualResult {
 		if (center.getLoginUser().isNull())
 			setError(ErrorType.NOT_LOGIN);
 		else {
-			GetThread thread = new GetThread();
-			thread.start();
+			GetTask task = new GetTask();
+			center.getExecutor().execute(task);
 		}
 	}
 
@@ -78,8 +78,8 @@ public class AllPerContactsBox extends VirtualResult {
 	}
 
 	public synchronized void updateAll() {
-		GetThread thread = new GetThread();
-		thread.start();
+		GetTask task = new GetTask();
+		center.getExecutor().execute(task);
 	}
 
 	public synchronized void setPermission(ID id, Permission p) {
@@ -91,6 +91,7 @@ public class AllPerContactsBox extends VirtualResult {
 		return permissions.get(id);
 	}
 	
+	//MAY LEAD TO DEADLOCK
 	public synchronized void addContact(ID uid){
 		List<ID> idList = new ArrayList<ID>();
 		idList.add(uid);

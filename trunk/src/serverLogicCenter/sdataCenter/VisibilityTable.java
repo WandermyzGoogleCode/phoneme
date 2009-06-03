@@ -56,6 +56,8 @@ public class VisibilityTable {
 
 	synchronized public List<Integer> getVisibilities(ID uid, List<ID> idList) throws SQLException{
 		List<Integer> res = new ArrayList<Integer>();
+		if (idList == null || idList.isEmpty())
+			return res;
 		String psql = "SELECT id, v FROM Visibility WHERE uid=? AND (";
 		for(ID id: idList){
 			if (psql.charAt(psql.length()-1) != '(')
@@ -63,6 +65,7 @@ public class VisibilityTable {
 			psql += "id=?";
 		}
 		psql += ")";
+		System.out.println(psql);//TODO TEST
 		PreparedStatement pStatement = connection.prepareStatement(psql);
 		pStatement.setLong(1, uid.getValue());
 		for(int i=0; i<idList.size(); i++)

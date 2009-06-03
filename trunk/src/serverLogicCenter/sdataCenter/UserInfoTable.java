@@ -74,7 +74,7 @@ public class UserInfoTable {
 	}
 
 	synchronized public List<BaseUserInfo> getUsersInfo(List<ID> idList) throws SQLException {
-		if (idList.isEmpty())
+		if (idList == null || idList.isEmpty())
 			return new ArrayList<BaseUserInfo>();
 		String psql = "SELECT * FROM UserInfo WHERE ";
 		for (ID id : idList) {

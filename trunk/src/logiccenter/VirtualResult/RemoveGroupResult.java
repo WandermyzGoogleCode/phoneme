@@ -18,7 +18,7 @@ public class RemoveGroupResult extends OneTimeVirtualResult {
 		else if (!center.getLoginUser().getID().equals(g.getAdminUserID()))
 			setError(ErrorType.NOT_ADMIN);
 		else
-			thread.start();
+			center.getExecutor().execute(task);
 	}
 
 	@Override

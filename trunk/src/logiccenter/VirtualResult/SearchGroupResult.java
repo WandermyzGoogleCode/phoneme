@@ -15,7 +15,7 @@ public class SearchGroupResult extends OneTimeVirtualResult {
 	public SearchGroupResult(Group g, LogicCenter center) {
 		super(center);
 		this.g = g;
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override

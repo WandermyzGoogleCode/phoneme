@@ -15,7 +15,7 @@ public class SearchUserResult extends OneTimeVirtualResult {
 	public SearchUserResult(BaseUserInfo b, LogicCenter center) {
 		super(center);
 		this.b = b;
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override

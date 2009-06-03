@@ -13,7 +13,7 @@ public class ImportFileResult extends OneTimeVirtualResult {
 		this.fileName = fileName;
 		//TODO 检查文件名：if (!fileNameChecker.check(fileName))...
 		
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override

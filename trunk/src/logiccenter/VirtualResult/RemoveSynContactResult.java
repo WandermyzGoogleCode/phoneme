@@ -16,7 +16,7 @@ public class RemoveSynContactResult extends OneTimeVirtualResult {
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);
 		else
-			thread.start();
+			center.getExecutor().execute(task);
 	}
 
 	@Override
