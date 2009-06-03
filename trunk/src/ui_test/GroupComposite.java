@@ -246,7 +246,9 @@ public class GroupComposite extends Composite
 			if(data instanceof Group)
 			{	
 				Group group = (Group)data;
+				Permission permission = allGroupsBox.getPermission(group.getID());
 				GroupInfoDialog groupInfoDialog = new GroupInfoDialog(thisComposite.getShell(), "±à¼­Èº×é", GroupInfoTableType.Normal, group); 
+				groupInfoDialog.setPermission(permission);
 				groupInfoDialog.open();
 			}
 			else if(currentItem.getData() instanceof UserInfo)
