@@ -1823,7 +1823,7 @@ public class MainWindow
 		public void run()
 		{
 			int n = users.size();
-			if(n <= 0) return;
+
 			// tabItemAddressContact.
 			// treeAddressContactItemNoGroup.clearAll(true);
 			/*
@@ -1855,6 +1855,8 @@ public class MainWindow
 			
 			currentTree.removeAll();
 			contactsCategory.clear();
+			
+			//if(n <= 0) return;
 			
 			TreeItem noGroupItem = new TreeItem(currentTree, SWT.NONE);
 			noGroupItem.setText("Î´·Ö×é");

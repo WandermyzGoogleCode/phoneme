@@ -210,8 +210,7 @@ public class GuiImp implements ui.Gui
 	@Override
 	public boolean yesOrNo(String askInfo)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return MessageDialog.openQuestion(shell, "Ã·Œ ", askInfo);
 	}
 
 }
