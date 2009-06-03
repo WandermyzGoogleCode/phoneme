@@ -26,13 +26,16 @@ public class ApplySynContactMessage extends Message {
 	@Override
 	public void proceed(LogicCenter center) throws RemoteException{
 		center.getUI().addPerContact(applyUser);
+		System.out.println("milestone1");//TODO TEST
 		center.getServer().admitSynContact(center.getLoginUser().getID(), applyUser.getID(), visibility);
+		System.out.println("milestone2");//TODO TEST
 		if (!center.getDataCenter().getAllSynContactsID().contains(applyUser.getID()))
 		{
 			boolean res = center.getUI().yesOrNo("对方已经成为你的被授权联系人，但是他还不是你的同步联系人，请问你要加他为同步联系人吗？");
 			if (res)
 				center.getUI().addSynContact(applyUser);
 		}
+		System.out.println("milestone3");//TODO TEST
 		proceeded = true;
 	}
 
