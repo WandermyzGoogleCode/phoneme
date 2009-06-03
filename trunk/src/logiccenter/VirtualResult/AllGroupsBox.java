@@ -95,11 +95,12 @@ public class AllGroupsBox extends VirtualResult {
 		return groups;
 	}
 
-	public void setPermission(ID targetID, Permission p) {
+	public synchronized void setPermission(ID targetID, Permission p) {
 		permissions.put(targetID, p);
+		setUpdateNow();
 	}
 
-	public Permission getPermission(ID id){
+	public synchronized Permission getPermission(ID id){
 		return permissions.get(id);
 	}
 }
