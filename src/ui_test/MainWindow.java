@@ -934,7 +934,8 @@ public class MainWindow
 	 */
 	private void dataInit()
 	{
-		
+		Gui gui = new GuiImp(shell);
+		logicCenter.setUI(gui);
 		
 		// [start] 个人信息 初始化
 		// [end]
@@ -943,12 +944,6 @@ public class MainWindow
 		allContactsBox = logicCenter.getAllContactsBox();
 		allContactsBox.addObserver(new ContactRefreshObserver());
 		// TODO ERRORED的处理
-		// [end]
-
-		// [start] 被授权联系人
-		allPerContactsBox = logicCenter.getAllPerContatcsBox();
-		if(allPerContactsBox != null)
-			allPerContactsBox.addObserver(new ContactPerRefreshObserver());
 		// [end]
 
 		// [start] MessageBox
@@ -1103,6 +1098,10 @@ public class MainWindow
 				//TODO: 上句好像没用
 				
 				compositeMessageBox.GetMessage();
+				
+				allPerContactsBox = logicCenter.getAllPerContatcsBox();
+				if(allPerContactsBox != null)
+					allPerContactsBox.addObserver(new ContactPerRefreshObserver());
 			}
 		}
 	}

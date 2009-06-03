@@ -865,47 +865,11 @@ public class UserInfoDialog extends Dialog
 	private class ButtonAddSyncSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			AddSynContactResult result =logicCenter.addSynContact(user.getBaseInfo().getIdenticalField(), 0);
-			//TODO: visibility
-			
-			result.addObserver(new AddSynContactResultObserver());
+
 		}
 	}
 	
-	class AddSynContactResultObserver implements Observer
-	{
 
-		@Override
-		public void update(Observable o, Object arg)
-		{
-			Display.getDefault().syncExec(new AddSynContactResultTask((AddSynContactResult)o));
-		}
-	}
-	
-	class AddSynContactResultTask implements Runnable
-	{
-		private AddSynContactResult result;
-		
-		public AddSynContactResultTask(AddSynContactResult result)
-		{
-			this.result = result;
-		}
-
-		@Override
-		public void run()
-		{
-			VirtualState state = result.getState();
-			if(state == VirtualState.PREPARED)
-			{
-				MessageDialog.openInformation(getShell(), "操作成功", "请求已发送，请等待对方验证");
-			}
-			else if(state == VirtualState.ERRORED)
-			{
-				MessageDialog.openWarning(getShell(), "操作失败", result.getError().toString());
-			}
-		}
-		
-	}
 	
 	/**
 	 * 添加为被授权联系人 
@@ -915,53 +879,11 @@ public class UserInfoDialog extends Dialog
 	private class ButtonSetPermSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "设置权限",
-					UserInfoTableType.Permission, user);
-			permission = new Permission();
-			userInfoDialog.setPermission(permission);
-			
-			if(userInfoDialog.OpenPermission() == IDialogConstants.OK_ID)
-			{
-				AddPerContactResult result = logicCenter.addPerContact(user.getBaseInfo().getIdenticalField(), permission);
-				result.addObserver(new AddPerContactResultObserver());
-			}
+			logicCenter.getUI().addPerContact(user.getBaseInfo());
 		}
 	}
-	
-	class AddPerContactResultObserver implements Observer
-	{
 
-		@Override
-		public void update(Observable o, Object arg)
-		{
-			Display.getDefault().syncExec(new AddPerContactResultTask((AddPerContactResult)o));
-		}
-	}
-	
-	class AddPerContactResultTask implements Runnable
-	{
-		private AddPerContactResult result;
-		
-		public AddPerContactResultTask(AddPerContactResult result)
-		{
-			this.result = result;
-		}
 
-		@Override
-		public void run()
-		{
-			VirtualState state = result.getState();
-			if(state == VirtualState.PREPARED)
-			{
-				MessageDialog.openInformation(getShell(), "操作成功", String.format("已将\"%s\"添加为被授权联系人",user.getInfoField(InfoFieldName.Name)));
-			}
-			else if(state == VirtualState.ERRORED)
-			{
-				MessageDialog.openWarning(getShell(), "操作失败", result.getError().toString());
-			}
-		}
-		
-	}
 	
 	
 	//[end]
