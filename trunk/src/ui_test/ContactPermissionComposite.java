@@ -13,9 +13,13 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
 import ui_test.ContactPermissionTable.ContactPermissionTableContentProvider;
 import ui_test.ContactPermissionTable.ContactPermissionTableLabelProvider;
@@ -27,6 +31,8 @@ import entity.infoField.InfoField;
 
 public class ContactPermissionComposite extends Composite
 {	
+	private Text textVisibility;
+	private Label label;
 	private TableColumn tableColumnValue;
 	private TableColumn tableColumnField;
 	private Table table;
@@ -34,7 +40,7 @@ public class ContactPermissionComposite extends Composite
 	
 	private LogicCenter logicCenter = LogicCenterImp.getInstance();
 	private Permission permission;
-	
+
 	/**
 	 * Create the composite
 	 * @param parent
@@ -43,10 +49,21 @@ public class ContactPermissionComposite extends Composite
 	public ContactPermissionComposite(Composite parent, int style, Permission permission)
 	{
 		super(parent, style);
-		setLayout(new FillLayout());
+		final GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
+		setLayout(gridLayout);
+
+		label = new Label(this, SWT.NONE);
+		label.setText("¿É¼û¶È");
+
+		textVisibility = new Text(this, SWT.BORDER);
+		textVisibility.setText("0");
+		final GridData gd_textVisibility = new GridData();
+		textVisibility.setLayoutData(gd_textVisibility);
 
 		checkboxTableViewer = CheckboxTableViewer.newCheckList(this, SWT.BORDER);
 		table = checkboxTableViewer.getTable();
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 
@@ -72,6 +89,7 @@ public class ContactPermissionComposite extends Composite
 		checkboxTableViewer.setInput(fieldsList);
 
 		Object input = checkboxTableViewer.getInput();
+		new Label(this, SWT.NONE);
 		if(input instanceof List)
 		{
 			List<InfoField> inputFieldsList = (List<InfoField>)input;
@@ -102,4 +120,8 @@ public class ContactPermissionComposite extends Composite
 		// Disable the check that prevents subclassing of SWT components
 	}
 
+	public String getVisibility()
+	{
+		return textVisibility.getText();
+	}
 }

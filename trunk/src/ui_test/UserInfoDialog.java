@@ -123,7 +123,6 @@ public class UserInfoDialog extends Dialog
 	
 	private Group group = null;
 	private AllPerContactsBox allPerContactsBox = null;
-	private AllGroupsBox allGroupsBox = null;
 	Permission permission = null;
 	
 	private UserInfoDialog thisDialog = this;
@@ -576,15 +575,7 @@ public class UserInfoDialog extends Dialog
 	{
 		this.allPerContactsBox = allPerContactsBox;
 	}
-	
-	/**
-	 * 为与群组有关的操作做准备
-	 * @param allGroupsBox
-	 */
-	public void setAllGroupsBox(AllGroupsBox allGroupsBox)
-	{
-		this.allGroupsBox = allGroupsBox;
-	}
+
 	
 	/**
 	 * 设置权限
@@ -737,7 +728,7 @@ public class UserInfoDialog extends Dialog
 	private class ButtonDeleteFromGroupSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell(), allGroupsBox);
+			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell());
 			if(groupSelectDialog.open() == IDialogConstants.OK_ID)
 			{
 				//!TODO: Identical
@@ -801,11 +792,10 @@ public class UserInfoDialog extends Dialog
 	private class ButtonInviteGroupSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell(), allGroupsBox);
+			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(getShell());
 			if(groupSelectDialog.open() == IDialogConstants.OK_ID)
 			{
-				//!TODO: Identical
-				InviteToGroupResult inviteToGroupResult = logicCenter.inviteToGroup(null, groupSelectDialog.getSelectedGroup(), groupSelectDialog.getMessage());
+				InviteToGroupResult inviteToGroupResult = logicCenter.inviteToGroup(user.getBaseInfo().getIdenticalField(), groupSelectDialog.getSelectedGroup(), groupSelectDialog.getMessage());
 				inviteToGroupResult.addObserver(new InviteToGroupResultObserver());
 			}
 		}
@@ -865,7 +855,7 @@ public class UserInfoDialog extends Dialog
 	private class ButtonAddSyncSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-
+			logicCenter.getUI().addSynContact(user.getBaseInfo());
 		}
 	}
 	

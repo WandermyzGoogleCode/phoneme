@@ -81,6 +81,7 @@ public class GroupInfoDialog extends Dialog
 	
 	private GroupInfoDialog thisDialog = this;
 	private Permission permission = new Permission();
+	private int visibility;
 	
 	/**
 	 * Create the dialog
@@ -241,6 +242,9 @@ public class GroupInfoDialog extends Dialog
 				result.addObserver(new EditGroupResultObserver());
 				
 				logicCenter.setPermission(group.getID(), permission);
+				
+				visibility = Integer.parseInt(contactPermissionComposite.getVisibility());
+				
 				//TODO: Error
 				return;
 			}
@@ -251,6 +255,11 @@ public class GroupInfoDialog extends Dialog
 			}
 		}
 		super.buttonPressed(buttonId);
+	}
+	
+	public int GetVisibility()
+	{
+		return visibility;
 	}
 	
 	/**

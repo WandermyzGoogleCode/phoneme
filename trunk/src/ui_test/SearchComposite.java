@@ -6,6 +6,7 @@ import java.util.Observer;
 
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
+import logiccenter.VirtualResult.AllGroupsBox;
 import logiccenter.VirtualResult.CreateGroupResult;
 import logiccenter.VirtualResult.RelationCubeResult;
 import logiccenter.VirtualResult.SearchUserResult;
@@ -43,7 +44,6 @@ import ui_test.UserInfoTable.UserInfoTableType;
 public class SearchComposite extends Composite
 {
 
-	private Text textRelationCubeResult;
 	private ToolItem toolItemSearch;
 	private TableColumn tableColumnName;
 	private Table table;
@@ -80,7 +80,7 @@ public class SearchComposite extends Composite
 		table = tableViewer.getTable();
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		final GridData gd_table = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd_table.heightHint = 233;
 		table.setLayoutData(gd_table);
 
@@ -103,10 +103,6 @@ public class SearchComposite extends Composite
 		
 		tableViewer.setContentProvider(new SearchResultTableContentProvider());
 		tableViewer.setLabelProvider(new SearchResultTableLabelProvider());
-
-		textRelationCubeResult = new Text(this, SWT.V_SCROLL | SWT.MULTI | SWT.H_SCROLL | SWT.BORDER);
-		final GridData gd_textRelationCubeResult = new GridData(SWT.FILL, SWT.FILL, true, true);
-		textRelationCubeResult.setLayoutData(gd_textRelationCubeResult);
 	}
 
 	@Override

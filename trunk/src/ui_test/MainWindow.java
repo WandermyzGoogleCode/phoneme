@@ -85,6 +85,7 @@ import entity.StatResult;
 import entity.UserInfo;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
+import entity.infoField.InfoFieldName;
 import entity.message.Message;
 import ui_test.GroupComposite;
 import ui_test.SearchComposite;
@@ -1536,7 +1537,7 @@ public class MainWindow
 							(UserInfo)current.getData());
 					if(getCurrentContactTab() == ContactTabType.Permission)
 						userInfoDialog.setAllPerContactsBox(allPerContactsBox);
-					userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
+					//userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
 					userInfoDialog.OpenEditInfo();
 					
 //					// Debug:
@@ -1612,7 +1613,7 @@ public class MainWindow
 							(getCurrentContactTab() == ContactTabType.Permission) ? 
 									UserInfoTableType.Permission : UserInfoTableType.Synchronization,
 							(UserInfo)current.getData());
-					userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
+					//userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
 					userInfoDialog.open();
 				}
 			}
@@ -1866,6 +1867,7 @@ public class MainWindow
 			{							
 				String name = users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
 				String nick = users.get(i).getCustomInfo().getInfoField("NickName").getStringValue();
+				String relation = users.get(i).getInfoField(InfoFieldName.Relation).getStringValue();
 				String cell = users.get(i).getBaseInfo().getInfoField("Cellphone").getStringValue();
 				String email = users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
 				String tag = users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
@@ -1887,7 +1889,7 @@ public class MainWindow
 					parentItem.setText(tag);
 					contactsCategory.put(tag, cateList.size()-1);
 				}
-				TreeItem current = createTreeSubItem(parentItem, name, nick, tag, cell, email, bir);
+				TreeItem current = createTreeSubItem(parentItem, name, nick, relation, cell, email, bir);
 				current.setData(users.get(i));
 			}
 			

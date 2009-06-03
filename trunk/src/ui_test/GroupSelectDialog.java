@@ -32,18 +32,18 @@ public class GroupSelectDialog extends Dialog
 	private Label labelSelect;
 	private Combo combo;
 
-	private AllGroupsBox allGroupsBox;
 	private List<Long> groupsIdInCombo = new ArrayList<Long>(); 
 	private Group selectedGroup = null;
 	private String message = null;
+	private AllGroupsBox allGroupsBox;
+	private LogicCenter logicCenter = LogicCenterImp.getInstance();
 	/**
 	 * Create the dialog
 	 * @param parentShell
 	 */
-	public GroupSelectDialog(Shell parentShell, AllGroupsBox allGroupsBox)
+	public GroupSelectDialog(Shell parentShell)
 	{
 		super(parentShell);
-		this.allGroupsBox = allGroupsBox;
 	}
 
 	/**
@@ -65,6 +65,8 @@ public class GroupSelectDialog extends Dialog
 		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		//
 		
+		allGroupsBox = logicCenter.getAllGroupsBox();
+		
 		for(Group group : allGroupsBox.getGroups())
 		{
 			groupsIdInCombo.add(group.getID().getValue());
@@ -78,7 +80,7 @@ public class GroupSelectDialog extends Dialog
 		textMessage = new Text(container, SWT.BORDER);
 		final GridData gd_textMessage = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		textMessage.setLayoutData(gd_textMessage);
-		
+	
 		return container;
 	}
 

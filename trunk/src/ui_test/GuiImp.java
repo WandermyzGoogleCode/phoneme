@@ -8,6 +8,7 @@ import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.AddPerContactResult;
 import logiccenter.VirtualResult.AddSynContactResult;
+import logiccenter.VirtualResult.SetPermissionResult;
 import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -15,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import ui_test.GroupTableTree.GroupInfoTableType;
 import ui_test.UserInfoTable.UserInfoTableType;
 
 import entity.BaseUserInfo;
@@ -85,10 +87,12 @@ public class GuiImp implements ui.Gui
 	@Override
 	public void addSynContact(BaseUserInfo targetUser)
 	{
-		AddSynContactResult result = logicCenter.addSynContact(targetUser.getIdenticalField(), 0);
-		//TODO: visibility
-		
-		result.addObserver(new AddSynContactResultObserver());
+		SingleNumDialog visibDialog = new SingleNumDialog(shell);
+		if(visibDialog.open() == IDialogConstants.OK_ID)
+		{
+			AddSynContactResult result = logicCenter.addSynContact(targetUser.getIdenticalField(), visibDialog.getResult());
+			result.addObserver(new AddSynContactResultObserver());
+		}
 		
 	}
 	
@@ -123,6 +127,10 @@ public class GuiImp implements ui.Gui
 			{
 				MessageDialog.openWarning(shell, "操作失败", result.getError().toString());
 			}
+			else if(state == VirtualState.LOADING)
+			{
+				MessageDialog.openWarning(shell, "Loading...", "Loading...");
+			}
 		}
 		
 	}
@@ -130,7 +138,51 @@ public class GuiImp implements ui.Gui
 	@Override
 	public void admitInvitation(Group g)
 	{
-		// TODO Auto-generated method stub
+		GroupInfoDialog groupInfoDialog = new GroupInfoDialog(shell, "群组设置", 
+				GroupInfoTableType.Normal, g);
+		Permission permission = new Permission();
+		groupInfoDialog.setPermission(permission);
+		
+		if(groupInfoDialog.open() == IDialogConstants.OK_ID)
+		{
+			SetPermissionResult result = logicCenter.setGroupPermission(g, permission);
+			result.addObserver(new SetPermissionResultObserver());
+		}
+		
+	}
+	
+	class SetPermissionResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getDefault().syncExec(new SetPermissionResultTask((SetPermissionResult)o));
+		}
+	}
+	
+	class SetPermissionResultTask implements Runnable
+	{
+		private SetPermissionResult result;
+		
+		public SetPermissionResultTask(SetPermissionResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				MessageDialog.openInformation(shell, "操作成功", "请求已发送，请等待对方验证");
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(shell, "操作失败", result.getError().toString());
+			}
+		}
 		
 	}
 
