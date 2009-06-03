@@ -39,7 +39,7 @@ public class GroupTableTreeLabelProvider implements ITableLabelProvider
 			case 1:
 				return user.getInfoField(InfoFieldName.NickName).getStringValue();
 			case 2:
-				return "";
+				return user.getInfoField(InfoFieldName.Relation).getStringValue();
 			case 3:
 				return user.getInfoField(InfoFieldName.Cellphone).getStringValue();
 			case 4:
