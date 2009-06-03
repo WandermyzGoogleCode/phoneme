@@ -25,4 +25,9 @@ public abstract class EmptyInfoField implements InfoField {
 	public boolean isEmpty() {
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return getStringValue();
+	}
 }

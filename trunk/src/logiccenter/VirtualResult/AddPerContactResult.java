@@ -27,8 +27,10 @@ public class AddPerContactResult extends OneTimeVirtualResult {
 	protected BoolInfo getResult() throws RemoteException, MyRemoteException{
 		BoolInfo res = center.getServer().addPerContact(thisUser, targetUser, permission);
 		ID targetUserID = center.getServer().getUID(targetUser);
-		if (res.isTrue())
+		if (res.isTrue()){
 			center.getDataCenter().addPerRelationship(targetUserID);
+			center.getAllPerContatcsBox().addContact(targetUserID);
+		}
 		return res;
 	}
 	

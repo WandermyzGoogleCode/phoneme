@@ -31,8 +31,9 @@ public class AllPerContactsBox extends VirtualResult {
 	class GetThread extends Thread {
 		@Override
 		public void run() {
-			List<ID> idList = center.getDataCenter().getAllPerContactsID();
 			try {
+				//TODO 本地数据库现在存储有问题，所以只好从远程拿
+				List<ID> idList = center.getServer().getPerRelationis(center.getLoginUser().getID());
 				List<BaseUserInfo> temp = center.getServer().getContactsInfo(center.getLoginUser().getID(), idList);
 				contacts = new ArrayList<UserInfo>();
 				for(BaseUserInfo baseInfo: temp)
@@ -88,5 +89,21 @@ public class AllPerContactsBox extends VirtualResult {
 	
 	public synchronized Permission getPermission(ID id){
 		return permissions.get(id);
+	}
+	
+	public synchronized void addContact(ID uid){
+		List<ID> idList = new ArrayList<ID>();
+		idList.add(uid);
+		try {
+			List<BaseUserInfo> temp = center.getServer().getContactsInfo(center.getLoginUser().getID(), idList);
+			contacts.add(new UserInfo(temp.get(0)));
+			List<Permission> pList = center.getServer().getPermissions(center.getLoginUser().getID(), idList);
+			permissions.put(idList.get(0), pList.get(0));
+		} catch (MyRemoteException e) {
+			setError(e.getErr());
+		} catch (RemoteException e) {
+			setError(ErrorType.REMOTE_ERROR);
+		}
+		setUpdateNow();
 	}
 }
