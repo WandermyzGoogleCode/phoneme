@@ -8,6 +8,7 @@ import java.util.Observer;
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.MessageBox;
+import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -117,28 +118,37 @@ public class MessageBoxComposite extends Composite
 		@Override
 		public void run()
 		{
-			List<Message> msgList = messageBox.getMessages();
+			VirtualState state = messageBox.getState();
 			
-			for(Message msg : msgList)
+			if(state == VirtualState.PREPARED)
 			{
-				if(msg.autoProceed())
+				List<Message> msgList = messageBox.getMessages();
+				
+				for(Message msg : msgList)
 				{
-					try
+					if(msg.autoProceed())
 					{
-						msg.proceed(logicCenter);
-					} catch (Exception e)
-					{
-						MessageDialog.openWarning(getShell(), "自动处理失败", e.getMessage());
-						e.printStackTrace();
+						try
+						{
+							msg.proceed(logicCenter);
+						} catch (Exception e)
+						{
+							MessageDialog.openWarning(getShell(), "自动处理失败", e.getMessage());
+							e.printStackTrace();
+						}
+						
+						MessageDialog.openInformation(getShell(), msg.title(), msg.detail());
+						msg.remove(logicCenter);
 					}
-					
-					MessageDialog.openInformation(getShell(), msg.title(), msg.detail());
-					msg.remove(logicCenter);
 				}
+				
+				tableViewer.setInput(messageBox.getMessages());
+				tableViewer.refresh();
 			}
-			
-			tableViewer.setInput(messageBox.getMessages());
-			tableViewer.refresh();
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(getShell(), "刷新MessageBox失败", messageBox.getError().toString());
+			}
 		}
 		
 	}
