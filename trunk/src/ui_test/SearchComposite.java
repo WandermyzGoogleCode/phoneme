@@ -7,6 +7,7 @@ import java.util.Observer;
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.CreateGroupResult;
+import logiccenter.VirtualResult.RelationCubeResult;
 import logiccenter.VirtualResult.SearchUserResult;
 import logiccenter.VirtualResult.VirtualState;
 
@@ -71,6 +72,7 @@ public class SearchComposite extends Composite
 		toolItemSearch.setText("新搜索");
 
 		toolItemRelationCube = new ToolItem(toolBar, SWT.PUSH);
+		toolItemRelationCube.addSelectionListener(new ToolItemRelationCubeSelectionListener());
 		toolItemRelationCube.setText("搜索人立方");
 
 		tableViewer = new TableViewer(this, SWT.BORDER);
@@ -132,25 +134,6 @@ public class SearchComposite extends Composite
 		}
 	}
 	
-	/**
-	 * 显示用户信息
-	 * @author Wander
-	 *
-	 */
-	private class TableViewerIDoubleClickListener implements IDoubleClickListener {
-		public void doubleClick(final DoubleClickEvent arg0)
-		{
-			if(tableViewer.getTable().getSelection().length <= 0) return;
-			
-			TableItem currentItem = tableViewer.getTable().getSelection()[0];
-			
-			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "用户信息",
-					UserInfoTableType.SearchRemoteResult,
-					new UserInfo((BaseUserInfo)currentItem.getData()));
-			userInfoDialog.open();
-		}
-	}
-	
 	class SearchUserResultObserver implements Observer
 	{
 
@@ -193,6 +176,95 @@ public class SearchComposite extends Composite
 			}
 		}
 		
+	}
+	
+	/**
+	 * 搜索人立方
+	 * @author Wander
+	 *
+	 */
+	private class ToolItemRelationCubeSelectionListener extends SelectionAdapter {
+		public void widgetSelected(final SelectionEvent e)
+		{
+			if(tableViewer.getTable().getSelection().length <= 0) return;
+			
+			TableItem item = tableViewer.getTable().getSelection()[0];
+			if(!(item.getData() instanceof UserInfo)) return;
+			
+			UserInfo user = (UserInfo)item.getData();
+			
+			UserInfo user2nd = new UserInfo();
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "搜索",
+					UserInfoTableType.SearchRemoteForm, user);
+			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
+			{
+				RelationCubeResult result = logicCenter.relationCube(user.getBaseInfo().getIdenticalField(), user2nd.getBaseInfo().getIdenticalField());
+				result.addObserver(new SearchUserResultObserver());
+			}
+		}
+	}
+	
+	class RelationCubeResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getDefault().syncExec(new RelationCubeResultTask((RelationCubeResult)o));
+		}
+	}
+	
+	class RelationCubeResultTask implements Runnable
+	{
+		private RelationCubeResult result;
+		
+		public RelationCubeResultTask(RelationCubeResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				List<BaseUserInfo> usersList = result.getSearchRes();
+				if(usersList.size() > 0)
+				{
+					tableViewer.setInput(usersList);
+					tableViewer.refresh();
+				}
+				else
+				{
+					MessageDialog.openInformation(getShell(), "未搜索到符合条件的用户", "未搜索到符合条件的用户");
+				}
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(getShell(), "搜索失败", result.getError().toString());
+			}
+		}
+		
+	}
+	
+	/**
+	 * 显示用户信息
+	 * @author Wander
+	 *
+	 */
+	private class TableViewerIDoubleClickListener implements IDoubleClickListener {
+		public void doubleClick(final DoubleClickEvent arg0)
+		{
+			if(tableViewer.getTable().getSelection().length <= 0) return;
+			
+			TableItem currentItem = tableViewer.getTable().getSelection()[0];
+			
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "用户信息",
+					UserInfoTableType.SearchRemoteResult,
+					new UserInfo((BaseUserInfo)currentItem.getData()));
+			userInfoDialog.open();
+		}
 	}
 
 }
