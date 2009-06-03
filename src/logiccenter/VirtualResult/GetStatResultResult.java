@@ -9,7 +9,7 @@ public class GetStatResultResult extends OneTimeVirtualResult {
 
 	public GetStatResultResult(LogicCenter center) {
 		super(center);
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override

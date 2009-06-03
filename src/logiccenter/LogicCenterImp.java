@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import logiccenter.VirtualResult.*;
 import static java.lang.System.*;
@@ -45,6 +47,8 @@ public class LogicCenterImp implements LogicCenter {
 	private AllPerContactsBox allPerContactsBox = null;// 程序启动就加载
 	private AllGroupsBox allGroupBox;// 程序启动就加载
 	private Gui ui = null;
+	
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 	private DataCenter dataCenter;
 
@@ -360,6 +364,11 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public void editLoginUser(BaseUserInfo baseInfo) {
 		this.loginUser = baseInfo;
+	}
+
+	@Override
+	public ExecutorService getExecutor() {
+		return executor;
 	}
 }
 

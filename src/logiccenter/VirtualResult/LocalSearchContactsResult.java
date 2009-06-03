@@ -18,7 +18,7 @@ public class LocalSearchContactsResult extends OneTimeVirtualResult {
 		super(center);
 		this.info = info;
 		matcher = userMatcher;
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override

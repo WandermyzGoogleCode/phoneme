@@ -28,7 +28,7 @@ public class LoginResult extends OneTimeVirtualResult {
 		if (!noLoginUser())
 			setError(ErrorType.ALREADY_ONLINE);
 		else
-			thread.start();
+			center.getExecutor().execute(task);
 	}
 
 	@Override

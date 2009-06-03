@@ -68,10 +68,10 @@ public class BFSRelationCube implements RelationCube {
 			}
 		}
 		
-		if (!dist.containsKey(to))
-			return null;
 		
 		List<ID> idRes = new ArrayList<ID>();
+		if (!dist.containsKey(to))
+			return idRes;
 		for(ID id=to; !id.equals(from); id = prev.get(id))
 			idRes.add(id);
 		idRes.add(from);

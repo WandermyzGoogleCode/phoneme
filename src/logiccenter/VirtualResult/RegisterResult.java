@@ -29,7 +29,7 @@ public class RegisterResult extends OneTimeVirtualResult {
 		if (!hasIdentical)
 			setError(ErrorType.NO_IDENTICAL_FIELD);
 		else
-			thread.start();
+			center.getExecutor().execute(task);
 	}
 
 	@Override

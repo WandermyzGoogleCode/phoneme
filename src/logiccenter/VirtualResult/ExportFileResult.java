@@ -18,7 +18,7 @@ public class ExportFileResult extends OneTimeVirtualResult {
 		
 		//TODO 对文件名进行检查：if (!fileNameChecker.check(fileName))...
 		
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override

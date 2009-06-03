@@ -16,7 +16,7 @@ public class RemoveContactInfoResult extends OneTimeVirtualResult {
 	public RemoveContactInfoResult(ID id, LogicCenter center) {
 		super(center);
 		this.id = id;
-		thread.start();
+		center.getExecutor().execute(task);
 	}
 
 	@Override
@@ -34,10 +34,12 @@ public class RemoveContactInfoResult extends OneTimeVirtualResult {
 			if (r.isPersonal()){
 				r.setRemoved(true);
 				center.getDataCenter().setUserInfo(info);
+				center.getAllContactsBox().editContact(info);
 			}
-			else
+			else{
 				center.getDataCenter().removeUserInfo(info.getBaseInfo().getID());
-			center.getAllContactsBox().setUpdateNow();
+				center.getAllContactsBox().removeContact(info.getBaseInfo().getID());
+			}
 		}
 		return new BoolInfo();
 	}

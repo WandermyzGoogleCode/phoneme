@@ -16,7 +16,7 @@ public class EditContactInfoResult extends OneTimeVirtualResult {
 		if (info.getBaseInfo().isNull())
 			setError(ErrorType.EDIT_NULL_USER);
 		else
-			thread.start();
+			center.getExecutor().execute(task);
 	}
 
 	@Override
