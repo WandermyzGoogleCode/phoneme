@@ -151,44 +151,49 @@ public class GroupInfoDialog extends Dialog
 		//[end]
 		
 		//[start] 群组信息
-		tabItemInfo = new TabItem(tabFolder, SWT.NONE);
-		tabItemInfo.setText("群组信息");
+		if (groupInfoTableType != GroupInfoTableType.Admit) {
+			tabItemInfo = new TabItem(tabFolder, SWT.NONE);
+			tabItemInfo.setText("群组信息");
 
-		compositeInfo = new Composite(tabFolder, SWT.NONE);
-		compositeInfo.setLayout(new GridLayout());
-		tabItemInfo.setControl(compositeInfo);
+			compositeInfo = new Composite(tabFolder, SWT.NONE);
+			compositeInfo.setLayout(new GridLayout());
+			tabItemInfo.setControl(compositeInfo);
 
-		tableViewerInfo = new TableViewer(compositeInfo, SWT.BORDER);
-		table = tableViewerInfo.getTable();
-		table.setLinesVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		table.setHeaderVisible(true);
+			tableViewerInfo = new TableViewer(compositeInfo, SWT.BORDER);
+			table = tableViewerInfo.getTable();
+			table.setLinesVisible(true);
+			table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			table.setHeaderVisible(true);
 
-		tableInfoColumnField = new TableColumn(table, SWT.NONE);
-		tableInfoColumnField.setWidth(100);
-		tableInfoColumnField.setText("字段");
+			tableInfoColumnField = new TableColumn(table, SWT.NONE);
+			tableInfoColumnField.setWidth(100);
+			tableInfoColumnField.setText("字段");
 
-		tableInfoColumnValue = new TableColumn(table, SWT.NONE);
-		tableInfoColumnValue.setWidth(335);
-		tableInfoColumnValue.setText("值");
+			tableInfoColumnValue = new TableColumn(table, SWT.NONE);
+			tableInfoColumnValue.setWidth(335);
+			tableInfoColumnValue.setText("值");
 
-		tableViewerInfo.setColumnProperties(new String[] {"field", "value"});
-		tableViewerInfo.setContentProvider(new GroupInfoTableContentProvider());
-		tableViewerInfo.setLabelProvider(new GroupInfoTableLabelProvider());
-			
-		CellEditor[] cellEditors = new CellEditor[2];
-		cellEditors[0] = null;
-		cellEditors[1] = (CellEditor) new TextCellEditor(tableViewerInfo.getTable());
-		
-		tableViewerInfo.setCellEditors(cellEditors);
-		tableViewerInfo.setCellModifier(new GroupInfoCellModifier(shell, groupInfoTableType, tableViewerInfo));
-		
-		List<InfoField> fieldsList = new ArrayList<InfoField>();
-		for(GroupFieldName fieldName : GroupFieldName.values())
-		{
-			fieldsList.add(group.getInfoField(fieldName.name()));
+			tableViewerInfo
+					.setColumnProperties(new String[] { "field", "value" });
+			tableViewerInfo
+					.setContentProvider(new GroupInfoTableContentProvider());
+			tableViewerInfo.setLabelProvider(new GroupInfoTableLabelProvider());
+
+			CellEditor[] cellEditors = new CellEditor[2];
+			cellEditors[0] = null;
+			cellEditors[1] = (CellEditor) new TextCellEditor(tableViewerInfo
+					.getTable());
+
+			tableViewerInfo.setCellEditors(cellEditors);
+			tableViewerInfo.setCellModifier(new GroupInfoCellModifier(shell,
+					groupInfoTableType, tableViewerInfo));
+
+			List<InfoField> fieldsList = new ArrayList<InfoField>();
+			for (GroupFieldName fieldName : GroupFieldName.values()) {
+				fieldsList.add(group.getInfoField(fieldName.name()));
+			}
+			tableViewerInfo.setInput(fieldsList);
 		}
-		tableViewerInfo.setInput(fieldsList);
 		//[end]
 		
 		//[start] 权限
@@ -252,6 +257,9 @@ public class GroupInfoDialog extends Dialog
 			{
 				modifyGroup();
 				contactPermissionComposite.ModifyPermission();
+			}
+			else if(groupInfoTableType == GroupInfoTableType.Admit)
+			{
 			}
 		}
 		super.buttonPressed(buttonId);

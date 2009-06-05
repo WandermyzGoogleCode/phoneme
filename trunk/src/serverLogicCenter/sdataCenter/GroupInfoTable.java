@@ -166,4 +166,15 @@ public class GroupInfoTable {
 		}
 		return res;
 	}
+
+	public List<ID> getAllGroupID() throws SQLException{
+		String psql = "SELECT gid FROM GroupInfo";
+		PreparedStatement pStatement = connection.prepareStatement(psql);
+		ResultSet rows = pStatement.executeQuery();
+		
+		List<ID> res = new ArrayList<ID>();
+		while (rows.next())
+			res.add(new ID(rows.getLong(1)));
+		return res;
+	}
 }

@@ -17,6 +17,8 @@ public class EditGroupResult extends OneTimeVirtualResult {
 		this.g = g;
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);
+		else if (!g.getAdminUserID().equals(center.getLoginUser().getID()))
+			setError(ErrorType.NOT_ADMIN);
 		else
 			center.getExecutor().execute(task);
 	}

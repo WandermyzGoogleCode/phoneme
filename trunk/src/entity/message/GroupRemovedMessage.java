@@ -32,10 +32,9 @@ public class GroupRemovedMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center){
+	public void subproceed(LogicCenter center){
 		center.getDataCenter().removeGroup(g);
 		center.getAllGroupsBox().removeGroup(g.getID());
-		proceeded = true;
 	}
 
 	@Override

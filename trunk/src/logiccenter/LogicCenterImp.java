@@ -20,6 +20,7 @@ import algorithm.Matcher;
 import datacenter.DataCenter;
 import datacenter.DataCenterImp;
 import datacenter.DataCenterImp_test;
+import datacenter.SDataCenterImp;
 
 import serverLogicCenter.ServerLogicCenter;
 import ui.Gui;
@@ -300,7 +301,7 @@ public class LogicCenterImp implements LogicCenter {
 
 	public synchronized static LogicCenter getInstance() {
 		if (instance == null)
-			instance = new LogicCenterImp(DataCenterImp_test.Instance());
+			instance = new LogicCenterImp(SDataCenterImp.getInstance());
 		return instance;
 	}
 
@@ -357,6 +358,8 @@ public class LogicCenterImp implements LogicCenter {
 
 	@Override
 	public void logout() throws RemoteException {
+		if (loginUser == null)
+			return;
 		server.logout(loginUser.getID());
 		loginUser = new BaseUserInfo();
 		allPerContactsBox = null;

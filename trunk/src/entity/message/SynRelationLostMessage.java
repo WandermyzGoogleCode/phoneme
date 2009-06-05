@@ -39,12 +39,11 @@ public class SynRelationLostMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) throws RemoteException,
+	public void subproceed(LogicCenter center) throws RemoteException,
 			MyRemoteException {
 		List<ID> idList = new ArrayList<ID>();
 		idList.add(synUser);
 		center.getAllContactsBox().updateRelation(idList);
-		proceeded = true;
 	}
 
 	@Override

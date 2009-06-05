@@ -26,7 +26,7 @@ public class SimpleStringMessage extends Message {
 	}
 	
 	@Override
-	public void proceed(LogicCenter center) {
+	public void subproceed(LogicCenter center) {
 	}
 	
 	@Override
