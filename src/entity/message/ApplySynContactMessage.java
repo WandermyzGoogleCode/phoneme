@@ -24,7 +24,7 @@ public class ApplySynContactMessage extends Message {
 	}
 	
 	@Override
-	public void proceed(LogicCenter center) throws RemoteException{
+	public void subproceed(LogicCenter center) throws RemoteException{
 		center.getUI().addPerContact(applyUser);
 		System.out.println("milestone1");//TODO TEST
 		center.getServer().admitSynContact(center.getLoginUser().getID(), applyUser.getID(), visibility);
@@ -36,7 +36,6 @@ public class ApplySynContactMessage extends Message {
 				center.getUI().addSynContact(applyUser);
 		}
 		System.out.println("milestone3");//TODO TEST
-		proceeded = true;
 	}
 
 	@Override

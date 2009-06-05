@@ -312,6 +312,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
 		if (g.getID() == null || g.getID().isNull() || !groupChecker.check(g))
 			return new BoolInfo(ErrorType.ILLEGAL_NEW_INSTANCE);
+		if (!g.getAdminUserID().equals(thisUser))
+			return new BoolInfo(ErrorType.NOT_ADMIN);
 		try {
 			dataCenter.setGroup(g);
 			for (ID id : g.getUserSet())
@@ -388,7 +390,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			g = dataCenter.getGroup(gid);
 			if (g == null)
 				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
-			if (g.getAdminUserID() != thisUser)
+			if (!g.getAdminUserID().equals(thisUser))
 				return new BoolInfo(ErrorType.NOT_ADMIN);
 			ID targetID = dataCenter.searchUserID(un);
 			if (targetID == null || targetID.isNull())

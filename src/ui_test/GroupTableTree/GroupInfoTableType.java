@@ -4,5 +4,6 @@ public enum GroupInfoTableType
 {
 	Null,
 	New,
-	Normal
+	Normal,
+	Admit
 }

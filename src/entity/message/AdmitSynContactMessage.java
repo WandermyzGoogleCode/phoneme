@@ -1,5 +1,7 @@
 package entity.message;
 
+import java.rmi.RemoteException;
+
 import entity.BaseUserInfo;
 import entity.ID;
 import entity.UserInfo;
@@ -34,10 +36,10 @@ public class AdmitSynContactMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) {
+	public void subproceed(LogicCenter center) {
+		center.getDataCenter().setUserInfo(new UserInfo(admitUser, null));//不更改本地信息
 		center.getDataCenter().addSynRelationship(admitUser.getID());
 		center.getAllContactsBox().editContact(new UserInfo(admitUser));
-		proceeded = true;
 	}
 
 	@Override

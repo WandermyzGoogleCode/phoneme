@@ -28,7 +28,8 @@ public class ID implements Serializable{
 	private static final long messageStart = groupStart+groupRange;
 	private static final long messageRange = 5000000000000000000L;
 	
-	public static final ID GLOBAL_ID = new ID(messageStart+messageRange);
+	public static final ID GLOBAL_ID = new ID(messageStart+messageRange);//代表全局的ID，用来表示全局权限
+	public static final ID LOCAL_ID = new ID(messageStart+messageRange+1);//代表本地的ID，用来存储本地的一些关系
 	
 	private static final Random rand = new Random(Calendar.getInstance().getTime().hashCode());
 	private long id;

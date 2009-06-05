@@ -8,6 +8,7 @@ import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.AddPerContactResult;
 import logiccenter.VirtualResult.AddSynContactResult;
+import logiccenter.VirtualResult.AdmitInvitationResult;
 import logiccenter.VirtualResult.SetPermissionResult;
 import logiccenter.VirtualResult.VirtualState;
 
@@ -139,33 +140,33 @@ public class GuiImp implements ui.Gui
 	public void admitInvitation(Group g)
 	{
 		GroupInfoDialog groupInfoDialog = new GroupInfoDialog(shell, "群组设置", 
-				GroupInfoTableType.Normal, g);
+				GroupInfoTableType.Admit, g);
 		Permission permission = new Permission();
 		groupInfoDialog.setPermission(permission);
 		
 		if(groupInfoDialog.open() == IDialogConstants.OK_ID)
 		{
-			SetPermissionResult result = logicCenter.setGroupPermission(g, permission);
-			result.addObserver(new SetPermissionResultObserver());
+			AdmitInvitationResult result = logicCenter.admitInvitation(g.getID(), permission, groupInfoDialog.GetVisibility());
+			result.addObserver(new AdmitInvitationResultObserver());
 		}
 		
 	}
 	
-	class SetPermissionResultObserver implements Observer
+	class AdmitInvitationResultObserver implements Observer
 	{
 
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getDefault().syncExec(new SetPermissionResultTask((SetPermissionResult)o));
+			Display.getDefault().syncExec(new AdmitInvitationResultTask((AdmitInvitationResult)o));
 		}
 	}
 	
-	class SetPermissionResultTask implements Runnable
+	class AdmitInvitationResultTask implements Runnable
 	{
-		private SetPermissionResult result;
+		private AdmitInvitationResult result;
 		
-		public SetPermissionResultTask(SetPermissionResult result)
+		public AdmitInvitationResultTask(AdmitInvitationResult result)
 		{
 			this.result = result;
 		}
@@ -176,7 +177,7 @@ public class GuiImp implements ui.Gui
 			VirtualState state = result.getState();
 			if(state == VirtualState.PREPARED)
 			{
-				MessageDialog.openInformation(shell, "操作成功", "请求已发送，请等待对方验证");
+				MessageDialog.openInformation(shell, "操作成功", "你已经加入群组");
 			}
 			else if(state == VirtualState.ERRORED)
 			{

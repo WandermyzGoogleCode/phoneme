@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import entity.infoField.BaseInfoFieldName;
@@ -113,9 +115,15 @@ public class UserInfo {
 	}
 
 	public Set<String> getKeySet() {
-		Set<String> res = baseInfo.getKeySet();
+		Set<String> res = new HashSet<String>();
+		res.addAll(baseInfo.getKeySet());
 		if (customInfo != null)
 			res.addAll(customInfo.getKeySet());
 		return res;
+	}
+	
+	static public void main(String args[]){
+		Set<String> ss = new UserInfo().getKeySet();
+		System.out.println(ss.size());
 	}
 }

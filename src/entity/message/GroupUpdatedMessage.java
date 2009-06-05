@@ -31,10 +31,9 @@ public class GroupUpdatedMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) throws RemoteException {
+	public void subproceed(LogicCenter center) throws RemoteException {
 		center.getDataCenter().setGroup(g);
 		center.getAllGroupsBox().editGroup(g);
-		proceeded = true;
 	}
 
 	@Override

@@ -28,12 +28,11 @@ public class ContactUpdatedMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) {
+	public void subproceed(LogicCenter center) {
 		UserInfo newInfo = new UserInfo(contact);
 		newInfo.setCustomInfo(null);//²»ÐÞ¸ÄcustomµÄ×Ö¶Î
 		center.getDataCenter().setUserInfo(newInfo);
 		center.getAllContactsBox().editContact(newInfo);
-		proceeded = true;
 	}
 
 	@Override

@@ -41,8 +41,14 @@ public abstract class Message implements Serializable {
 	 * @param center
 	 * @throws Exception
 	 */
-	public abstract void proceed(LogicCenter center) throws RemoteException,
+	public abstract void subproceed(LogicCenter center) throws RemoteException,
 			MyRemoteException;
+
+	public void proceed(LogicCenter center) throws RemoteException, MyRemoteException{
+		subproceed(center);
+		proceeded = true;
+		center.getServer().removeMessage(center.getLoginUser().getID(), this);
+	}
 
 	public abstract String title();
 

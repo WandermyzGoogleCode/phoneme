@@ -13,15 +13,16 @@ import com.mysql.jdbc.Statement;
 import entity.BaseUserInfo;
 import entity.Group;
 import entity.ID;
+import entity.UserInfo;
 import entity.infoField.IdenticalInfoField;
 import entity.infoField.IndexedInfoField;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 
-public class UserInfoTable {
+public class BaseUserInfoTable {
 	private Connection connection;
 
-	UserInfoTable(Connection connection) throws SQLException {
+	public BaseUserInfoTable(Connection connection) throws SQLException {
 		this.connection = connection;
 
 		// 如果没有表，则建表

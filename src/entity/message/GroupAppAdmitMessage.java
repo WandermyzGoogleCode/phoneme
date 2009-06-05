@@ -31,11 +31,10 @@ public class GroupAppAdmitMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) {
+	public void subproceed(LogicCenter center) {
 		center.getDataCenter().setGroup(group);
 		center.getDataCenter().setPermission(group.getID(), p);
 		center.getAllGroupsBox().editGroup(group);
-		proceeded = true;
 	}
 
 	@Override

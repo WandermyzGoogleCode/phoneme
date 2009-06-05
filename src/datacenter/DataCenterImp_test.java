@@ -99,8 +99,6 @@ public class DataCenterImp_test implements DataCenter {
 
 			if (userInfoTableExist == false) {
 				// 建立UserInfo信息表
-				// TODO CRITICAL 当前的USERID已经变成了LONG
-				// TODO CRITICAL 请用字段的getMaxLength来设定字符串长度
 				sql = "CREATE TABLE UserInfo(UserID bigint not null";
 				while (fieldNameIter.hasNext()) {
 					String temp = fieldNameIter.next();
@@ -132,7 +130,6 @@ public class DataCenterImp_test implements DataCenter {
 			}
 
 			// 建立Group信息表
-			// TODO CRITICAL 当前的GROUPID已经变成了LONG
 
 			if (groupTableExist == false) {
 				sql = "CREATE TABLE GroupInfo(GroupID bigint not null";
@@ -157,7 +154,6 @@ public class DataCenterImp_test implements DataCenter {
 			}
 
 			// 建立Group成员表
-			// TODO CRITICAL 当前的ID已经变成了LONG
 			if (groupMemTableExist == false) {
 				sql = "CREATE TABLE GroupMember(GroupID bigint not null,UserID bigint not null)";
 				statement.executeUpdate(sql);
@@ -171,7 +167,6 @@ public class DataCenterImp_test implements DataCenter {
 				permissionTableExist = false;
 			}
 			// 建立Permission表
-			// TODO CRITICAL 当前的ID已经变成了LONG
 			if (permissionTableExist == false) {
 				sql = "CREATE TABLE Permission(UserID bigint not null";
 				fieldNameIter = (new Permission()).getKeySet().iterator();
@@ -474,7 +469,6 @@ public class DataCenterImp_test implements DataCenter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ReturnType importFile(String fileName) {
-		// TODO Auto-generated method stub
 		try {
 			UserInfo userInfo = new UserInfo();
 			BaseUserInfo baseUserInfo = new BaseUserInfo();
@@ -959,11 +953,11 @@ public class DataCenterImp_test implements DataCenter {
 									.getStringValue());
 							keyNum++;
 						}
-						fieldNameIter = userInfoWriteBuffer.get(i)
-								.getCustomInfo().getKeySet().iterator();
 						if (userInfoWriteBuffer.get(i).getCustomInfo() == null)// 防止null
 							userInfoWriteBuffer.get(i).setCustomInfo(
 									new CustomUserInfo());
+						fieldNameIter = userInfoWriteBuffer.get(i)
+								.getCustomInfo().getKeySet().iterator();
 						while (fieldNameIter.hasNext()) {
 							pstatement2.setString(keyNum, userInfoWriteBuffer
 									.get(i).getCustomInfo().getInfoField(
@@ -1116,7 +1110,6 @@ public class DataCenterImp_test implements DataCenter {
 
 	@Override
 	public List<ID> getAllPerContactsID() {
-		// TODO Auto-generated method stub
 		List<ID> result = new ArrayList<ID>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -1138,7 +1131,6 @@ public class DataCenterImp_test implements DataCenter {
 
 	@Override
 	public List<ID> getAllSynContactsID() {
-		// TODO Auto-generated method stub
 		List<ID> result = new ArrayList<ID>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -1160,7 +1152,6 @@ public class DataCenterImp_test implements DataCenter {
 
 	@Override
 	public List<Group> getAllGroups() {
-		// TODO Auto-generated method stub
 		List<Group> result = new ArrayList<Group>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();

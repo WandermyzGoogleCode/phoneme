@@ -34,10 +34,9 @@ public class InviteToGroupMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) throws RemoteException,
+	public void subproceed(LogicCenter center) throws RemoteException,
 			MyRemoteException {
 		center.getUI().admitInvitation(g);
-		proceeded = true;
 	}
 
 	@Override

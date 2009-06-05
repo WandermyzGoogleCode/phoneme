@@ -41,11 +41,10 @@ public class ApplyJoinGroupMessage extends Message {
 	}
 
 	@Override
-	public void proceed(LogicCenter center) throws RemoteException, MyRemoteException {
+	public void subproceed(LogicCenter center) throws RemoteException, MyRemoteException {
 		BoolInfo res = center.getServer().admitApplication(center.getLoginUser().getID(), g.getID(), appUser.getID(), p, visibility);
 		if (!res.isTrue())
 			throw new MyRemoteException(new SimpleError(res.getInfo()));
-		proceeded = true;
 	}
 
 	@Override

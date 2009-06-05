@@ -43,7 +43,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 
 	private static ServerDataCenterImp instance = null;
 
-	private UserInfoTable userInfoTable;
+	private BaseUserInfoTable userInfoTable;
 	private GroupInfoTable groupInfoTable;
 	private GroupMemTable groupMemTable;
 	private SynRelationTable synRelationTable;
@@ -63,7 +63,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			Connection connection = (Connection) DriverManager
 					.getConnection(url);
-			userInfoTable = new UserInfoTable(connection);
+			userInfoTable = new BaseUserInfoTable(connection);
 			groupInfoTable = new GroupInfoTable(connection);
 			groupMemTable = new GroupMemTable(connection);
 			synRelationTable = new SynRelationTable(connection);
