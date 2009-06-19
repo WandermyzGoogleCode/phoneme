@@ -38,7 +38,10 @@ public class VisibilityTable {
 		pStatement.setLong(1, uid.getValue());
 		pStatement.setLong(2, id.getValue());
 		ResultSet res = pStatement.executeQuery();
-		return (res.next() && res.getInt(1) > 0);
+		int cnt = 0;
+		if (res.next())
+			cnt = res.getInt(1);
+		return (cnt > 0);
 	}
 
 	synchronized public void setVisibility(ID uid, ID id, int visibility) throws SQLException{

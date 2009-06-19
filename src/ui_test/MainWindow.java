@@ -20,7 +20,11 @@ import logiccenter.VirtualResult.LocalSearchContactsResult;
 import logiccenter.VirtualResult.LoginResult;
 import logiccenter.VirtualResult.MessageBox;
 import logiccenter.VirtualResult.RegisterResult;
+import logiccenter.VirtualResult.RemoteSynResult;
+import logiccenter.VirtualResult.RemoveSynContactResult;
 import logiccenter.VirtualResult.RemoveGroupResult;
+import logiccenter.VirtualResult.RemoveSynContactResult;
+import logiccenter.VirtualResult.SetVisibilityResult;
 import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -74,6 +78,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import ui.Gui;
 import ui_test.GroupInfoDialog.RemoveGroupResultTask;
 import ui_test.UserInfoTable.UserInfoTableType;
+import ui_test.utility.VirtualResultObserver;
 
 import com.ibm.icu.impl.ICUService.Factory;
 import com.swtdesigner.SWTResourceManager;
@@ -86,6 +91,7 @@ import entity.UserInfo;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
 import entity.infoField.InfoFieldName;
+import entity.infoField.Relation;
 import entity.message.Message;
 import ui_test.GroupComposite;
 import ui_test.SearchComposite;
@@ -228,6 +234,7 @@ public class MainWindow
 	public static LogicCenter logicCenter = LogicCenterImp.getInstance();
 	private Map<String, Integer> contactsCategory = new HashMap<String, Integer>();
 	private AllPerContactsBox allPerContactsBox;
+	private ToolItem toolItemVisibility;
 	//private List<UserInfo> localSearchResult = null;
 	// [end]
 
@@ -618,6 +625,33 @@ public class MainWindow
 		toolItemAddressPermission.addSelectionListener(new ToolItemAddressPermissionSelectionListener());
 		toolItemAddressPermission.setToolTipText("编辑当前联系人的权限");
 		toolItemAddressPermission.setText("权");
+		
+		toolItemVisibility = new ToolItem(toolBarAddress, SWT.NONE);
+		toolItemVisibility.setEnabled(false);
+		toolItemVisibility.setToolTipText(Messages.getString("MainWindow.toolItem.toolTipText")); //$NON-NLS-1$
+		toolItemVisibility.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem current = getCurrentTreeItem();
+				UserInfo userInfo = (UserInfo)current.getData();
+				if (logicCenter.getLoginUser().isNull()){
+					MessageDialog.openError(shell, "设置错误", "请先登录");
+					return;					
+				}
+				if (!((Relation)(userInfo.getInfoField(InfoFieldName.Relation))).isPersonal()){
+					MessageDialog.openError(shell, "设置错误", "非同步联系人不能设置可见度");
+					return;
+				}
+				SingleNumDialog dialog = new SingleNumDialog(shell);
+				//TODO 显示原来的值
+				if (dialog.open() == IDialogConstants.OK_ID){
+					SetVisibilityResult result = logicCenter.setVisibility(userInfo.getBaseInfo().getID(), dialog.getResult());
+					VirtualResultObserver observer = new VirtualResultObserver(shell, "可见度设置成功");
+					result.addObserver(observer);
+				}
+			}
+		});
+		toolItemVisibility.setText(Messages.getString("MainWindow.toolItem.text")); //$NON-NLS-1$
 
 		toolItemAddressDel = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressDel.addSelectionListener(new ToolItemAddressDelSelectionListener());
@@ -945,6 +979,7 @@ public class MainWindow
 		// [start] 同步联系人
 		allContactsBox = logicCenter.getAllContactsBox();
 		allContactsBox.addObserver(new ContactRefreshObserver());
+		compositeGroup.setAllContactsBox(allContactsBox);
 		// TODO ERRORED的处理
 		// [end]
 
@@ -1451,6 +1486,7 @@ public class MainWindow
 			{
 				toolItemAddressPermission.setEnabled(false);
 				toolItemAddressCustomGroup.setEnabled(false);
+				toolItemVisibility.setEnabled(false);
 
 				toolItemAddressPermission.setToolTipText("");
 				toolItemAddressCustomGroup.setToolTipText("");
@@ -1462,6 +1498,7 @@ public class MainWindow
 			{
 				toolItemAddressPermission.setEnabled(getCurrentContactTab() == ContactTabType.Permission);//Modified by SpaceFlyer
 				toolItemAddressCustomGroup.setEnabled(true);
+				toolItemVisibility.setEnabled(getCurrentContactTab() != ContactTabType.Permission);
 
 				toolItemAddressEdit.setToolTipText(String.format("编辑联系人\"%s\"", current.getText(0)));
 				toolItemAddressDel.setToolTipText(String.format("删除联系人\"%s\"", current.getText(0)));
@@ -1734,7 +1771,9 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			// TODO: 远程同步
+			RemoteSynResult result = logicCenter.remoteSynchronize();
+			VirtualResultObserver observer = new VirtualResultObserver(shell, "远程同步成功");
+			result.addObserver(observer);
 		}
 	}
 

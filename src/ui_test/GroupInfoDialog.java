@@ -257,7 +257,7 @@ public class GroupInfoDialog extends Dialog
 					result.addObserver(new EditGroupResultObserver());
 				}				
 				
-				visibility = Integer.parseInt(contactPermissionComposite.getVisibility());//TODO NEXT
+				//TODO NEXT Visibility
 				//TODO: Error
 				return;
 			}

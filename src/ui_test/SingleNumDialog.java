@@ -79,5 +79,10 @@ public class SingleNumDialog extends Dialog
 	{
 		return result;
 	}
+	
+	public void setValue(int v)
+	{
+		text.setText(Integer.toString(v));
+	}
 
 }
