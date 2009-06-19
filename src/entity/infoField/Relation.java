@@ -62,7 +62,9 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 			res += "Personal";
 		if (!groups.isEmpty())
 		{
-			res += "||Groups:";
+			if (personal)
+				res += " & ";
+			res += "Groups:";
 			for(String s: groups){
 				if (res.length()+4+s.length() > maxLength){
 					res += "...";
@@ -122,5 +124,10 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	
 	public boolean isPersonal(){
 		return personal;
+	}
+	
+	public void setEmpty(){
+		personal = false;
+		groups.clear();
 	}
 }

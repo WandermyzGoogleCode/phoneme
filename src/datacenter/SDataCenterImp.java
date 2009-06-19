@@ -227,6 +227,8 @@ public class SDataCenterImp implements DataCenter {
 	public ReturnType setGroup(Group g) {
 		try {
 			groupInfoTable.setGroup(g);
+			for(ID id: g.getUserSet())
+				addToGroup(g, id);
 		} catch (SQLException e) {
 			System.out.println(e);			
 			e.printStackTrace();

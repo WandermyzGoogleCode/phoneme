@@ -37,9 +37,9 @@ public class AllPerContactsBox extends VirtualResult {
 						center.getLoginUser().getID());
 				List<BaseUserInfo> temp = center.getServer().getContactsInfo(
 						center.getLoginUser().getID(), idList);
-				bc.setPContacts(new ArrayList<UserInfo>());
+				bc.setPContacts(new HashMap<ID, UserInfo>());
 				for (BaseUserInfo baseInfo : temp)
-					bc.getPContacts().add(new UserInfo(baseInfo));
+					bc.getPContacts().put(baseInfo.getID(), new UserInfo(baseInfo));
 				List<Permission> pList = center.getServer().getPermissions(
 						center.getLoginUser().getID(), idList);
 				for (int i = 0; i < idList.size(); i++)
@@ -58,7 +58,7 @@ public class AllPerContactsBox extends VirtualResult {
 	}
 
 	public List<UserInfo> getContacts() {
-		return bc.getPContacts();
+		return new ArrayList<UserInfo>(bc.getPContacts().values());
 	}
 
 	public AllPerContactsBox(LogicCenter center, BoxContent bc) {
@@ -73,11 +73,7 @@ public class AllPerContactsBox extends VirtualResult {
 	}
 
 	public void removeContact(ID uid) {
-		for (UserInfo userInfo : bc.getPContacts())
-			if (userInfo.getBaseInfo().getID().equals(uid)) {
-				bc.getPContacts().remove(userInfo);
-				break;
-			}
+		bc.getPContacts().remove(uid);
 		setUpdateNow();
 	}
 
@@ -102,7 +98,7 @@ public class AllPerContactsBox extends VirtualResult {
 		try {
 			List<BaseUserInfo> temp = center.getServer().getContactsInfo(
 					center.getLoginUser().getID(), idList);
-			bc.getPContacts().add(new UserInfo(temp.get(0)));
+			bc.getPContacts().put(temp.get(0).getID(), new UserInfo(temp.get(0)));
 			List<Permission> pList = center.getServer().getPermissions(
 					center.getLoginUser().getID(), idList);
 			bc.getPPermissions().put(idList.get(0), pList.get(0));

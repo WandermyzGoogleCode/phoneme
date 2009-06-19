@@ -5,6 +5,7 @@ import java.util.List;
 
 import logiccenter.LogicCenter;
 
+import entity.BaseUserInfo;
 import entity.ID;
 import entity.MyRemoteException;
 import entity.SimpleError;
@@ -48,7 +49,9 @@ public class MessageBox extends VirtualResult {
 					if (isInterrupted())
 						break;
 					if (newMessage == null) {
-						setError(new SimpleError("Server has closed the sender"));
+						setError(new SimpleError("Server has closed the connection"));
+						center.setLoginUser(new BaseUserInfo());//将当前登录用户设为无效
+						center.logout();
 						break;
 					}
 					messages.add(newMessage);
@@ -110,6 +113,10 @@ public class MessageBox extends VirtualResult {
 				messages.remove(i);
 				break;
 			}
+		setUpdateNow();
+	}
+
+	public void refresh() {
 		setUpdateNow();
 	}
 }

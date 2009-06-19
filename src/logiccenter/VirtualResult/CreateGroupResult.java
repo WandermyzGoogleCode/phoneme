@@ -31,8 +31,10 @@ public class CreateGroupResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
 		Group resG = center.getServer().createGroup(center.getLoginUser().getID(), g, p, visibility);
+		resG.addToGroup(center.getLoginUser().getID());
 		center.getDataCenter().setGroup(resG);
 		center.getAllGroupsBox().editGroup(resG);
+		center.getAllGroupsBox().setPermission(resG.getID(), p);
 		return new BoolInfo();
 	}
 

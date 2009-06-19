@@ -1,5 +1,6 @@
 package logiccenter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,10 +25,10 @@ public class BoxContent {
 	private Map<ID, Permission> gPermissions = new ConcurrentHashMap<ID, Permission>();
 	
 	//AllPerContactsBoxµÄÄÚÈÝ
-	private List<UserInfo> pContacts;
+	private Map<ID, UserInfo> pContacts;
 	private Map<ID, Permission> pPermissions = new ConcurrentHashMap<ID, Permission>();
 	
-	public synchronized void setPContacts(List<UserInfo> contacts) {
+	public synchronized void setPContacts(Map<ID, UserInfo> contacts) {
 		pContacts = contacts;
 	}
 	
@@ -59,7 +60,7 @@ public class BoxContent {
 		return groups;
 	}
 	
-	public synchronized List<UserInfo> getPContacts() {
+	public synchronized Map<ID, UserInfo> getPContacts() {
 		return pContacts;
 	}
 	

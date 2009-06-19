@@ -126,7 +126,7 @@ public class MessageBoxComposite extends Composite
 				
 				for(Message msg : msgList)
 				{
-					if(msg.autoProceed())
+					if(msg.autoProceed() && !msg.proceeded())
 					{
 						try
 						{
@@ -147,7 +147,7 @@ public class MessageBoxComposite extends Composite
 			}
 			else if(state == VirtualState.ERRORED)
 			{
-				MessageDialog.openWarning(getShell(), "Ë¢ÐÂMessageBoxÊ§°Ü", messageBox.getError().toString());
+				MessageDialog.openWarning(getShell(), "MessageBoxÊ§Ð§", messageBox.getError().toString());
 			}
 		}
 		

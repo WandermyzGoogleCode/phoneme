@@ -20,9 +20,9 @@ public interface ServerLogicCenter extends Remote{
 	public List<Message> getAllMessages(ID user) throws RemoteException, MyRemoteException;
 	public Message getNewMessage(ID user) throws RemoteException, MyRemoteException;	
 	public BoolInfo addPerContact(ID thisUser, IdenticalInfoField targetUser, Permission permission) throws RemoteException;	
-	public BoolInfo addSynContact(ID thisUser, IdenticalInfoField targetUser, int visibility) throws RemoteException;
+	public BoolInfo addSynContact(ID thisUser, IdenticalInfoField targetUser, int visibility) throws RemoteException, MyRemoteException;
 	public BoolInfo admitApplication(ID thisUser, ID gid, ID uid, Permission p, int visibility) throws RemoteException;
-	public BoolInfo admitInvitation(ID thisUser, ID gid, Permission p, int visibility) throws RemoteException;
+	public Group admitInvitation(ID thisUser, ID gid, Permission p, int visibility) throws RemoteException, MyRemoteException;
 	public BoolInfo applyJoinGroup(ID thisUser, ID gid, Permission p, int visibility) throws RemoteException;
 	public Group createGroup(ID thisUser, Group g, Permission p, int visibility) throws RemoteException, MyRemoteException;
 	public BoolInfo editGroup(ID thisUser, Group g) throws RemoteException;
@@ -50,8 +50,9 @@ public interface ServerLogicCenter extends Remote{
 	 * @param targetUser
 	 * @param visibility
 	 * @throws RemoteException
+	 * @throws MyRemoteException 
 	 */
-	public void admitSynContact(ID admitUser, ID targetUser, int visibility) throws RemoteException;
+	public void admitSynContact(ID admitUser, ID targetUser, int visibility) throws RemoteException, MyRemoteException;
 	/**
 	 * 客户端程序结束时必须调用该函数（如果已经登录的话），否则服务器不会释放客户端线程
 	 * @param thisUser
