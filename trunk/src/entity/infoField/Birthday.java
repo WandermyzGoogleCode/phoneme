@@ -1,6 +1,7 @@
 package entity.infoField;
 
-import java.util.regex.Pattern;
+import java.text.DateFormat;
+
 
 /**
  * 传入的时候，必须是yyyy-mm-dd，否则格式不合法
@@ -14,17 +15,27 @@ public class Birthday extends EmptyBirthday {
 	private static final long serialVersionUID = -3884258647822327940L;
 	public static final int maxLength = 20;
 	private static final String nullData = "";
+	private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 	private String day;
 	private int y, m, d;
 	private final int yyyy=0;
 	private final int mm=1;
 	private final int dd=2;
 	
+	static {
+		dateFormat.setLenient(false);
+	}
+	
 	public static boolean check(String data){
-		//TODO 有空的话，加上更加精确的判断
 		if (data == null || data.length() > maxLength)
 			return false;
-		return Pattern.matches("\\d+-\\d+-\\d+", data);
+		try{
+			dateFormat.parse(data);
+		}
+		catch (java.text.ParseException e) {
+			return false;
+		}
+		return true;
 	}
 
 	private void setEmpty(){
@@ -38,7 +49,7 @@ public class Birthday extends EmptyBirthday {
 			setEmpty();
 			return;
 		}
-		
+
 		String date[]=birthday.split("-");
 		this.y=Integer.parseInt(date[yyyy]);
 		this.m=Integer.parseInt(date[mm]);
@@ -80,5 +91,11 @@ public class Birthday extends EmptyBirthday {
 	@Override
 	public boolean isEmpty(){
 		return (day.equals(nullData));
+	}
+	
+	public static void main(String args[]){
+		System.out.println(Birthday.check("2000-2-29"));
+		Birthday b = new Birthday("1989-7-9");
+		System.out.println(b.getYear());
 	}
 }

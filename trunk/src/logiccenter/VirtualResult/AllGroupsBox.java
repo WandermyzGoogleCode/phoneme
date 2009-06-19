@@ -84,6 +84,7 @@ public class AllGroupsBox extends VirtualResult {
 	public void removeGroup(ID gid) {
 		Group g = bc.getGroups().get(gid);
 		bc.getGroups().remove(gid);
+		bc.getGPermissions().remove(gid);
 		if (g != null)
 			center.getAllContactsBox().updateRelation(g.getUsersID());// 更新所有人的关系
 		setUpdateNow();

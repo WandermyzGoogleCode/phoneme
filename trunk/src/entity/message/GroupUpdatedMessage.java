@@ -38,7 +38,7 @@ public class GroupUpdatedMessage extends Message {
 
 	@Override
 	public String title() {
-		return "群组："+g.getName()+"有更新。";
+		return "群组\""+g.getName()+"\"有更新。";
 	}
 
 	@Override

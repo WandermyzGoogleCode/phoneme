@@ -6,7 +6,9 @@ import logiccenter.LogicCenter;
 
 import entity.BoolInfo;
 import entity.ErrorType;
+import entity.Group;
 import entity.ID;
+import entity.MyRemoteException;
 import entity.Permission;
 import entity.SimpleError;
 
@@ -34,8 +36,11 @@ public class AdmitInvitationResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws RemoteException {
-		return center.getServer().admitInvitation(center.getLoginUser().getID(), gid, p, visibility);
+	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
+		Group g = center.getServer().admitInvitation(center.getLoginUser().getID(), gid, p, visibility);
+		center.getAllGroupsBox().editGroup(g);
+		center.getAllGroupsBox().setPermission(gid, p);
+		return new BoolInfo();
 	}
 
 }

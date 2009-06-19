@@ -38,14 +38,14 @@ public abstract class VirtualResult extends Observable {
 		return updateTime;
 	}
 	
-	synchronized protected void setPrepared()
+	protected void setPrepared()
 	{
 		state = PREPARED;
 		setChanged();
 		notifyObservers();
 	}
 	
-	synchronized protected void setUpdateTime(Date time)
+	protected void setUpdateTime(Date time)
 	{
 		this.state = PREPARED;
 		updateTime = time;
@@ -53,14 +53,14 @@ public abstract class VirtualResult extends Observable {
 		notifyObservers();
 	}
 	
-	synchronized protected void setUpdateNow(){
+	protected void setUpdateNow(){
 		this.state = PREPARED;
 		updateTime = Calendar.getInstance().getTime();
 		setChanged();
-		notifyObservers();		
+		notifyObservers();
 	}
 	
-	synchronized protected void setError(MyError err)
+	protected void setError(MyError err)
 	{
 		this.err = err;
 		this.state = ERRORED;

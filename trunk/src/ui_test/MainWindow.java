@@ -614,8 +614,8 @@ public class MainWindow
 		toolItemAddressEdit.setText("编");
 
 		toolItemAddressPermission = new ToolItem(toolBarAddress, SWT.PUSH);
-		toolItemAddressPermission.addSelectionListener(new ToolItemAddressPermissionSelectionListener());
 		toolItemAddressPermission.setEnabled(false);
+		toolItemAddressPermission.addSelectionListener(new ToolItemAddressPermissionSelectionListener());
 		toolItemAddressPermission.setToolTipText("编辑当前联系人的权限");
 		toolItemAddressPermission.setText("权");
 
@@ -637,6 +637,7 @@ public class MainWindow
 		toolItemAddressSep1.setText("New item");
 
 		toolItemAddressSyncLocal = new ToolItem(toolBarAddress, SWT.PUSH);
+		toolItemAddressSyncLocal.setEnabled(false);
 		toolItemAddressSyncLocal.addSelectionListener(new ToolItemAddressSyncLocalSelectionListener());
 		toolItemAddressSyncLocal.setToolTipText("与Outlook等软件进行本地同步");
 		toolItemAddressSyncLocal.setText(Messages.getString("MainWindow.SyncLocal")); //$NON-NLS-1$
@@ -651,7 +652,7 @@ public class MainWindow
 		final FormData fd_labelAddressSearch = new FormData();
 		fd_labelAddressSearch.top = new FormAttachment(toolBarAddress, 0, SWT.TOP);
 		labelAddressSearch.setLayoutData(fd_labelAddressSearch);
-		labelAddressSearch.setText("搜索");
+		labelAddressSearch.setText(Messages.getString("MainWindow.labelAddressSearch.text")); //$NON-NLS-1$
 
 		
 		tabFolderAddress = new TabFolder(compositeAddress, SWT.NONE);
@@ -1172,16 +1173,24 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			//listButtonUserInfo.setSelection(false);
-			//scrolledCompositeInfo.setVisible(false);
-			listButtonAddressBook.setSelection(false);
-			compositeAddress.setVisible(false);
-			listButtonGroup.setSelection(true);
-			compositeGroup.setVisible(true);
-			listButtonSearch.setSelection(false);
-			listButtonMessageBox.setSelection(false);
-			compositeSearch.setVisible(false);
-			compositeMessageBox.setVisible(false);
+			if(logicCenter.getLoginUser().isNull())//Added by SpaceFlyer
+			{
+				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
+				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
+			}
+			else
+			{
+				//listButtonUserInfo.setSelection(false);
+				//scrolledCompositeInfo.setVisible(false);
+				listButtonAddressBook.setSelection(false);
+				compositeAddress.setVisible(false);
+				listButtonGroup.setSelection(true);
+				compositeGroup.setVisible(true);
+				listButtonSearch.setSelection(false);
+				listButtonMessageBox.setSelection(false);
+				compositeSearch.setVisible(false);
+				compositeMessageBox.setVisible(false);
+			}
 		}
 	}
 
@@ -1209,18 +1218,26 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			//listButtonUserInfo.setSelection(false);
-			//scrolledCompositeInfo.setVisible(false);
-			listButtonAddressBook.setSelection(false);
-			compositeAddress.setVisible(false);
-			listButtonGroup.setSelection(false);
-			compositeGroup.setVisible(false);
-			listButtonSearch.setSelection(false);
-			listButtonMessageBox.setSelection(true);
-			compositeSearch.setVisible(false);
-			compositeMessageBox.setVisible(true);
-			compositeMainStackLayout.topControl = compositeMessageBox;
-			// System.out.println("messagebox");
+			if(logicCenter.getLoginUser().isNull())//Added by SpaceFlyer
+			{
+				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
+				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
+			}
+			else
+			{
+				//listButtonUserInfo.setSelection(false);
+				//scrolledCompositeInfo.setVisible(false);
+				listButtonAddressBook.setSelection(false);
+				compositeAddress.setVisible(false);
+				listButtonGroup.setSelection(false);
+				compositeGroup.setVisible(false);
+				listButtonSearch.setSelection(false);
+				listButtonMessageBox.setSelection(true);
+				compositeSearch.setVisible(false);
+				compositeMessageBox.setVisible(true);
+				compositeMainStackLayout.topControl = compositeMessageBox;
+				// System.out.println("messagebox");
+			}
 		}
 	}
 
@@ -1443,7 +1460,7 @@ public class MainWindow
 			} else
 			// 选择了联系人
 			{
-				toolItemAddressPermission.setEnabled(true);
+				toolItemAddressPermission.setEnabled(getCurrentContactTab() == ContactTabType.Permission);//Modified by SpaceFlyer
 				toolItemAddressCustomGroup.setEnabled(true);
 
 				toolItemAddressEdit.setToolTipText(String.format("编辑联系人\"%s\"", current.getText(0)));
@@ -1458,8 +1475,9 @@ public class MainWindow
 				}
 
 				String cate = ((UserInfo)current.getData()).getCustomInfo().getInfoField("Category").getStringValue();
-				if(cate != null && !cate.isEmpty())
+				if(cate != null && !cate.isEmpty() && contactsCategory.containsKey(cate))
 				{
+					System.out.println(contactsCategory.keySet());//TODO TEST BUG（一登录就选择某CATE的联系人，会RE，因为contactsCategory没有任何key）
 					int cateKey = (int)contactsCategory.get(cate);
 					toolItemAddressCustomGroupItems[cateKey].setSelection(true);
 				}
@@ -1610,9 +1628,11 @@ public class MainWindow
 				{
 					//TODO: 删除联系人
 					UserInfoDialog userInfoDialog = new UserInfoDialog(shell, current.getText(), 
-							(getCurrentContactTab() == ContactTabType.Permission) ? 
+							(getCurrentContactTab() == ContactTabType.Permission) ?
 									UserInfoTableType.Permission : UserInfoTableType.Synchronization,
 							(UserInfo)current.getData());
+					if (getCurrentContactTab() == ContactTabType.Permission)
+						userInfoDialog.setAllPerContactsBox(allPerContactsBox);//W同学，你的BUG！
 					//userInfoDialog.setAllGroupsBox(compositeGroup.getAllGroupsBox());
 					userInfoDialog.open();
 				}

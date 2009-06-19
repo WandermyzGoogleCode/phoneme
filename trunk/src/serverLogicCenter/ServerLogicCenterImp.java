@@ -159,6 +159,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			targetID = dataCenter.searchUserID(targetUser);
 			if (targetID == null || targetID.isNull())
 				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (targetID.equals(thisUser))
+				return new BoolInfo(ErrorType.SELF_LOOP);
 			dataCenter.addPerRelationship(thisUser, targetID, permission);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -169,7 +171,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 
 	@Override
 	public BoolInfo addSynContact(ID thisUser, IdenticalInfoField targetUser,
-			int visibility) throws RemoteException {
+			int visibility) throws RemoteException, MyRemoteException {
 		if (!onlineUsers.contains(thisUser))
 			return new BoolInfo(ErrorType.NOT_ONLINE);
 		if (targetUser == null)
@@ -179,6 +181,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			targetID = dataCenter.searchUserID(targetUser);
 			if (targetID == null || targetID.isNull())
 				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (targetID.equals(thisUser))
+				return new BoolInfo(ErrorType.SELF_LOOP);
 			if (dataCenter.isPerContact(thisUser, targetID)) {
 				admitSynContact(targetID, thisUser, visibility);
 				return new BoolInfo();
@@ -186,7 +190,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			Message newMessage = new ApplySynContactMessage(
 					getUserInfo(thisUser), targetID, visibility, idFactory
 							.getNewMessageID());
-			pushMessage(thisUser, newMessage);
+			pushMessage(targetID, newMessage);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new BoolInfo(ErrorType.SQL_ERROR);
@@ -226,22 +230,20 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	}
 
 	@Override
-	public BoolInfo admitInvitation(ID thisUser, ID gid, Permission p,
-			int visibility) throws RemoteException {
+	public Group admitInvitation(ID thisUser, ID gid, Permission p,
+			int visibility) throws RemoteException, MyRemoteException{
 		if (!onlineUsers.contains(thisUser))
-			return new BoolInfo(ErrorType.NOT_ONLINE);
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
 		if (gid == null || p == null)
-			return new BoolInfo(ErrorType.ILLEGAL_NULL);
+			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
 		Group g;
 		try {
 			g = dataCenter.getGroup(gid);
 			if (g == null)
-				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+				throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
 			dataCenter.addToGroup(g, thisUser, p);
 			dataCenter.setVisiblity(thisUser, gid, visibility);
 			g.addToGroup(thisUser);
-			pushMessage(thisUser, new GroupUpdatedMessage(g, "您已经加入该群组",
-					idFactory.getNewMessageID()));
 			String detail = "群组有新用户加入："
 					+ getUserInfo(thisUser).getStringValue();
 			for (ID id : g.getUserSet())
@@ -250,9 +252,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 							idFactory.getNewMessageID()));
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new BoolInfo(ErrorType.SQL_ERROR);
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
 		}
-		return null;
+		return g;
 	}
 
 	@Override
@@ -295,7 +297,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		g.setAdminID(thisUser);
 		try {
 			dataCenter.setGroup(g);
-			dataCenter.setPermission(thisUser, g.getID(), p);
+			dataCenter.addToGroup(g, thisUser, p);
 			dataCenter.setVisiblity(thisUser, g.getID(), visibility);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -416,11 +418,13 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			g = dataCenter.getGroup(gid);
 			if (g == null)
 				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (g.getAdminUserID().equals(thisUser))
+				return new BoolInfo(ErrorType.ADMIN_CANNOT_QUIT);
 			if (g.getUserSet().contains(thisUser)) {
 				g.removeFromGroup(thisUser);
 				dataCenter.removeFromGroup(g, thisUser);
-				String detail = "用户：" + getUserInfo(thisUser).getName()
-						+ "退出了群组";
+				String detail = "用户\"" + getUserInfo(thisUser).getName()
+						+ "\"退出了群组。"+String.format("原因：%s", reason);
 				for (ID id : g.getUserSet())
 					pushMessage(id, new GroupUpdatedMessage(g, detail,
 							idFactory.getNewMessageID()));
@@ -581,8 +585,10 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			thisUser = dataCenter.loginGetInfo(identicalInfo, pwd);
 			if (thisUser.isNull())
 				throw new MyRemoteException(ErrorType.LOGIN_FAILED);
-			if (onlineUsers.contains(thisUser))
-				throw new MyRemoteException(ErrorType.ALREADY_ONLINE);
+			if (onlineUsers.contains(thisUser)){
+				//throw new MyRemoteException(ErrorType.ALREADY_ONLINE);
+				logout(thisUser);
+			}
 			onlineUsers.add(thisUser);
 			senders.put(thisUser, new MessageSender(thisUser));
 
@@ -734,7 +740,13 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 
 	@Override
 	public void admitSynContact(ID admitUser, ID targetUser, int visibility)
-			throws RemoteException {
+			throws RemoteException, MyRemoteException {
+		try {
+			dataCenter.addSynRelationship(targetUser, admitUser, visibility);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 		senders.get(targetUser).addMessage(
 				new AdmitSynContactMessage(getUserInfo(admitUser, targetUser),
 						targetUser, visibility, idFactory.getNewMessageID()));
@@ -857,7 +869,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 
 		    // Bind the remote object's stub in the registry
 		    Registry registry = LocateRegistry.getRegistry();
-		    registry.bind("logicCenterServer", stub);
+		    registry.rebind("logicCenterServer", stub);
 
 		    System.err.println("Server ready");
 		}
@@ -865,7 +877,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		{
 			System.err.println("Exception: "+e.toString());
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override

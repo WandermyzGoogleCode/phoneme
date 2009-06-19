@@ -358,9 +358,8 @@ public class LogicCenterImp implements LogicCenter {
 
 	@Override
 	public void logout() throws RemoteException {
-		if (loginUser == null)
-			return;
-		server.logout(loginUser.getID());
+		if (loginUser != null && !loginUser.isNull())
+			server.logout(loginUser.getID());
 		loginUser = new BaseUserInfo();
 		allPerContactsBox = null;
 		messageBox = null;

@@ -8,12 +8,15 @@ import java.util.Observer;
 import logiccenter.LogicCenter;
 import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.EditGroupResult;
+import logiccenter.VirtualResult.QuitGroupResult;
 import logiccenter.VirtualResult.RemoveGroupResult;
+import logiccenter.VirtualResult.SetPermissionResult;
 import logiccenter.VirtualResult.VirtualResult;
 import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TableViewer;
@@ -239,17 +242,22 @@ public class GroupInfoDialog extends Dialog
 	{
 		if (buttonId == IDialogConstants.OK_ID) 
 		{		
-			if(groupInfoTableType == GroupInfoTableType.Normal && true)	//TODO: 并且有权限
+			if(groupInfoTableType == GroupInfoTableType.Normal)
 			{
-				modifyGroup();
-				contactPermissionComposite.ModifyPermission();
-				EditGroupResult result = logicCenter.editGroup(group);
-				result.addObserver(new EditGroupResultObserver());
+				if (tabFolder.getSelectionIndex() == tabFolder.indexOf(tabItemPermission))
+				{
+					contactPermissionComposite.ModifyPermission();
+					SetPermissionResult result = logicCenter.setPermission(group.getID(), permission);
+					result.addObserver(new EditGroupResultObserver());
+				}
+				else if (tabFolder.getSelectionIndex() == tabFolder.indexOf(tabItemInfo))
+				{
+					modifyGroup();
+					EditGroupResult result = logicCenter.editGroup(group);
+					result.addObserver(new EditGroupResultObserver());
+				}				
 				
-				logicCenter.setPermission(group.getID(), permission);
-				
-				visibility = Integer.parseInt(contactPermissionComposite.getVisibility());
-				
+				visibility = Integer.parseInt(contactPermissionComposite.getVisibility());//TODO NEXT
 				//TODO: Error
 				return;
 			}
@@ -260,6 +268,7 @@ public class GroupInfoDialog extends Dialog
 			}
 			else if(groupInfoTableType == GroupInfoTableType.Admit)
 			{
+				contactPermissionComposite.ModifyPermission();
 			}
 		}
 		super.buttonPressed(buttonId);
@@ -281,7 +290,7 @@ public class GroupInfoDialog extends Dialog
 		@Override
 		public void update(Observable o, Object arg)
 		{
-			Display.getDefault().syncExec(new EditGroupResultTask((EditGroupResult)o));
+			Display.getDefault().syncExec(new EditGroupResultTask((VirtualResult)o));
 		}
 		
 	}
@@ -293,9 +302,9 @@ public class GroupInfoDialog extends Dialog
 	 */
 	class EditGroupResultTask implements Runnable
 	{
-		private EditGroupResult result;
+		private VirtualResult result;
 		
-		public EditGroupResultTask(EditGroupResult result)
+		public EditGroupResultTask(VirtualResult result)
 		{
 			this.result = result;
 		}
@@ -414,7 +423,56 @@ public class GroupInfoDialog extends Dialog
 	private class ButtonToolsExitGroupSelectionListener extends SelectionAdapter {
 		public void widgetSelected(final SelectionEvent e)
 		{
-			//TODO: 退出群组
+			InputDialog confirmDialog = new InputDialog(shell, String.format("确认要退出群组\"%s\"吗？",group.getName()), "为什么要退出：", "未说明具体原因", null);
+			if (confirmDialog.open() == InputDialog.OK)
+			{
+				QuitGroupResult res = logicCenter.quitGroup(group.getID(), confirmDialog.getValue());
+				res.addObserver(new QuitGroupResultObserver());
+			}
+		}
+	}
+	
+	/**
+	 * 退出群组 Observer
+	 *
+	 */
+	class QuitGroupResultObserver implements Observer
+	{
+
+		@Override
+		public void update(Observable o, Object arg)
+		{
+			Display.getDefault().syncExec(new QuitGroupResultTask((QuitGroupResult)o));
+		}
+		
+	}
+	
+	/**
+	 * 退出群组 Task
+	 *
+	 */
+	class QuitGroupResultTask implements Runnable
+	{
+		private QuitGroupResult result;
+		
+		public QuitGroupResultTask(QuitGroupResult result)
+		{
+			this.result = result;
+		}
+
+		@Override
+		public void run()
+		{
+			VirtualState state = result.getState();
+			if(state == VirtualState.PREPARED)
+			{
+				thisDialog.close();
+			}
+			else if(state == VirtualState.ERRORED)
+			{
+				MessageDialog.openWarning(shell, "退出群组失败", result.getError().toString());
+			}
+			
 		}
 	}
 	

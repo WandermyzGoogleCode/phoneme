@@ -7,6 +7,7 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.ID;
+import entity.MyRemoteException;
 import entity.SimpleError;
 import entity.infoField.IdenticalInfoField;
 
@@ -46,7 +47,7 @@ public class AddSynContactResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws RemoteException{
+	protected BoolInfo getResult() throws RemoteException, MyRemoteException{
 		return center.getServer().addSynContact(thisUser, targetUser, visibility);
 	}
 }

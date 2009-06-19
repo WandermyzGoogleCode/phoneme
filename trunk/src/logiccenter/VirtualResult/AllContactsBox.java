@@ -89,6 +89,7 @@ public class AllContactsBox extends VirtualResult {
 		Set<ID> synIDSet = (synIDList == null) ? new HashSet<ID>()
 				: new HashSet<ID>(synIDList);
 		Relation r = (Relation) newInfo.getInfoField(InfoFieldName.Relation);
+		r.setEmpty();
 		if (synIDSet.contains(newInfo.getBaseInfo().getID()))
 			r.setPersonal(true);
 		for (Group g : center.getAllGroupsBox().getGroups())
@@ -131,9 +132,12 @@ public class AllContactsBox extends VirtualResult {
 	public void updateGroupMembers(Group g) throws RemoteException,
 			MyRemoteException {
 		List<ID> newIDList = new ArrayList<ID>();
+		List<ID> oldIDList = new ArrayList<ID>();
 		for (ID id : g.getUserSet())
 			if (!bc.getContacts().containsKey(id))
 				newIDList.add(id);
+			else
+				oldIDList.add(id);
 		List<BaseUserInfo> newUsers = center.getServer().getContactsInfo(
 				center.getLoginUser().getID(), newIDList);
 		for (BaseUserInfo bInfo : newUsers) {
@@ -141,7 +145,7 @@ public class AllContactsBox extends VirtualResult {
 			newInfo.setCustomInfo(null);// 不改变本地字段
 			editContactImp(new UserInfo(bInfo));
 		}
-		setUpdateNow();
+		updateRelation(oldIDList);//setUpdateNow在updateRelation中
 	}
 
 	/**

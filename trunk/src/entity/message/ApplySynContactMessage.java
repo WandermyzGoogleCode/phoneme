@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
 import entity.ID;
+import entity.MyRemoteException;
 import entity.infoField.InfoFieldName;
 
 public class ApplySynContactMessage extends Message {
@@ -24,7 +25,7 @@ public class ApplySynContactMessage extends Message {
 	}
 	
 	@Override
-	public void subproceed(LogicCenter center) throws RemoteException{
+	public void subproceed(LogicCenter center) throws RemoteException, MyRemoteException{
 		center.getUI().addPerContact(applyUser);
 		System.out.println("milestone1");//TODO TEST
 		center.getServer().admitSynContact(center.getLoginUser().getID(), applyUser.getID(), visibility);

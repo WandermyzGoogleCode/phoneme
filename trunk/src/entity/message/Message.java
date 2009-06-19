@@ -48,6 +48,7 @@ public abstract class Message implements Serializable {
 		subproceed(center);
 		proceeded = true;
 		center.getServer().removeMessage(center.getLoginUser().getID(), this);
+		center.getMessageBox().refresh();
 	}
 
 	public abstract String title();

@@ -33,8 +33,8 @@ public class GroupAppAdmitMessage extends Message {
 	@Override
 	public void subproceed(LogicCenter center) {
 		center.getDataCenter().setGroup(group);
-		center.getDataCenter().setPermission(group.getID(), p);
 		center.getAllGroupsBox().editGroup(group);
+		center.getAllGroupsBox().setPermission(group.getID(), p);
 	}
 
 	@Override
