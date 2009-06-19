@@ -6,6 +6,7 @@ import logiccenter.LogicCenter;
 import entity.BoolInfo;
 import entity.ErrorType;
 import entity.Group;
+import entity.MyRemoteException;
 import entity.infoField.IdenticalInfoField;
 
 public class RemoveGroupMemberResult extends OneTimeVirtualResult {
@@ -26,8 +27,11 @@ public class RemoveGroupMemberResult extends OneTimeVirtualResult {
 	}
 
 	@Override
-	protected BoolInfo getResult() throws RemoteException {
-		return center.getServer().removeGroupMember(center.getLoginUser().getID(), un, g.getID());
+	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
+		Group newG = center.getServer().removeGroupMember(center.getLoginUser().getID(), un, g.getID());
+		center.getDataCenter().setGroup(newG);
+		center.getAllGroupsBox().editGroup(newG);
+		return new BoolInfo();
 	}
 
 }

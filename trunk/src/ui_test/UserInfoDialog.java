@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 
 import algorithm.LCSQUserInfoMatcher;
 import algorithm.LCSTUserInfoMatcher;
@@ -187,8 +188,7 @@ public class UserInfoDialog extends Dialog {
 			else if (userInfoTableType == UserInfoTableType.Permission)
 				userType = "被授权联系人";
 			else if (userInfoTableType == UserInfoTableType.Group)
-				userType = String.format("群组联系人(%s)", user
-						.getInfoField(InfoFieldName.GroupName));
+				userType = String.format("群组联系人");
 			else if (userInfoTableType == UserInfoTableType.Owner)
 				userType = "所有者";
 			else if (userInfoTableType == UserInfoTableType.SearchRemoteResult)
@@ -697,9 +697,8 @@ public class UserInfoDialog extends Dialog {
 			GroupSelectDialog groupSelectDialog = new GroupSelectDialog(
 					getShell());
 			if (groupSelectDialog.open() == IDialogConstants.OK_ID) {
-				// !TODO: Identical
 				RemoveGroupMemberResult removeGroupMemberResult = logicCenter
-						.removeGroupMember(null, groupSelectDialog
+						.removeGroupMember(user.getBaseInfo().getIdenticalField(), groupSelectDialog
 								.getSelectedGroup());
 				removeGroupMemberResult
 						.addObserver(new RemoveGroupMemberResultObserver());

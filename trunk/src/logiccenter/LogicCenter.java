@@ -181,7 +181,7 @@ public interface LogicCenter {
 	 * @param visibility
 	 * @return
 	 */
-	public SetVisibilityResult setVisibility(ID uid, int visibility);
+	public SetVisibilityResult setVisibility(ID id, int visibility);
 
 	/*
 	 * 判断是否是同步联系人，如果是同步联系人，则不能修改BaseUserInfo。
@@ -306,7 +306,7 @@ public interface LogicCenter {
 	 * 搞定OUTLOOK
 	 * @return
 	 */
-	public RemoteSynResult removeSynchronize();
+	public RemoteSynResult remoteSynchronize();
 	
 	/**
 	 * 程序退出之前要调用这个，否则会有线程

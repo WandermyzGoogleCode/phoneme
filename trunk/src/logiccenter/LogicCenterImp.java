@@ -352,7 +352,7 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public RemoteSynResult removeSynchronize() {
+	public RemoteSynResult remoteSynchronize() {
 		return new RemoteSynResult(this);
 	}
 

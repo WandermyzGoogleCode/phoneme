@@ -30,9 +30,7 @@ import entity.UserInfo;
 import entity.infoField.InfoField;
 
 public class ContactPermissionComposite extends Composite
-{	
-	private Text textVisibility;
-	private Label label;
+{
 	private TableColumn tableColumnValue;
 	private TableColumn tableColumnField;
 	private Table table;
@@ -52,14 +50,6 @@ public class ContactPermissionComposite extends Composite
 		final GridLayout gridLayout = new GridLayout();
 		gridLayout.numColumns = 2;
 		setLayout(gridLayout);
-
-		label = new Label(this, SWT.NONE);
-		label.setText("¿É¼û¶È");
-
-		textVisibility = new Text(this, SWT.BORDER);
-		textVisibility.setText("0");
-		final GridData gd_textVisibility = new GridData();
-		textVisibility.setLayoutData(gd_textVisibility);
 
 		checkboxTableViewer = CheckboxTableViewer.newCheckList(this, SWT.BORDER);
 		table = checkboxTableViewer.getTable();
@@ -89,7 +79,6 @@ public class ContactPermissionComposite extends Composite
 		checkboxTableViewer.setInput(fieldsList);
 
 		Object input = checkboxTableViewer.getInput();
-		new Label(this, SWT.NONE);
 		if(input instanceof List)
 		{
 			List<InfoField> inputFieldsList = (List<InfoField>)input;
@@ -118,10 +107,5 @@ public class ContactPermissionComposite extends Composite
 	protected void checkSubclass()
 	{
 		// Disable the check that prevents subclassing of SWT components
-	}
-
-	public String getVisibility()
-	{
-		return textVisibility.getText();
 	}
 }

@@ -9,6 +9,7 @@ import logiccenter.LogicCenterImp;
 import logiccenter.VirtualResult.AllContactsBox;
 import logiccenter.VirtualResult.AllGroupsBox;
 import logiccenter.VirtualResult.CreateGroupResult;
+import logiccenter.VirtualResult.SetVisibilityResult;
 import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,6 +36,7 @@ import ui_test.GroupTableTree.GroupInfoTableType;
 import ui_test.GroupTableTree.GroupTableTreeContentProvider;
 import ui_test.GroupTableTree.GroupTableTreeLabelProvider;
 import ui_test.UserInfoTable.UserInfoTableType;
+import ui_test.utility.VirtualResultObserver;
 
 import entity.Group;
 import entity.Permission;
@@ -62,6 +64,7 @@ public class GroupComposite extends Composite
 	private AllGroupsBox allGroupsBox = null;
 	
 	private LogicCenter logicCenter = LogicCenterImp.getInstance();
+	private ToolItem toolItemVisibility;
 	/**
 	 * Create the composite
 	 * @param parent
@@ -95,6 +98,27 @@ public class GroupComposite extends Composite
 		final FormData fd_tree = new FormData();
 		fd_tree.right = new FormAttachment(100, 0);
 		fd_tree.top = new FormAttachment(toolBar, 0, SWT.BOTTOM);
+		
+		toolItemVisibility = new ToolItem(toolBar, SWT.NONE);
+		toolItemVisibility.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem currentItem = getCurrentItem();
+				if (currentItem == null){
+					MessageDialog.openError(getShell(), "设置失败", "请先选中群组");
+					return;
+				}
+				Group g = (Group)currentItem.getData();
+				SingleNumDialog dialog = new SingleNumDialog(getShell());
+				if (dialog.open() == IDialogConstants.OK_ID){
+					SetVisibilityResult result = logicCenter.setVisibility(g.getID(), dialog.getResult());
+					VirtualResultObserver observer = new VirtualResultObserver(getShell(), "设置可见度成功");
+					result.addObserver(observer);
+				}
+			}
+		});
+		toolItemVisibility.setToolTipText("\u8BBE\u7F6E\u7FA4\u7EC4\u5173\u7CFB\u7684\u53EF\u89C1\u5EA6");
+		toolItemVisibility.setText("\u5EA6");
 		fd_tree.left = new FormAttachment(0, 0);
 		fd_tree.bottom = new FormAttachment(100, -5);
 		tree.setLayoutData(fd_tree);

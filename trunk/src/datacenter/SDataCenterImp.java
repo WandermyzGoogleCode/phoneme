@@ -3,7 +3,9 @@ package datacenter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.mysql.jdbc.Connection;
 
@@ -227,8 +229,13 @@ public class SDataCenterImp implements DataCenter {
 	public ReturnType setGroup(Group g) {
 		try {
 			groupInfoTable.setGroup(g);
+			Set<ID> oldMemSet = new HashSet<ID>(groupMemTable.getRelations(g.getID()));
 			for(ID id: g.getUserSet())
-				addToGroup(g, id);
+				if (!oldMemSet.contains(id))
+					addToGroup(g, id);
+			for(ID id: oldMemSet)
+				if (!g.getUserSet().contains(id))
+					removeFromGroup(g, id);
 		} catch (SQLException e) {
 			System.out.println(e);			
 			e.printStackTrace();

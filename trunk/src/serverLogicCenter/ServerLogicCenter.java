@@ -33,7 +33,7 @@ public interface ServerLogicCenter extends Remote{
 	public BoolInfo quitGroup(ID thisUser, ID gid, String reason)throws RemoteException;
 	public BoolInfo register(BaseUserInfo b, Password pwd) throws RemoteException;
 	public BoolInfo removeGroup(ID thisUser, ID gid) throws RemoteException;
-	public BoolInfo removeGroupMember(ID thisUser, IdenticalInfoField un, ID gid) throws RemoteException;
+	public Group removeGroupMember(ID thisUser, IdenticalInfoField un, ID gid) throws RemoteException, MyRemoteException;
 	public BoolInfo removePerContact(ID thisUser, ID targetID) throws RemoteException;
 	public BoolInfo removeSynContact(ID thisUser, ID targetID) throws RemoteException;
 	public BoolInfo setPermission(ID thisUser, ID targetID, Permission p) throws RemoteException;

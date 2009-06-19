@@ -481,33 +481,36 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	}
 
 	@Override
-	public BoolInfo removeGroupMember(ID thisUser, IdenticalInfoField un, ID gid)
-			throws RemoteException {
+	public Group removeGroupMember(ID thisUser, IdenticalInfoField un, ID gid)
+			throws RemoteException, MyRemoteException {
 		if (!onlineUsers.contains(thisUser))
-			return new BoolInfo(ErrorType.NOT_ONLINE);
+			throw new MyRemoteException(ErrorType.NOT_ONLINE);
 		if (gid == null || un == null)
-			return new BoolInfo(ErrorType.ILLEGAL_NULL);
+			throw new MyRemoteException(ErrorType.ILLEGAL_NULL);
 		Group g;
 		try {
 			g = dataCenter.getGroup(gid);
 			if (!g.getAdminUserID().equals(thisUser))
-				return new BoolInfo(ErrorType.NOT_ADMIN);
+				throw new MyRemoteException(ErrorType.NOT_ADMIN);
 			ID targetUser = dataCenter.searchUserID(un);
 			if (targetUser == null || targetUser.isNull())
-				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+				throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
+			if (targetUser.equals(g.getAdminUserID()))
+				throw new MyRemoteException(ErrorType.ADMIN_CANNOT_QUIT);
 			g.removeFromGroup(targetUser);
 			dataCenter.removeFromGroup(g, targetUser);
 			String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
 			for (ID id : g.getUserSet())
-				pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
+				if (!id.equals(thisUser))
+					pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
 						.getNewMessageID()));
 			pushMessage(targetUser, new GroupRemovedMessage(g, "管理员将您从群组中删除",
 					idFactory.getNewMessageID()));
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new BoolInfo(ErrorType.SQL_ERROR);
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
 		}
-		return new BoolInfo();
+		return g;
 	}
 
 	@Override
