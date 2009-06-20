@@ -45,23 +45,23 @@ public class MessageBox extends VirtualResult {
 					Message newMessage = center.getServer().getNewMessage(
 							thisUser);
 					System.out.println(center.getLoginUser().getName()
-							+ " receive new message");// TODO TEST
+							+ Messages.getString("MessageBox.0"));// TODO TEST //$NON-NLS-1$
 					if (isInterrupted())
 						break;
 					if (newMessage == null) {
-						setError(new SimpleError("Server has closed the connection"));
+						setError(new SimpleError(Messages.getString("MessageBox.1"))); //$NON-NLS-1$
 						center.setLoginUser(new BaseUserInfo());//将当前登录用户设为无效
 						center.logout();
 						break;
 					}
 					messages.add(newMessage);
-					System.out.println("size: " + messages.size());// TODO TEST
+					System.out.println(Messages.getString("MessageBox.2") + messages.size());// TODO TEST //$NON-NLS-1$
 					setUpdateNow();
 				}
 			} catch (MyRemoteException e) {
 				setError(e.getErr());
 			} catch (Exception e) {
-				System.err.println("Exception: " + e.toString());
+				System.err.println(Messages.getString("MessageBox.3") + e.toString()); //$NON-NLS-1$
 				e.printStackTrace();
 			}
 		}
@@ -75,7 +75,7 @@ public class MessageBox extends VirtualResult {
 	public List<Message> getMessages() {
 		if (getState() != VirtualState.PREPARED) {// 保护在没有准备好的时候就来索取
 			System.err
-					.println("err: you can't getMessages when it's not PREPARED.");
+					.println(Messages.getString("MessageBox.4")); //$NON-NLS-1$
 			return null;
 		}
 		return messages;
@@ -84,7 +84,7 @@ public class MessageBox extends VirtualResult {
 	public int getMessageCnt() {
 		if (getState() != VirtualState.PREPARED) {// 保护在没有准备好的时候就来索取
 			System.err
-					.println("err: you can't getMessageCnt when it's not PREPARED.");
+					.println(Messages.getString("MessageBox.5")); //$NON-NLS-1$
 			return 0;
 		}
 		return messages.size();

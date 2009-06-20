@@ -118,16 +118,16 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 		MessageSender sender = senders.get(user);
 		synchronized (sender) {
 			while (sender.isAlive() && !sender.hasMessage()) {
-				System.out.println(user+":message wake up");//TODO TEST
+				System.out.println(user+Messages.getString("ServerLogicCenterImp.0"));//TODO TEST //$NON-NLS-1$
 				try {
 					sender.wait();
 				} catch (Exception e) {
-					System.err.println("Exception: " + e.toString());
+					System.err.println(Messages.getString("ServerLogicCenterImp.1") + e.toString()); //$NON-NLS-1$
 					e.printStackTrace();
 					break;
 				}
 			}
-			System.out.println(user+":message sended--"+sender.isAlive()+sender.hasMessage());//TODO TEST
+			System.out.println(user+Messages.getString("ServerLogicCenterImp.2")+sender.isAlive()+sender.hasMessage());//TODO TEST //$NON-NLS-1$
 			if (sender.isAlive() && sender.hasMessage())
 				return sender.getMessage();
 		}
@@ -217,7 +217,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			g.addToGroup(uid);
 			pushMessage(uid, new GroupAppAdmitMessage(uid, g, p,
 					visibility, idFactory.getNewMessageID()));
-			String detail = "群组有新用户加入：" + getUserInfo(uid).getStringValue();
+			String detail = Messages.getString("ServerLogicCenterImp.3") + getUserInfo(uid).getStringValue(); //$NON-NLS-1$
 			for (ID id : g.getUserSet())
 				if (!id.equals(uid))
 					pushMessage(id, new GroupUpdatedMessage(g, detail,
@@ -244,7 +244,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			dataCenter.addToGroup(g, thisUser, p);
 			dataCenter.setVisiblity(thisUser, gid, visibility);
 			g.addToGroup(thisUser);
-			String detail = "群组有新用户加入："
+			String detail = Messages.getString("ServerLogicCenterImp.4") //$NON-NLS-1$
 					+ getUserInfo(thisUser).getStringValue();
 			for (ID id : g.getUserSet())
 				if (!id.equals(thisUser))
@@ -322,7 +322,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			dataCenter.setGroup(g);
 			for (ID id : g.getUserSet())
 				if (id != g.getAdminUserID())
-					pushMessage(id, new GroupUpdatedMessage(g, "管理员修改了群组信息",
+					pushMessage(id, new GroupUpdatedMessage(g, Messages.getString("ServerLogicCenterImp.5"), //$NON-NLS-1$
 							idFactory.getNewMessageID()));
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -425,8 +425,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			if (g.getUserSet().contains(thisUser)) {
 				g.removeFromGroup(thisUser);
 				dataCenter.removeFromGroup(g, thisUser);
-				String detail = "用户\"" + getUserInfo(thisUser).getName()
-						+ "\"退出了群组。"+String.format("原因：%s", reason);
+				String detail = Messages.getString("ServerLogicCenterImp.6") + getUserInfo(thisUser).getName() //$NON-NLS-1$
+						+ Messages.getString("ServerLogicCenterImp.7")+String.format(Messages.getString("ServerLogicCenterImp.8"), reason); //$NON-NLS-1$ //$NON-NLS-2$
 				for (ID id : g.getUserSet())
 					pushMessage(id, new GroupUpdatedMessage(g, detail,
 							idFactory.getNewMessageID()));
@@ -470,7 +470,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			if (!g.getAdminUserID().equals(thisUser))
 				return new BoolInfo(ErrorType.NOT_ADMIN);
 			dataCenter.removeGroup(g);
-			String detail = "管理员删除了群组";
+			String detail = Messages.getString("ServerLogicCenterImp.9"); //$NON-NLS-1$
 			for (ID id : g.getUserSet())
 				if (!id.equals(thisUser))
 					pushMessage(id, new GroupRemovedMessage(g, detail,
@@ -502,12 +502,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			if (g.getUserSet().contains(targetUser)){
 				g.removeFromGroup(targetUser);
 				dataCenter.removeFromGroup(g, targetUser);
-				String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
+				String detail = Messages.getString("ServerLogicCenterImp.10") + getUserInfo(targetUser).getName() + Messages.getString("ServerLogicCenterImp.11"); //$NON-NLS-1$ //$NON-NLS-2$
 				for (ID id : g.getUserSet())
 					if (!id.equals(thisUser))
 						pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
 							.getNewMessageID()));
-				pushMessage(targetUser, new GroupRemovedMessage(g, "管理员将您从群组中删除",
+				pushMessage(targetUser, new GroupRemovedMessage(g, Messages.getString("ServerLogicCenterImp.12"), //$NON-NLS-1$
 						idFactory.getNewMessageID()));				
 			}
 		} catch (SQLException e) {
@@ -895,13 +895,13 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 
 		    // Bind the remote object's stub in the registry
 		    Registry registry = LocateRegistry.getRegistry();
-		    registry.rebind("logicCenterServer", stub);
+		    registry.rebind(Messages.getString("ServerLogicCenterImp.13"), stub); //$NON-NLS-1$
 
-		    System.err.println("Server ready");
+		    System.err.println(Messages.getString("ServerLogicCenterImp.14")); //$NON-NLS-1$
 		}
 		catch (Exception e)
 		{
-			System.err.println("Exception: "+e.toString());
+			System.err.println(Messages.getString("ServerLogicCenterImp.15")+e.toString()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

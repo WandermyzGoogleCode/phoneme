@@ -19,20 +19,20 @@ public class MessageBoxTableLabelProvider implements ITableLabelProvider
 	@Override
 	public String getColumnText(Object element, int col)
 	{
-		if(!(element instanceof Message)) return "";
+		if(!(element instanceof Message)) return Messages.getString("MessageBoxTableLabelProvider.0"); //$NON-NLS-1$
 		
 		Message msg = (Message)element;
 		switch(col)
 		{
 		case 0:
-			return msg.proceeded()?"已处理":"未处理";
+			return msg.proceeded()?Messages.getString("MessageBoxTableLabelProvider.proceed"):Messages.getString("MessageBoxTableLabelProvider.notProceed"); //$NON-NLS-1$ //$NON-NLS-2$
 		case 1:
 			return msg.title();
 		case 2:
 			return msg.detail();
 		}
 		
-		return "";
+		return Messages.getString("MessageBoxTableLabelProvider.3"); //$NON-NLS-1$
 	}
 
 	@Override

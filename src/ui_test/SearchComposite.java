@@ -69,11 +69,11 @@ public class SearchComposite extends Composite
 
 		toolItemSearch = new ToolItem(toolBar, SWT.PUSH);
 		toolItemSearch.addSelectionListener(new ToolItemSearchSelectionListener());
-		toolItemSearch.setText("新搜索");
+		toolItemSearch.setText(Messages.getString("SearchComposite.newSearch")); //$NON-NLS-1$
 
 		toolItemRelationCube = new ToolItem(toolBar, SWT.PUSH);
 		toolItemRelationCube.addSelectionListener(new ToolItemRelationCubeSelectionListener());
-		toolItemRelationCube.setText("搜索人立方");
+		toolItemRelationCube.setText(Messages.getString("SearchComposite.realtionCube")); //$NON-NLS-1$
 
 		tableViewer = new TableViewer(this, SWT.BORDER);
 		tableViewer.addDoubleClickListener(new TableViewerIDoubleClickListener());
@@ -86,19 +86,19 @@ public class SearchComposite extends Composite
 
 		tableColumnName = new TableColumn(table, SWT.NONE);
 		tableColumnName.setWidth(100);
-		tableColumnName.setText("姓名");
+		tableColumnName.setText(Messages.getString("SearchComposite.name")); //$NON-NLS-1$
 
 		tableColumnCellphone = new TableColumn(table, SWT.NONE);
 		tableColumnCellphone.setWidth(100);
-		tableColumnCellphone.setText("手机");
+		tableColumnCellphone.setText(Messages.getString("SearchComposite.cell")); //$NON-NLS-1$
 
 		tableColumnEmail = new TableColumn(table, SWT.NONE);
 		tableColumnEmail.setWidth(100);
-		tableColumnEmail.setText("E-mail");
+		tableColumnEmail.setText(Messages.getString("SearchComposite.email")); //$NON-NLS-1$
 
 		tableColumnBirth = new TableColumn(table, SWT.NONE);
 		tableColumnBirth.setWidth(100);
-		tableColumnBirth.setText("生日");
+		tableColumnBirth.setText(Messages.getString("SearchComposite.birthday")); //$NON-NLS-1$
 		//
 		
 		tableViewer.setContentProvider(new SearchResultTableContentProvider());
@@ -120,7 +120,7 @@ public class SearchComposite extends Composite
 		public void widgetSelected(final SelectionEvent e)
 		{
 			UserInfo user = new UserInfo();
-			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "搜索",
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), Messages.getString("SearchComposite.search"), //$NON-NLS-1$
 					UserInfoTableType.SearchRemoteForm, user);
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
@@ -163,12 +163,12 @@ public class SearchComposite extends Composite
 				}
 				else
 				{
-					MessageDialog.openInformation(getShell(), "未搜索到符合条件的用户", "未搜索到符合条件的用户");
+					MessageDialog.openInformation(getShell(), Messages.getString("SearchComposite.notFoundfuhe"), Messages.getString("SearchComposite.notFoundfuhe")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			else if(state == VirtualState.ERRORED)
 			{
-				MessageDialog.openWarning(getShell(), "搜索失败", result.getError().toString());
+				MessageDialog.openWarning(getShell(), Messages.getString("SearchComposite.searchFailed"), result.getError().toString()); //$NON-NLS-1$
 			}
 		}
 		
@@ -190,7 +190,7 @@ public class SearchComposite extends Composite
 			BaseUserInfo user = (BaseUserInfo)item.getData();
 			
 			BaseUserInfo user2nd = new BaseUserInfo();
-			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "搜索",
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), Messages.getString("SearchComposite.search"), //$NON-NLS-1$
 					UserInfoTableType.SearchRemoteForm, new UserInfo(user2nd));
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
@@ -233,12 +233,12 @@ public class SearchComposite extends Composite
 				}
 				else
 				{
-					MessageDialog.openInformation(getShell(), "未搜索到符合条件的用户", "未搜索到符合条件的用户");
+					MessageDialog.openInformation(getShell(), Messages.getString("SearchComposite.notFoundfuhe"), Messages.getString("SearchComposite.notFoundfuhe")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			else if(state == VirtualState.ERRORED)
 			{
-				MessageDialog.openWarning(getShell(), "搜索失败", result.getError().toString());
+				MessageDialog.openWarning(getShell(), Messages.getString("SearchComposite.searchFailed"), result.getError().toString()); //$NON-NLS-1$
 			}
 		}
 		
@@ -256,7 +256,7 @@ public class SearchComposite extends Composite
 			
 			TableItem currentItem = tableViewer.getTable().getSelection()[0];
 			
-			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), "用户信息",
+			UserInfoDialog userInfoDialog = new UserInfoDialog(getShell(), Messages.getString("SearchComposite.userInfo"), //$NON-NLS-1$
 					UserInfoTableType.SearchRemoteResult,
 					new UserInfo((BaseUserInfo)currentItem.getData()));
 			userInfoDialog.open();
