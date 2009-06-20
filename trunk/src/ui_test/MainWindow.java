@@ -342,7 +342,7 @@ public class MainWindow
 
 			public void widgetSelected(SelectionEvent e)
 			{
-				System.out.println("统计！");
+				System.out.println(Messages.getString("MainWindow.statics")); //$NON-NLS-1$
 				StatObserver observer = new StatObserver();
 				GetStatResultResult res = logicCenter.getStatResult();
 				res.addObserver(observer);
@@ -608,23 +608,23 @@ public class MainWindow
 
 		toolItemAddressAddContact = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressAddContact.addSelectionListener(new ToolItemAddressAddContactSelectionListener());
-		toolItemAddressAddContact.setToolTipText("添加联系人");
-		toolItemAddressAddContact.setText("添人");
+		toolItemAddressAddContact.setToolTipText(Messages.getString("MainWindow.addContactinfo")); //$NON-NLS-1$
+		toolItemAddressAddContact.setText(Messages.getString("MainWindow.addcontact")); //$NON-NLS-1$
 
 		toolItemAddressSep2 = new ToolItem(toolBarAddress, SWT.SEPARATOR);
-		toolItemAddressSep2.setText("New item");
+		toolItemAddressSep2.setText(Messages.getString("MainWindow.newitem")); //$NON-NLS-1$
 
 		toolItemAddressEdit = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressEdit.addSelectionListener(new ToolItemAddressEditSelectionListener());
 		toolItemAddressEdit.setEnabled(false);
-		toolItemAddressEdit.setToolTipText("查看和编辑当前联系人");
-		toolItemAddressEdit.setText("编");
+		toolItemAddressEdit.setToolTipText(Messages.getString("MainWindow.editcontactoolTip")); //$NON-NLS-1$
+		toolItemAddressEdit.setText(Messages.getString("MainWindow.editcontact")); //$NON-NLS-1$
 
 		toolItemAddressPermission = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressPermission.setEnabled(false);
 		toolItemAddressPermission.addSelectionListener(new ToolItemAddressPermissionSelectionListener());
-		toolItemAddressPermission.setToolTipText("编辑当前联系人的权限");
-		toolItemAddressPermission.setText("权");
+		toolItemAddressPermission.setToolTipText(Messages.getString("MainWindow.editpropertiytip")); //$NON-NLS-1$
+		toolItemAddressPermission.setText(Messages.getString("MainWindow.editpropertiy")); //$NON-NLS-1$
 		
 		toolItemVisibility = new ToolItem(toolBarAddress, SWT.NONE);
 		toolItemVisibility.setEnabled(false);
@@ -635,18 +635,18 @@ public class MainWindow
 				TreeItem current = getCurrentTreeItem();
 				UserInfo userInfo = (UserInfo)current.getData();
 				if (logicCenter.getLoginUser().isNull()){
-					MessageDialog.openError(shell, "设置错误", "请先登录");
+					MessageDialog.openError(shell, Messages.getString("MainWindow.setError"), Messages.getString("MainWindow.loginfirst")); //$NON-NLS-1$ //$NON-NLS-2$
 					return;					
 				}
 				if (!((Relation)(userInfo.getInfoField(InfoFieldName.Relation))).isPersonal()){
-					MessageDialog.openError(shell, "设置错误", "非同步联系人不能设置可见度");
+					MessageDialog.openError(shell, Messages.getString("MainWindow.setError"), Messages.getString("MainWindow.setVisiblerange")); //$NON-NLS-1$ //$NON-NLS-2$
 					return;
 				}
 				SingleNumDialog dialog = new SingleNumDialog(shell);
 				//TODO 显示原来的值
 				if (dialog.open() == IDialogConstants.OK_ID){
 					SetVisibilityResult result = logicCenter.setVisibility(userInfo.getBaseInfo().getID(), dialog.getResult());
-					VirtualResultObserver observer = new VirtualResultObserver(shell, "可见度设置成功");
+					VirtualResultObserver observer = new VirtualResultObserver(shell, Messages.getString("MainWindow.setVisibleSucceed")); //$NON-NLS-1$
 					result.addObserver(observer);
 				}
 			}
@@ -656,30 +656,30 @@ public class MainWindow
 		toolItemAddressDel = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressDel.addSelectionListener(new ToolItemAddressDelSelectionListener());
 		toolItemAddressDel.setEnabled(false);
-		toolItemAddressDel.setToolTipText("删除当前联系人");
-		toolItemAddressDel.setText("删");
+		toolItemAddressDel.setToolTipText(Messages.getString("MainWindow.deleteContactip")); //$NON-NLS-1$
+		toolItemAddressDel.setText(Messages.getString("MainWindow.delContact")); //$NON-NLS-1$
 
 		toolItemAddressCustomGroup = new ToolItem(toolBarAddress, SWT.DROP_DOWN);
 		toolItemAddressCustomGroup.setEnabled(false);
-		toolItemAddressCustomGroup.setToolTipText("指定当前联系人的分组");
-		toolItemAddressCustomGroup.setText("分组");
+		toolItemAddressCustomGroup.setToolTipText(Messages.getString("MainWindow.15")); //$NON-NLS-1$
+		toolItemAddressCustomGroup.setText(Messages.getString("MainWindow.16")); //$NON-NLS-1$
 
 		toolItemAddressCustomGroupMenu = new Menu(toolBarAddress);
 		addDropDown(toolItemAddressCustomGroup, toolItemAddressCustomGroupMenu);
 
 		toolItemAddressSep1 = new ToolItem(toolBarAddress, SWT.SEPARATOR);
-		toolItemAddressSep1.setText("New item");
+		toolItemAddressSep1.setText(Messages.getString("MainWindow.17")); //$NON-NLS-1$
 
 		toolItemAddressSyncLocal = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressSyncLocal.setEnabled(false);
 		toolItemAddressSyncLocal.addSelectionListener(new ToolItemAddressSyncLocalSelectionListener());
-		toolItemAddressSyncLocal.setToolTipText("与Outlook等软件进行本地同步");
+		toolItemAddressSyncLocal.setToolTipText(Messages.getString("MainWindow.18")); //$NON-NLS-1$
 		toolItemAddressSyncLocal.setText(Messages.getString("MainWindow.SyncLocal")); //$NON-NLS-1$
 
 		toolItemAddressSyncRemote = new ToolItem(toolBarAddress, SWT.PUSH);
 		toolItemAddressSyncRemote.addSelectionListener(new ToolItemAddressSyncRemoteSelectionListener());
-		toolItemAddressSyncRemote.setToolTipText("与服务器进行远程同步");
-		toolItemAddressSyncRemote.setText(Messages.getString("MainWindow.SyncRemote")); //$NON-teAddress;
+		toolItemAddressSyncRemote.setToolTipText(Messages.getString("MainWindow.19")); //$NON-NLS-1$
+		toolItemAddressSyncRemote.setText(Messages.getString(Messages.getString("MainWindow.20"))); //$NON-teAddress; //$NON-NLS-1$
 
 		labelAddressSearch = new Button(compositeAddress, SWT.NONE);
 		labelAddressSearch.addSelectionListener(new LabelAddressSearchSelectionListener());
@@ -700,7 +700,7 @@ public class MainWindow
 
 		//[start]“联系人”选项卡
 		tabItemAddressContact = new TabItem(tabFolderAddress, SWT.NONE);
-		tabItemAddressContact.setText("联系人");
+		tabItemAddressContact.setText(Messages.getString("MainWindow.21")); //$NON-NLS-1$
 
 		treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER);
 		treeAddressContact.addMouseListener(new TreeAddressContactMouseListener());
@@ -711,32 +711,32 @@ public class MainWindow
 
 		treeAddressContactColumnName = new TreeColumn(treeAddressContact, SWT.NONE);
 		treeAddressContactColumnName.setWidth(100);
-		treeAddressContactColumnName.setText("姓名");
+		treeAddressContactColumnName.setText(Messages.getString("MainWindow.22")); //$NON-NLS-1$
 
 		treeAddressContactColumnNickName = new TreeColumn(treeAddressContact, SWT.NONE);
 		treeAddressContactColumnNickName.setWidth(100);
-		treeAddressContactColumnNickName.setText("昵称");
+		treeAddressContactColumnNickName.setText(Messages.getString("MainWindow.23")); //$NON-NLS-1$
 
 		treeAddressContactColumnRelation = new TreeColumn(treeAddressContact, SWT.NONE);
 		treeAddressContactColumnRelation.setWidth(100);
-		treeAddressContactColumnRelation.setText("关系");
+		treeAddressContactColumnRelation.setText(Messages.getString("MainWindow.24")); //$NON-NLS-1$
 
 		treeAddressContactColumnCellphone = new TreeColumn(treeAddressContact, SWT.NONE);
 		treeAddressContactColumnCellphone.setWidth(100);
-		treeAddressContactColumnCellphone.setText("手机");
+		treeAddressContactColumnCellphone.setText(Messages.getString("MainWindow.25")); //$NON-NLS-1$
 
 		treeAddressContactColumnEmail = new TreeColumn(treeAddressContact, SWT.NONE);
 		treeAddressContactColumnEmail.setWidth(100);
-		treeAddressContactColumnEmail.setText("E-mail");
+		treeAddressContactColumnEmail.setText(Messages.getString("MainWindow.26")); //$NON-NLS-1$
 
 		treeAddressContactColumnBirth = new TreeColumn(treeAddressContact, SWT.NONE);
 		treeAddressContactColumnBirth.setWidth(100);
-		treeAddressContactColumnBirth.setText("生日");
+		treeAddressContactColumnBirth.setText(Messages.getString("MainWindow.27")); //$NON-NLS-1$
 		//[end]
 		
 		//[start]“被授权联系人”选项卡
 		tabItemAddressPermit = new TabItem(tabFolderAddress, SWT.NONE);
-		tabItemAddressPermit.setText("被授权联系人");
+		tabItemAddressPermit.setText(Messages.getString("MainWindow.28")); //$NON-NLS-1$
 
 		treeAddressPermit = new Tree(tabFolderAddress, SWT.BORDER);
 		treeAddressPermit.addSelectionListener(new TreeAddressContactSelectionListener());
@@ -745,32 +745,32 @@ public class MainWindow
 
 		treeAddressPermitColumnName = new TreeColumn(treeAddressPermit, SWT.NONE);
 		treeAddressPermitColumnName.setWidth(100);
-		treeAddressPermitColumnName.setText("姓名");
+		treeAddressPermitColumnName.setText(Messages.getString("MainWindow.29")); //$NON-NLS-1$
 
 		treeAddressPermitColumnNickName = new TreeColumn(treeAddressPermit, SWT.NONE);
 		treeAddressPermitColumnNickName.setWidth(100);
-		treeAddressPermitColumnNickName.setText("昵称");
+		treeAddressPermitColumnNickName.setText(Messages.getString("MainWindow.30")); //$NON-NLS-1$
 
 		treeAddressPermitColumnRelation = new TreeColumn(treeAddressPermit, SWT.NONE);
 		treeAddressPermitColumnRelation.setWidth(100);
-		treeAddressPermitColumnRelation.setText("关系");
+		treeAddressPermitColumnRelation.setText(Messages.getString("MainWindow.31")); //$NON-NLS-1$
 
 		treeAddressPermitColumnCellphone = new TreeColumn(treeAddressPermit, SWT.NONE);
 		treeAddressPermitColumnCellphone.setWidth(100);
-		treeAddressPermitColumnCellphone.setText("手机");
+		treeAddressPermitColumnCellphone.setText(Messages.getString("MainWindow.32")); //$NON-NLS-1$
 
 		treeAddressPermitColumnEmail = new TreeColumn(treeAddressPermit, SWT.NONE);
 		treeAddressPermitColumnEmail.setWidth(100);
-		treeAddressPermitColumnEmail.setText("E-mail");
+		treeAddressPermitColumnEmail.setText(Messages.getString("MainWindow.33")); //$NON-NLS-1$
 
 		treeAddressPermitColumnBirth = new TreeColumn(treeAddressPermit, SWT.NONE);
 		treeAddressPermitColumnBirth.setWidth(100);
-		treeAddressPermitColumnBirth.setText("生日");
+		treeAddressPermitColumnBirth.setText(Messages.getString("MainWindow.34")); //$NON-NLS-1$
 		//[end]
 		
 		//[start]“搜索结果”选项卡
 		tabItemAddressSearchResult = new TabItem(tabFolderAddress, SWT.NONE);
-		tabItemAddressSearchResult.setText("搜索结果");
+		tabItemAddressSearchResult.setText(Messages.getString("MainWindow.35")); //$NON-NLS-1$
 
 		treeAddressSearchResult = new Tree(tabFolderAddress, SWT.BORDER);
 		treeAddressSearchResult.setHeaderVisible(true);
@@ -779,27 +779,27 @@ public class MainWindow
 		
 		treeAddressSerachResultColumnName = new TreeColumn(treeAddressSearchResult, SWT.NONE);
 		treeAddressSerachResultColumnName.setWidth(100);
-		treeAddressSerachResultColumnName.setText("姓名");
+		treeAddressSerachResultColumnName.setText(Messages.getString("MainWindow.36")); //$NON-NLS-1$
 
 		treeAddressSearchResultColumnNickName = new TreeColumn(treeAddressSearchResult, SWT.NONE);
 		treeAddressSearchResultColumnNickName.setWidth(100);
-		treeAddressSearchResultColumnNickName.setText("昵称");
+		treeAddressSearchResultColumnNickName.setText(Messages.getString("MainWindow.37")); //$NON-NLS-1$
 
 		treeAddressSearchResultColumnRelation = new TreeColumn(treeAddressSearchResult, SWT.NONE);
 		treeAddressSearchResultColumnRelation.setWidth(100);
-		treeAddressSearchResultColumnRelation.setText("关系");
+		treeAddressSearchResultColumnRelation.setText(Messages.getString("MainWindow.38")); //$NON-NLS-1$
 
 		treeAddressSearchResultColumnCellphone = new TreeColumn(treeAddressSearchResult, SWT.NONE);
 		treeAddressSearchResultColumnCellphone.setWidth(100);
-		treeAddressSearchResultColumnCellphone.setText("手机");
+		treeAddressSearchResultColumnCellphone.setText(Messages.getString("MainWindow.39")); //$NON-NLS-1$
 
 		treeAddressSearchResultColumnEmail = new TreeColumn(treeAddressSearchResult, SWT.NONE);
 		treeAddressSearchResultColumnEmail.setWidth(100);
-		treeAddressSearchResultColumnEmail.setText("E-mail");
+		treeAddressSearchResultColumnEmail.setText(Messages.getString("MainWindow.40")); //$NON-NLS-1$
 
 		treeAddressSearchResultColumnBirth = new TreeColumn(treeAddressSearchResult, SWT.NONE);
 		treeAddressSearchResultColumnBirth.setWidth(100);
-		treeAddressSearchResultColumnBirth.setText("生日");
+		treeAddressSearchResultColumnBirth.setText(Messages.getString("MainWindow.41")); //$NON-NLS-1$
 		
 		//[end]
 		
@@ -1001,7 +1001,7 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			UserInfo newUser = new UserInfo();
-			UserInfoDialog userInfoDialog = new UserInfoDialog(shell,"新用户注册",
+			UserInfoDialog userInfoDialog = new UserInfoDialog(shell,Messages.getString("MainWindow.42"), //$NON-NLS-1$
 					UserInfoTableType.Register, newUser);
 			
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
@@ -1048,11 +1048,11 @@ public class MainWindow
 			VirtualState state = result.getState();
 			if(state == VirtualState.PREPARED)
 			{
-				MessageDialog.openWarning(shell, "注册成功", "注册成功");
+				MessageDialog.openWarning(shell, Messages.getString("MainWindow.43"), Messages.getString("MainWindow.44")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else if(state == VirtualState.ERRORED)
 			{
-				MessageDialog.openWarning(shell, "注册失败", result.getError().toString());
+				MessageDialog.openWarning(shell, Messages.getString("MainWindow.45"), result.getError().toString()); //$NON-NLS-1$
 			}
 			
 		}
@@ -1067,15 +1067,15 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			if(logicCenter.getLoginUser() != null &&
-					MessageDialog.openConfirm(shell, "退出登录确认", "确实要退出登录吗？"))
+					MessageDialog.openConfirm(shell, Messages.getString("MainWindow.46"), Messages.getString("MainWindow.47"))) //$NON-NLS-1$ //$NON-NLS-2$
 			{
 				try
 				{
 					logicCenter.logout();
-					shell.setText("PhoneM");					
+					shell.setText(Messages.getString("MainWindow.48"));					 //$NON-NLS-1$
 				} catch (RemoteException e1)
 				{
-					MessageDialog.openWarning(shell, "退出登录失败", "退出登录失败！");
+					MessageDialog.openWarning(shell, Messages.getString("MainWindow.49"), Messages.getString("MainWindow.50")); //$NON-NLS-1$ //$NON-NLS-2$
 					e1.printStackTrace();
 				}
 				
@@ -1128,13 +1128,13 @@ public class MainWindow
 			if(state == VirtualState.ERRORED)
 			{
 				MyError error = loginResult.getError();
-				MessageDialog.openWarning(shell, "登录失败", error.toString());
+				MessageDialog.openWarning(shell, Messages.getString("MainWindow.51"), error.toString()); //$NON-NLS-1$
 			}
 			else if(state == VirtualState.PREPARED)
 			{
 				BaseUserInfo loginUser = logicCenter.getLoginUser();
-				MessageDialog.openInformation(shell, "登录成功","登录成功");
-				shell.setText("PhoneMe" + String.format(" - \"%s\" 已登录", loginUser.getInfoField("Name")));
+				MessageDialog.openInformation(shell, Messages.getString("MainWindow.52"),Messages.getString("MainWindow.53")); //$NON-NLS-1$ //$NON-NLS-2$
+				shell.setText(Messages.getString("MainWindow.54") + String.format(Messages.getString("MainWindow.55"), loginUser.getInfoField(Messages.getString("MainWindow.56")))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				//TODO: 上句好像没用
 				
 				compositeMessageBox.GetMessage();
@@ -1167,12 +1167,12 @@ public class MainWindow
 			BaseUserInfo loginBaseUserInfo = logicCenter.getLoginUser();
 			if(loginBaseUserInfo.isNull())
 			{
-				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
+				MessageDialog.openWarning(shell, Messages.getString("MainWindow.57"), Messages.getString("MainWindow.58")); //$NON-NLS-1$ //$NON-NLS-2$
 				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
 			}
 			else
 			{
-				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "个人信息", 
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, Messages.getString("MainWindow.59"),  //$NON-NLS-1$
 						UserInfoTableType.Owner,
 						new UserInfo(loginBaseUserInfo));
 				if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
@@ -1211,7 +1211,7 @@ public class MainWindow
 		{
 			if(logicCenter.getLoginUser().isNull())//Added by SpaceFlyer
 			{
-				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
+				MessageDialog.openWarning(shell, Messages.getString("MainWindow.60"), Messages.getString("MainWindow.61")); //$NON-NLS-1$ //$NON-NLS-2$
 				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
 			}
 			else
@@ -1256,7 +1256,7 @@ public class MainWindow
 		{
 			if(logicCenter.getLoginUser().isNull())//Added by SpaceFlyer
 			{
-				MessageDialog.openWarning(shell, "请先登录", "请先登录！");
+				MessageDialog.openWarning(shell, Messages.getString("MainWindow.62"), Messages.getString("MainWindow.63")); //$NON-NLS-1$ //$NON-NLS-2$
 				(new ToolItemMainLoginSelectionListener()).widgetSelected(null);
 			}
 			else
@@ -1489,11 +1489,11 @@ public class MainWindow
 				toolItemAddressCustomGroup.setEnabled(false);
 				toolItemVisibility.setEnabled(false);
 
-				toolItemAddressPermission.setToolTipText("");
-				toolItemAddressCustomGroup.setToolTipText("");
+				toolItemAddressPermission.setToolTipText(Messages.getString("MainWindow.64")); //$NON-NLS-1$
+				toolItemAddressCustomGroup.setToolTipText(Messages.getString("MainWindow.65")); //$NON-NLS-1$
 				
-				toolItemAddressEdit.setToolTipText(String.format("重命名分组\"%s\"", current.getText(0)));
-				toolItemAddressDel.setToolTipText(String.format("删除分组\"%s\"", current.getText(0)));
+				toolItemAddressEdit.setToolTipText(String.format(Messages.getString("MainWindow.66"), current.getText(0))); //$NON-NLS-1$
+				toolItemAddressDel.setToolTipText(String.format(Messages.getString("MainWindow.67"), current.getText(0))); //$NON-NLS-1$
 			} else
 			// 选择了联系人
 			{
@@ -1501,10 +1501,10 @@ public class MainWindow
 				toolItemAddressCustomGroup.setEnabled(true);
 				toolItemVisibility.setEnabled(getCurrentContactTab() != ContactTabType.Permission);
 
-				toolItemAddressEdit.setToolTipText(String.format("编辑联系人\"%s\"", current.getText(0)));
-				toolItemAddressDel.setToolTipText(String.format("删除联系人\"%s\"", current.getText(0)));
-				toolItemAddressPermission.setToolTipText(String.format("为\"%s\"设置权限", current.getText(0)));
-				toolItemAddressCustomGroup.setToolTipText(String.format("为\"%s\"设置自定义分组", current.getText(0)));
+				toolItemAddressEdit.setToolTipText(String.format(Messages.getString("MainWindow.68"), current.getText(0))); //$NON-NLS-1$
+				toolItemAddressDel.setToolTipText(String.format(Messages.getString("MainWindow.69"), current.getText(0))); //$NON-NLS-1$
+				toolItemAddressPermission.setToolTipText(String.format(Messages.getString("MainWindow.70"), current.getText(0))); //$NON-NLS-1$
+				toolItemAddressCustomGroup.setToolTipText(String.format(Messages.getString("MainWindow.71"), current.getText(0))); //$NON-NLS-1$
 
 				toolItemAddressCustomGroupNone.setSelection(false);
 				for (MenuItem item : toolItemAddressCustomGroupItems)
@@ -1512,7 +1512,7 @@ public class MainWindow
 					item.setSelection(false);
 				}
 
-				String cate = ((UserInfo)current.getData()).getCustomInfo().getInfoField("Category").getStringValue();
+				String cate = ((UserInfo)current.getData()).getCustomInfo().getInfoField(Messages.getString("MainWindow.72")).getStringValue(); //$NON-NLS-1$
 				if(cate != null && !cate.isEmpty() && contactsCategory.containsKey(cate))
 				{
 					System.out.println(contactsCategory.keySet());//TODO TEST BUG（一登录就选择某CATE的联系人，会RE，因为contactsCategory没有任何key）
@@ -1544,7 +1544,7 @@ public class MainWindow
 			if(getCurrentContactTab() == ContactTabType.Synchronization)
 			{
 				UserInfo newUser = UserInfo.getNewLocalUser();
-				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "添加联系人", UserInfoTableType.NewLocal, newUser);
+				UserInfoDialog userInfoDialog = new UserInfoDialog(shell, Messages.getString("MainWindow.73"), UserInfoTableType.NewLocal, newUser); //$NON-NLS-1$
 				userInfoDialog.OpenEditInfo();
 				
 			}
@@ -1577,8 +1577,8 @@ public class MainWindow
 							for (TreeItem item : current.getItems())
 							{
 								UserInfo user = (UserInfo) item.getData();
-								InfoField field = factory.makeInfoField("Category", editGroupDialog.GetCategoryName());
-								user.getCustomInfo().setInfoField("Category", field);
+								InfoField field = factory.makeInfoField(Messages.getString("MainWindow.74"), editGroupDialog.GetCategoryName()); //$NON-NLS-1$
+								user.getCustomInfo().setInfoField(Messages.getString("MainWindow.75"), field); //$NON-NLS-1$
 
 								logicCenter.editContactInfo(user);
 							}
@@ -1650,13 +1650,13 @@ public class MainWindow
 				{
 					if(!(current.getData() instanceof Integer) || !current.getData().equals(-1))	//不是“未分组”
 					{
-						if (MessageDialog.openConfirm(shell, "确认删除", String.format("你确实要删除分组\"%s\"吗？", current.getText())))
+						if (MessageDialog.openConfirm(shell, Messages.getString("MainWindow.76"), String.format(Messages.getString("MainWindow.77"), current.getText()))) //$NON-NLS-1$ //$NON-NLS-2$
 						{
 							for (TreeItem item : current.getItems())
 							{
 								UserInfo user = (UserInfo) item.getData();
-								user.getCustomInfo().setInfoField("Category",
-										InfoFieldFactory.getFactory().makeInfoField("Category", null));
+								user.getCustomInfo().setInfoField(Messages.getString("MainWindow.78"), //$NON-NLS-1$
+										InfoFieldFactory.getFactory().makeInfoField(Messages.getString("MainWindow.79"), null)); //$NON-NLS-1$
 								logicCenter.editContactInfo(user);
 							}
 						}
@@ -1700,8 +1700,8 @@ public class MainWindow
 			
 			if (toolItemAddressCustomGroupNone.getSelection())
 			{
-				InfoField cate = factory.makeInfoField("Category", null);
-				user.getCustomInfo().setInfoField("Category", cate);
+				InfoField cate = factory.makeInfoField(Messages.getString("MainWindow.80"), null); //$NON-NLS-1$
+				user.getCustomInfo().setInfoField(Messages.getString("MainWindow.81"), cate); //$NON-NLS-1$
 				//MessageDialog.openInformation(shell, "设置分组", "id = 0");
 			} 
 			else
@@ -1710,8 +1710,8 @@ public class MainWindow
 //				{
 //					if (item.getSelection())
 //					{
-						InfoField cate = factory.makeInfoField("Category", currentMenuItem.getText());
-						user.getCustomInfo().setInfoField("Category", cate);
+						InfoField cate = factory.makeInfoField(Messages.getString("MainWindow.82"), currentMenuItem.getText()); //$NON-NLS-1$
+						user.getCustomInfo().setInfoField(Messages.getString("MainWindow.83"), cate); //$NON-NLS-1$
 						//MessageDialog.openInformation(shell, "设置分组", "id = " + ((Integer) item.getData()).toString());
 //					}
 //				}
@@ -1738,8 +1738,8 @@ public class MainWindow
 				{
 					InfoFieldFactory factory = InfoFieldFactory.getFactory();
 					UserInfo user = (UserInfo)current.getData();
-					user.getCustomInfo().setInfoField("Category",
-							factory.makeInfoField("Category", editGroupDialog.GetCategoryName())
+					user.getCustomInfo().setInfoField(Messages.getString("MainWindow.84"), //$NON-NLS-1$
+							factory.makeInfoField(Messages.getString("MainWindow.85"), editGroupDialog.GetCategoryName()) //$NON-NLS-1$
 							);
 					
 					logicCenter.editContactInfo(user);
@@ -1773,7 +1773,7 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			RemoteSynResult result = logicCenter.remoteSynchronize();
-			VirtualResultObserver observer = new VirtualResultObserver(shell, "远程同步成功");
+			VirtualResultObserver observer = new VirtualResultObserver(shell, Messages.getString("MainWindow.86")); //$NON-NLS-1$
 			result.addObserver(observer);
 		}
 	}
@@ -1788,7 +1788,7 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			UserInfo user = new UserInfo();
-			UserInfoDialog userInfoDialog = new UserInfoDialog(shell, "本地搜索", UserInfoTableType.SearchLocalForm, user);
+			UserInfoDialog userInfoDialog = new UserInfoDialog(shell, Messages.getString("MainWindow.87"), UserInfoTableType.SearchLocalForm, user); //$NON-NLS-1$
 			if(userInfoDialog.OpenEditInfo() == IDialogConstants.OK_ID)
 			{
 				LocalSearchContactsResult result = logicCenter.localSearchContacts(user, userInfoDialog.getStrategy());
@@ -1919,7 +1919,7 @@ public class MainWindow
 			//if(n <= 0) return;
 			
 			TreeItem noGroupItem = new TreeItem(currentTree, SWT.NONE);
-			noGroupItem.setText("未分组");
+			noGroupItem.setText(Messages.getString("MainWindow.88")); //$NON-NLS-1$
 			noGroupItem.setData(new Integer(-1));
 
 			List<TreeItem> cateList = new ArrayList<TreeItem>();
@@ -1927,13 +1927,13 @@ public class MainWindow
 			// item1.setText("sql");
 			for (int i = 0; i < n; i++)
 			{							
-				String name = users.get(i).getBaseInfo().getInfoField("Name").getStringValue();
-				String nick = users.get(i).getCustomInfo().getInfoField("NickName").getStringValue();
+				String name = users.get(i).getBaseInfo().getInfoField(Messages.getString("MainWindow.89")).getStringValue(); //$NON-NLS-1$
+				String nick = users.get(i).getCustomInfo().getInfoField(Messages.getString("MainWindow.90")).getStringValue(); //$NON-NLS-1$
 				String relation = users.get(i).getInfoField(InfoFieldName.Relation).getStringValue();
-				String cell = users.get(i).getBaseInfo().getInfoField("Cellphone").getStringValue();
-				String email = users.get(i).getBaseInfo().getInfoField("EmailAddress").getStringValue();
-				String tag = users.get(i).getCustomInfo().getInfoField("Category").getStringValue();
-				String bir = users.get(i).getBaseInfo().getInfoField("Birthday").getStringValue();
+				String cell = users.get(i).getBaseInfo().getInfoField(Messages.getString("MainWindow.91")).getStringValue(); //$NON-NLS-1$
+				String email = users.get(i).getBaseInfo().getInfoField(Messages.getString("MainWindow.92")).getStringValue(); //$NON-NLS-1$
+				String tag = users.get(i).getCustomInfo().getInfoField(Messages.getString("MainWindow.93")).getStringValue(); //$NON-NLS-1$
+				String bir = users.get(i).getBaseInfo().getInfoField(Messages.getString("MainWindow.94")).getStringValue(); //$NON-NLS-1$
 				
 				TreeItem parentItem;
 				if (tag == null || tag.isEmpty())
@@ -1969,7 +1969,7 @@ public class MainWindow
 			
 			toolItemAddressCustomGroupNone = new MenuItem(toolItemAddressCustomGroupMenu, SWT.RADIO);
 			toolItemAddressCustomGroupNone.addSelectionListener(new ToolItemAddressCustomGroupSelectionListener());
-			toolItemAddressCustomGroupNone.setText("未分组");
+			toolItemAddressCustomGroupNone.setText(Messages.getString("MainWindow.95")); //$NON-NLS-1$
 
 			toolItemAddressCustomGroupItems = new MenuItem[contactsCategory.size()]; // 1: 分组总数
 			for(String cate : contactsCategory.keySet())
@@ -1983,7 +1983,7 @@ public class MainWindow
 			new MenuItem(toolItemAddressCustomGroupMenu, SWT.SEPARATOR);
 			toolItemAddressCustomGroupNew = new MenuItem(toolItemAddressCustomGroupMenu, SWT.NONE);
 			toolItemAddressCustomGroupNew.addSelectionListener(new ToolItemAddressCustomGroupNewSelectionListener());
-			toolItemAddressCustomGroupNew.setText("新建分组...");
+			toolItemAddressCustomGroupNew.setText(Messages.getString("MainWindow.96")); //$NON-NLS-1$
 			// [end]
 		}
 
@@ -2050,15 +2050,15 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			FileDialog dialog = new FileDialog(shell);
-			dialog.setText("目录");
+			dialog.setText(Messages.getString("MainWindow.97")); //$NON-NLS-1$
 			// dialog.setMessage("请选择一个文件");
-			dialog.setFilterPath("c:/");
-			dialog.setFilterExtensions(new String[] { "*.csv" });
+			dialog.setFilterPath(Messages.getString("MainWindow.98")); //$NON-NLS-1$
+			dialog.setFilterExtensions(new String[] { Messages.getString("MainWindow.99") }); //$NON-NLS-1$
 			String dir = dialog.open();
 			if (dir != null)
 			{
 				logicCenter.importFile(dir);
-				System.out.println("路径：" + dir);
+				System.out.println(Messages.getString("MainWindow.100") + dir); //$NON-NLS-1$
 			}
 		}
 	}
@@ -2074,15 +2074,15 @@ public class MainWindow
 		public void widgetSelected(final SelectionEvent e)
 		{
 			FileDialog dialog = new FileDialog(shell, SWT.SAVE);
-			dialog.setText("目录");
+			dialog.setText(Messages.getString("MainWindow.101")); //$NON-NLS-1$
 			// dialog.setMessage("请选择一个目录");
-			dialog.setFilterExtensions(new String[] { "*.csv" });
-			dialog.setFilterPath("c:/");
+			dialog.setFilterExtensions(new String[] { Messages.getString("MainWindow.102") }); //$NON-NLS-1$
+			dialog.setFilterPath(Messages.getString("MainWindow.103")); //$NON-NLS-1$
 			String dir = dialog.open();
 			if (dir != null)
 			{
-				logicCenter.exportFile(dir + ".csv");
-				System.out.println("路径：" + dir);
+				logicCenter.exportFile(dir + Messages.getString("MainWindow.104")); //$NON-NLS-1$
+				System.out.println(Messages.getString("MainWindow.105") + dir); //$NON-NLS-1$
 			}
 		}
 	}
@@ -2114,7 +2114,7 @@ public class MainWindow
 		@Override
 		public void run()
 		{
-			System.out.println("run");
+			System.out.println(Messages.getString("MainWindow.106")); //$NON-NLS-1$
 			statDialog.setStatics(result);
 		}
 

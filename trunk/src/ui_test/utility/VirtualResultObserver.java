@@ -47,11 +47,11 @@ class EditGroupResultTask implements Runnable
 		VirtualState state = result.getState();
 		if(state == VirtualState.PREPARED)
 		{
-			MessageDialog.openInformation(shell, "³É¹¦", succMsg);
+			MessageDialog.openInformation(shell, Messages.getString("VirtualResultObserver.succeed"), succMsg); //$NON-NLS-1$
 		}
 		else if(state == VirtualState.ERRORED)
 		{
-			MessageDialog.openWarning(shell, "Ê§°Ü", result.getError().toString());
+			MessageDialog.openWarning(shell, Messages.getString("VirtualResultObserver.failed"), result.getError().toString()); //$NON-NLS-1$
 		}
 		
 	}

@@ -32,14 +32,14 @@ import entity.message.Message;
 
 public class ServerDataCenterImp implements ServerDataCenter {
 	// 数据库用户名
-	private String userName = "root";
+	private String userName = Messages.getString("ServerDataCenterImp.DBuserName"); //$NON-NLS-1$
 	// 密码
-	private String userPasswd = "81999";
+	private String userPasswd = Messages.getString("ServerDataCenterImp.DBPswd"); //$NON-NLS-1$
 	// 数据库名
-	private String dbName = "PhoneMeServer";
+	private String dbName = Messages.getString("ServerDataCenterImp.dbName"); //$NON-NLS-1$
 	// 联结字符串
-	private String url = "jdbc:mysql://localhost/" + dbName + "?user="
-			+ userName + "&password=" + userPasswd;
+	private String url = "jdbc:mysql://localhost/" + dbName + "?user=" //$NON-NLS-1$ //$NON-NLS-2$
+			+ userName + "&password=" + userPasswd; //$NON-NLS-1$
 
 	private static ServerDataCenterImp instance = null;
 
@@ -60,7 +60,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 	private ServerDataCenterImp() {
 		// 建表
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName("com.mysql.jdbc.Driver").newInstance(); //$NON-NLS-1$
 			Connection connection = (Connection) DriverManager
 					.getConnection(url);
 			userInfoTable = new BaseUserInfoTable(connection);
@@ -376,18 +376,18 @@ public class ServerDataCenterImp implements ServerDataCenter {
 			// TEST REGISTER LOGIN
 			BaseUserInfo user = new BaseUserInfo();
 			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-					InfoFieldName.Name.name(), "TestUser"));
+					InfoFieldName.Name.name(), "TestUser")); //$NON-NLS-1$
 			user.setInfoField(InfoFieldFactory.getFactory().makeInfoField(
-					InfoFieldName.Cellphone, "13888888888"));
+					InfoFieldName.Cellphone, "13888888888")); //$NON-NLS-1$
 			user.setID(new ID(198979));
-			Password pwd = new Password("lala");
+			Password pwd = new Password("lala"); //$NON-NLS-1$
 			center.register(user, pwd);
 			ID id = center.loginGetInfo((IdenticalInfoField) InfoFieldFactory
 					.getFactory().makeInfoField(InfoFieldName.Cellphone,
-							"13888888888"), pwd);
+							"13888888888"), pwd); //$NON-NLS-1$
 			ID id2 = center.loginGetInfo((IdenticalInfoField) InfoFieldFactory
 					.getFactory().makeInfoField(InfoFieldName.Cellphone,
-							"13888888888"), new Password("test"));
+							"13888888888"), new Password("test")); //$NON-NLS-1$ //$NON-NLS-2$
 			System.out.println(id);
 			System.out.println(id2);
 

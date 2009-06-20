@@ -36,7 +36,7 @@ public class UserInfoTableElem
 	{
 		String fieldName = infoField.getName();
 		
-		if(fieldName == "Relation") return false;
+		if(fieldName == Messages.getString("UserInfoTableElem.relation")) return false; //$NON-NLS-1$
 		
 		if(userInfoTableType == UserInfoTableType.Local)
 		{
@@ -83,7 +83,7 @@ public class UserInfoTableElem
 	{
 		String fieldName = infoField.getName();
 		
-		if(fieldName == "Relation") return false;
+		if(fieldName == Messages.getString("UserInfoTableElem.relation")) return false; //$NON-NLS-1$
 		
 		if(userInfoTableType == UserInfoTableType.Local)
 		{

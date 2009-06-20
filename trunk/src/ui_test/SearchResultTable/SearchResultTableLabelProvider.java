@@ -27,16 +27,16 @@ public class SearchResultTableLabelProvider implements ITableLabelProvider
 			switch(columnIndex)
 			{
 			case 0:
-				return user.getInfoField("Name").getStringValue();
+				return user.getInfoField(Messages.getString("SearchResultTableLabelProvider.name")).getStringValue(); //$NON-NLS-1$
 			case 1:
-				return user.getInfoField("Cellphone").getStringValue();
+				return user.getInfoField(Messages.getString("SearchResultTableLabelProvider.cell")).getStringValue(); //$NON-NLS-1$
 			case 2:
-				return user.getInfoField("EmailAddress").getStringValue();
+				return user.getInfoField(Messages.getString("SearchResultTableLabelProvider.email")).getStringValue(); //$NON-NLS-1$
 			case 3:
-				return user.getInfoField("Birthday").getStringValue();
+				return user.getInfoField(Messages.getString("SearchResultTableLabelProvider.birthday")).getStringValue(); //$NON-NLS-1$
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	@Override

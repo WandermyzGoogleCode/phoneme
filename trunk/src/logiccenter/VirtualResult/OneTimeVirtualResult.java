@@ -44,7 +44,7 @@ public abstract class OneTimeVirtualResult extends VirtualResult {
 			catch (RemoteException e)
 			{
 				setError(ErrorType.REMOTE_ERROR);
-				System.err.println("Exception: "+e.toString());
+				System.err.println(Messages.getString("OneTimeVirtualResult.0")+e.toString()); //$NON-NLS-1$
 				e.printStackTrace();
 			}
 		}

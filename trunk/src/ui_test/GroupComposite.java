@@ -103,18 +103,18 @@ public class GroupComposite extends Composite
 
 		toolNewGroup = new ToolItem(toolBar, SWT.PUSH);
 		toolNewGroup.addSelectionListener(new ToolNewGroupSelectionListener());
-		toolNewGroup.setToolTipText("新建群组");
-		toolNewGroup.setText("新");
+		toolNewGroup.setToolTipText(Messages.getString("GroupComposite.0")); //$NON-NLS-1$
+		toolNewGroup.setText(Messages.getString("GroupComposite.1")); //$NON-NLS-1$
 
 		toolEditGroup = new ToolItem(toolBar, SWT.PUSH);
-		toolEditGroup.setToolTipText("编辑用户或群组");
+		toolEditGroup.setToolTipText(Messages.getString("GroupComposite.2")); //$NON-NLS-1$
 		toolEditGroup.addSelectionListener(new ToolEditGroupSelectionListener());
-		toolEditGroup.setText("编");
+		toolEditGroup.setText(Messages.getString("GroupComposite.3")); //$NON-NLS-1$
 		
 		toolItemVisibility = new ToolItem(toolBar, SWT.NONE);
 		toolItemVisibility.addSelectionListener(new VisibilitySelectionListener());
-		toolItemVisibility.setToolTipText("\u8BBE\u7F6E\u7FA4\u7EC4\u5173\u7CFB\u7684\u53EF\u89C1\u5EA6");
-		toolItemVisibility.setText("\u5EA6");
+		toolItemVisibility.setToolTipText(Messages.getString("GroupComposite.4")); //$NON-NLS-1$
+		toolItemVisibility.setText(Messages.getString("GroupComposite.5")); //$NON-NLS-1$
 		
 		tabFolder = new TabFolder(this, SWT.NONE);
 		{
@@ -127,7 +127,7 @@ public class GroupComposite extends Composite
 		}
 		
 		tabItemMyGroup = new TabItem(tabFolder, SWT.NONE);
-		tabItemMyGroup.setText("\u5DF2\u52A0\u5165\u7FA4\u7EC4");
+		tabItemMyGroup.setText(Messages.getString("GroupComposite.6")); //$NON-NLS-1$
 		
 		treeViewer = new TreeViewer(tabFolder, SWT.BORDER);
 		tree = treeViewer.getTree();
@@ -136,30 +136,30 @@ public class GroupComposite extends Composite
 		
 		treeColumn_1 = new TreeColumn(tree, SWT.NONE);
 		treeColumn_1.setWidth(92);
-		treeColumn_1.setText("\u540D\u5B57");
+		treeColumn_1.setText(Messages.getString("GroupComposite.7")); //$NON-NLS-1$
 		
 		treeColumn_4 = new TreeColumn(tree, SWT.NONE);
 		treeColumn_4.setWidth(72);
-		treeColumn_4.setText("\u6635\u79F0");
+		treeColumn_4.setText(Messages.getString("GroupComposite.8")); //$NON-NLS-1$
 		
 		treeColumn_5 = new TreeColumn(tree, SWT.NONE);
 		treeColumn_5.setWidth(100);
-		treeColumn_5.setText("\u5173\u7CFB");
+		treeColumn_5.setText(Messages.getString("GroupComposite.9")); //$NON-NLS-1$
 		
 		treeColumn_7 = new TreeColumn(tree, SWT.NONE);
 		treeColumn_7.setWidth(100);
-		treeColumn_7.setText("\u624B\u673A");
+		treeColumn_7.setText(Messages.getString("GroupComposite.10")); //$NON-NLS-1$
 		
 		treeColumn_6 = new TreeColumn(tree, SWT.NONE);
 		treeColumn_6.setWidth(100);
-		treeColumn_6.setText("E-mail");
+		treeColumn_6.setText(Messages.getString("GroupComposite.11")); //$NON-NLS-1$
 		
 		treeColumn_2 = new TreeColumn(tree, SWT.NONE);
 		treeColumn_2.setWidth(84);
-		treeColumn_2.setText("\u751F\u65E5");
+		treeColumn_2.setText(Messages.getString("GroupComposite.12")); //$NON-NLS-1$
 		
 		tabItemSearchResult = new TabItem(tabFolder, SWT.NONE);
-		tabItemSearchResult.setText("\u641C\u7D22\u7ED3\u679C");
+		tabItemSearchResult.setText(Messages.getString("GroupComposite.13")); //$NON-NLS-1$
 		
 		treeViewerSearchResult = new TreeViewer(tabFolder, SWT.BORDER);
 		treeSearchResult = treeViewerSearchResult.getTree();
@@ -168,18 +168,18 @@ public class GroupComposite extends Composite
 		
 		treeColumn = new TreeColumn(treeSearchResult, SWT.NONE);
 		treeColumn.setWidth(100);
-		treeColumn.setText("\u7FA4\u7EC4\u540D");
+		treeColumn.setText(Messages.getString("GroupComposite.14")); //$NON-NLS-1$
 		
 		treeColumn_8 = new TreeColumn(treeSearchResult, SWT.NONE);
 		treeColumn_8.setWidth(512);
-		treeColumn_8.setText("\u8BE6\u7EC6\u4FE1\u606F");
+		treeColumn_8.setText(Messages.getString("GroupComposite.15")); //$NON-NLS-1$
 		
 		buttonSearchGroup = new Button(this, SWT.NONE);
 		buttonSearchGroup.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Group g = new Group();
-				GroupInfoDialog dialog = new GroupInfoDialog(getShell(), "请输入查询信息", GroupInfoTableType.Search, g);
+				GroupInfoDialog dialog = new GroupInfoDialog(getShell(), Messages.getString("GroupComposite.16"), GroupInfoTableType.Search, g); //$NON-NLS-1$
 				if (dialog.open() == IDialogConstants.OK_ID){
 					SearchGroupResult result = logicCenter.searchGroup(g);
 					SearchResultObserver observer = new SearchResultObserver();
@@ -193,12 +193,12 @@ public class GroupComposite extends Composite
 			
 			toolItemApplyJoin = new ToolItem(toolBar, SWT.NONE);
 			toolItemApplyJoin.addSelectionListener(new ApplyJoinGroupListener());
-			toolItemApplyJoin.setToolTipText("\u7533\u8BF7\u52A0\u5165\u7FA4\u7EC4");
-			toolItemApplyJoin.setText("\u52A0");
+			toolItemApplyJoin.setToolTipText(Messages.getString("GroupComposite.17")); //$NON-NLS-1$
+			toolItemApplyJoin.setText(Messages.getString("GroupComposite.18")); //$NON-NLS-1$
 			formData.right = new FormAttachment(100, -10);
 			buttonSearchGroup.setLayoutData(formData);
 		}
-		buttonSearchGroup.setText("\u641C\u7D22\u7FA4\u7EC4");
+		buttonSearchGroup.setText(Messages.getString("GroupComposite.19")); //$NON-NLS-1$
 		treeViewer.setLabelProvider(new GroupTableTreeLabelProvider());
 		contentProvider = new GroupTableTreeContentProvider();
 		treeViewer.setContentProvider(contentProvider);
@@ -261,12 +261,12 @@ public class GroupComposite extends Composite
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			if (tabFolder.getSelectionIndex() == tabFolder.indexOf(tabItemMyGroup)){
-				MessageDialog.openError(getShell(), "申请失败", "你已在该群组");
+				MessageDialog.openError(getShell(), Messages.getString("GroupComposite.20"), Messages.getString("GroupComposite.21")); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 			TreeItem currentItem = getCurrentItem();
 			if (currentItem == null || !(currentItem.getData() instanceof Group)){
-				MessageDialog.openError(getShell(), "申请失败", "请先选中群组");
+				MessageDialog.openError(getShell(), Messages.getString("GroupComposite.22"), Messages.getString("GroupComposite.23")); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 			Group g = (Group)currentItem.getData();
@@ -276,11 +276,11 @@ public class GroupComposite extends Composite
 			if (visDialog.open() != IDialogConstants.OK_ID)
 				return;
 			visibility = visDialog.getResult();
-			GroupInfoDialog perDialog = new GroupInfoDialog(getShell(), "请设置对群组的权限", GroupInfoTableType.Admit, g);
+			GroupInfoDialog perDialog = new GroupInfoDialog(getShell(), Messages.getString("GroupComposite.24"), GroupInfoTableType.Admit, g); //$NON-NLS-1$
 			perDialog.setPermission(p);
 			if (perDialog.open() == IDialogConstants.OK_ID){
 				ApplyJoinGroupResult result = logicCenter.applyJoinGroup(g.getID(), p, visibility);
-				VirtualResultObserver observer = new VirtualResultObserver(getShell(), "申请成功，请等待管理员批准");
+				VirtualResultObserver observer = new VirtualResultObserver(getShell(), Messages.getString("GroupComposite.25")); //$NON-NLS-1$
 				result.addObserver(observer);
 			}
 		}
@@ -295,19 +295,19 @@ public class GroupComposite extends Composite
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			if (tabFolder.getSelectionIndex() != tabFolder.indexOf(tabItemMyGroup)){
-				MessageDialog.openError(getShell(), "设置失败", "不能搜索结果");
+				MessageDialog.openError(getShell(), Messages.getString("GroupComposite.26"), Messages.getString("GroupComposite.27")); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 			TreeItem currentItem = getCurrentItem();
 			if (currentItem == null || !(currentItem.getData() instanceof Group)){
-				MessageDialog.openError(getShell(), "设置失败", "请先选中群组");
+				MessageDialog.openError(getShell(), Messages.getString("GroupComposite.28"), Messages.getString("GroupComposite.29")); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 			Group g = (Group)currentItem.getData();
 			SingleNumDialog dialog = new SingleNumDialog(getShell());
 			if (dialog.open() == IDialogConstants.OK_ID){
 				SetVisibilityResult result = logicCenter.setVisibility(g.getID(), dialog.getResult());
-				VirtualResultObserver observer = new VirtualResultObserver(getShell(), "设置可见度成功");
+				VirtualResultObserver observer = new VirtualResultObserver(getShell(), Messages.getString("GroupComposite.30")); //$NON-NLS-1$
 				result.addObserver(observer);
 			}
 		}
@@ -322,7 +322,7 @@ public class GroupComposite extends Composite
 		public void widgetSelected(final SelectionEvent e)
 		{
 			Group newGroup = new Group();
-			GroupInfoDialog groupInfoDialog = new GroupInfoDialog(thisComposite.getShell(),"新建群组", GroupInfoTableType.New, newGroup);	
+			GroupInfoDialog groupInfoDialog = new GroupInfoDialog(thisComposite.getShell(),Messages.getString("GroupComposite.31"), GroupInfoTableType.New, newGroup);	 //$NON-NLS-1$
 			Permission permission = new Permission();
 			groupInfoDialog.setPermission(permission);
 			if(groupInfoDialog.open() == IDialogConstants.OK_ID)
@@ -359,12 +359,12 @@ public class GroupComposite extends Composite
 			VirtualState state = result.getState();
 			if(state == VirtualState.PREPARED)
 			{
-				MessageDialog.openInformation(getShell(), "新建群组 成功", "新建群组 成功");
+				MessageDialog.openInformation(getShell(), Messages.getString("GroupComposite.32"), Messages.getString("GroupComposite.33")); //$NON-NLS-1$ //$NON-NLS-2$
 				treeViewer.refresh();
 			}
 			else if(state == VirtualState.ERRORED)
 			{
-				MessageDialog.openWarning(getShell(), "新建群组失败", result.getError().toString());
+				MessageDialog.openWarning(getShell(), Messages.getString("GroupComposite.34"), result.getError().toString()); //$NON-NLS-1$
 			}
 		}
 		
@@ -379,7 +379,7 @@ public class GroupComposite extends Composite
 		public void widgetSelected(final SelectionEvent e)
 		{
 			if (tabFolder.getSelectionIndex() != tabFolder.indexOf(tabItemMyGroup)){
-				MessageDialog.openError(getShell(), "编辑失败", "不能编辑搜索结果");
+				MessageDialog.openError(getShell(), Messages.getString("GroupComposite.35"), Messages.getString("GroupComposite.36")); //$NON-NLS-1$ //$NON-NLS-2$
 				return;
 			}
 			TreeItem currentItem = getCurrentItem();
@@ -391,7 +391,7 @@ public class GroupComposite extends Composite
 			{	
 				Group group = (Group)data;
 				Permission permission = allGroupsBox.getPermission(group.getID());
-				GroupInfoDialog groupInfoDialog = new GroupInfoDialog(thisComposite.getShell(), "编辑群组", GroupInfoTableType.Normal, group); 
+				GroupInfoDialog groupInfoDialog = new GroupInfoDialog(thisComposite.getShell(), Messages.getString("GroupComposite.37"), GroupInfoTableType.Normal, group);  //$NON-NLS-1$
 				groupInfoDialog.setPermission(permission);
 				groupInfoDialog.open();
 			}
@@ -403,7 +403,7 @@ public class GroupComposite extends Composite
 					return;
 				
 				UserInfo user = (UserInfo)data;
-				UserInfoDialog userInfoDialog = new UserInfoDialog(thisComposite.getShell(), "用户信息", UserInfoTableType.Group, user);
+				UserInfoDialog userInfoDialog = new UserInfoDialog(thisComposite.getShell(), Messages.getString("GroupComposite.38"), UserInfoTableType.Group, user); //$NON-NLS-1$
 				userInfoDialog.setGroup((Group)parentData);
 				userInfoDialog.open();
 			}
@@ -443,7 +443,7 @@ public class GroupComposite extends Composite
 			if (result.getState() == VirtualState.PREPARED)
 				Display.getDefault().syncExec(new SearchResultTask(result.getSearchRes()));
 			else if (result.getState() == VirtualState.ERRORED)
-				MessageDialog.openError(getShell(), "搜索出错", result.getError().toString());
+				MessageDialog.openError(getShell(), Messages.getString("GroupComposite.39"), result.getError().toString()); //$NON-NLS-1$
 		}
 	}
 	
