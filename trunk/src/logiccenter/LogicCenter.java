@@ -308,6 +308,8 @@ public interface LogicCenter {
 	 */
 	public RemoteSynResult remoteSynchronize();
 	
+	public LocalSynResult localSynchronize();
+	
 	/**
 	 * 程序退出之前要调用这个，否则会有线程
 	 * 被服务器锁着不放。
