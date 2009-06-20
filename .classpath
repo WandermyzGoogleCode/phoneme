@@ -17,5 +17,40 @@
 	<classpathentry kind="lib" path="lib/org.eclipse.text_3.4.0.v20080605-1800.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.text.source_3.4.0.v20080605-1800.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.ui.forms_3.3.101.v20080708_34x.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.ui.forms.source_3.3.100.v20080611.jar"/>
 	<classpathentry kind="lib" path="lib/org.eclipse.ui.workbench_3.4.1.M20080827-0800a.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.ui.workbench.source_3.4.0.I20080606-1300.jar"/>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-client-1.0.jar" sourcepath="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-client-1.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-client-meta-1.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-contacts-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-contacts-meta-3.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-core-1.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-media-1.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Java/eclipse/plugins/com.google.gdata_1.0.0/gdataplugin.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

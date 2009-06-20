@@ -374,6 +374,11 @@ public class LogicCenterImp implements LogicCenter {
 	public ExecutorService getExecutor() {
 		return executor;
 	}
+
+	@Override
+	public LocalSynResult localSynchronize() {
+		return new LocalSynResult(this);
+	}
 }
 
 class Tester implements Observer {
