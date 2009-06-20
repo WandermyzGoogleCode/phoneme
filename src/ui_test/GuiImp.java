@@ -17,7 +17,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import ui_test.GroupTableTree.GroupInfoTableType;
+import ui_test.GroupInfoTable.GroupInfoTableType;
 import ui_test.UserInfoTable.UserInfoTableType;
 
 import entity.BaseUserInfo;

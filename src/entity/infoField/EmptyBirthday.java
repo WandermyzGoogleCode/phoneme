@@ -10,7 +10,7 @@ public class EmptyBirthday extends EmptyInfoField implements IndexedInfoField
 
 	@Override
 	public String getName() {
-		return "Birthday";
+		return Messages.getString("Birthday"); //$NON-NLS-1$
 	}
 
 	@Override

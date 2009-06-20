@@ -1,6 +1,8 @@
 package logiccenter.VirtualResult;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 import logiccenter.LogicCenter;
 import entity.BoolInfo;
@@ -22,8 +24,12 @@ public class RemoveSynContactResult extends OneTimeVirtualResult {
 	@Override
 	protected BoolInfo getResult() throws RemoteException {
 		BoolInfo res = center.getServer().removeSynContact(center.getLoginUser().getID(), targetID);
-		if (res.isTrue())
+		if (res.isTrue()){
 			center.getDataCenter().removeSynRelationship(targetID);
+			List<ID> idList = new ArrayList<ID>();
+			idList.add(targetID);
+			center.getAllContactsBox().updateRelation(idList);
+		}
 		return res;
 	}
 }

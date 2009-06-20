@@ -9,7 +9,7 @@ public class EmptyGroupDescription extends EmptyInfoField {
 
 	@Override
 	public String getName() {
-		return "GroupDescription";
+		return Messages.getString("GroupDescription"); //$NON-NLS-1$
 	}
 
 	@Override

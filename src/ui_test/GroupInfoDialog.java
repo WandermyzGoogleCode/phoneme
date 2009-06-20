@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.TableItem;
 import ui_test.GroupInfoTable.GroupInfoCellModifier;
 import ui_test.GroupInfoTable.GroupInfoTableContentProvider;
 import ui_test.GroupInfoTable.GroupInfoTableLabelProvider;
-import ui_test.GroupTableTree.GroupInfoTableType;
+import ui_test.GroupInfoTable.GroupInfoTableType;
 import ui_test.UserInfoTable.UserInfoTableType;
 //import entity.Group;
 //import entity.UserInfo;
@@ -200,11 +200,13 @@ public class GroupInfoDialog extends Dialog
 		//[end]
 		
 		//[start] 权限
-		tabItemPermission = new TabItem(tabFolder, SWT.NONE);
-		tabItemPermission.setText("权限");
-
-		contactPermissionComposite = new ContactPermissionComposite(tabFolder, SWT.NONE, permission);
-		tabItemPermission.setControl(contactPermissionComposite);
+		if (groupInfoTableType != GroupInfoTableType.Search){
+			tabItemPermission = new TabItem(tabFolder, SWT.NONE);
+			tabItemPermission.setText("权限");
+	
+			contactPermissionComposite = new ContactPermissionComposite(tabFolder, SWT.NONE, permission);
+			tabItemPermission.setControl(contactPermissionComposite);
+		}
 		//[end]
 		return container;
 	}
@@ -257,7 +259,6 @@ public class GroupInfoDialog extends Dialog
 					result.addObserver(new EditGroupResultObserver());
 				}				
 				
-				//TODO NEXT Visibility
 				//TODO: Error
 				return;
 			}
@@ -266,6 +267,8 @@ public class GroupInfoDialog extends Dialog
 				modifyGroup();
 				contactPermissionComposite.ModifyPermission();
 			}
+			else if (groupInfoTableType == GroupInfoTableType.Search)
+				modifyGroup();				
 			else if(groupInfoTableType == GroupInfoTableType.Admit)
 			{
 				contactPermissionComposite.ModifyPermission();

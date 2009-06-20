@@ -1,5 +1,7 @@
 package entity.infoField;
 
+import entity.Messages;
+
 public class EmptyNickName extends EmptyInfoField implements IndexedInfoField 
 {
 
@@ -10,7 +12,7 @@ public class EmptyNickName extends EmptyInfoField implements IndexedInfoField
 
 	@Override
 	public String getName() {
-		return "NickName";
+		return entity.infoField.Messages.getString("NickName");  //$NON-NLS-1$
 	}
 
 	@Override

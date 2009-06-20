@@ -1,12 +1,14 @@
 package entity.infoField;
 
+import entity.Messages;
+
 public class GroupName extends EmptyGroupName {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8471578597892895255L;
 	public static final int maxLength = 50;
-	private static final String nullName = "NoName";
+	private static final String nullName = entity.infoField.Messages.getString("nullName");  //$NON-NLS-1$
 	private String name;
 
 	public static boolean check(String name){

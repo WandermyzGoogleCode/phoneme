@@ -15,14 +15,14 @@ public class NickName extends EmptyNickName {
 	public NickName(String name)
 	{
 		if (!check(name))
-			name = "";
+			name = ""; //$NON-NLS-1$
 		this.name=name;
 	}
 	
 	public void setStringValue(String name)
 	{
 		if (!check(name))
-			name = "";
+			name = ""; //$NON-NLS-1$
 		this.name=name;
 	}
 
@@ -33,6 +33,6 @@ public class NickName extends EmptyNickName {
 	
 	@Override
 	public boolean isEmpty() {
-		return name.equals("");
+		return name.equals(""); //$NON-NLS-1$
 	}
 }

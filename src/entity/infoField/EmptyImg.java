@@ -14,7 +14,7 @@ public class EmptyImg extends EmptyInfoField implements MultimediaInfoField {
 
 	@Override
 	public String getName() {
-		return "Image";
+		return Messages.getString("Image"); //$NON-NLS-1$
 	}
 
 	@Override

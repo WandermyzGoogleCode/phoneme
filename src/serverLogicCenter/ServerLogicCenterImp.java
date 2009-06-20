@@ -213,9 +213,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			if (!g.getAdminUserID().equals(thisUser))
 				return new BoolInfo(ErrorType.NOT_ADMIN);
 			dataCenter.addToGroup(g, uid, p);
-			dataCenter.setVisiblity(thisUser, gid, visibility);
-			g.addToGroup(thisUser);
-			pushMessage(thisUser, new GroupAppAdmitMessage(uid, g, p,
+			dataCenter.setVisiblity(uid, gid, visibility);
+			g.addToGroup(uid);
+			pushMessage(uid, new GroupAppAdmitMessage(uid, g, p,
 					visibility, idFactory.getNewMessageID()));
 			String detail = "群组有新用户加入：" + getUserInfo(uid).getStringValue();
 			for (ID id : g.getUserSet())
@@ -269,6 +269,8 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			g = dataCenter.getGroup(gid);
 			if (g == null)
 				return new BoolInfo(ErrorType.TARGET_NOT_EXIST);
+			if (g.getUserSet().contains(thisUser))
+				return new BoolInfo(ErrorType.ALREADY_IN_GROUP);//已经在群组中
 
 			Permission tempP = getFinalPermission(thisUser, g.getAdminUserID());
 			tempP.union(p);
@@ -357,9 +359,9 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 				idSet.addAll(g.getUserSet());
 
 			// 发送消息
-			idSet.remove(baseInfo.getID());
+			//需要通知自己//idSet.remove(baseInfo.getID());
 			for (ID id : idSet)
-				pushMessage(id, new ContactUpdatedMessage(baseInfo, idFactory
+				pushMessage(id, new ContactUpdatedMessage(filter(baseInfo, getFinalPermission(baseInfo.getID(), id)), idFactory
 						.getNewMessageID()));
 		} catch (SQLException e) {
 			return new BoolInfo(ErrorType.SQL_ERROR);
@@ -497,15 +499,17 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 				throw new MyRemoteException(ErrorType.TARGET_NOT_EXIST);
 			if (targetUser.equals(g.getAdminUserID()))
 				throw new MyRemoteException(ErrorType.ADMIN_CANNOT_QUIT);
-			g.removeFromGroup(targetUser);
-			dataCenter.removeFromGroup(g, targetUser);
-			String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
-			for (ID id : g.getUserSet())
-				if (!id.equals(thisUser))
-					pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
-						.getNewMessageID()));
-			pushMessage(targetUser, new GroupRemovedMessage(g, "管理员将您从群组中删除",
-					idFactory.getNewMessageID()));
+			if (g.getUserSet().contains(targetUser)){
+				g.removeFromGroup(targetUser);
+				dataCenter.removeFromGroup(g, targetUser);
+				String detail = "用户：" + getUserInfo(targetUser).getName() + "被删除";
+				for (ID id : g.getUserSet())
+					if (!id.equals(thisUser))
+						pushMessage(id, new GroupUpdatedMessage(g, detail, idFactory
+							.getNewMessageID()));
+				pushMessage(targetUser, new GroupRemovedMessage(g, "管理员将您从群组中删除",
+						idFactory.getNewMessageID()));				
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new MyRemoteException(ErrorType.SQL_ERROR);
@@ -557,6 +561,20 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
 		try {
 			dataCenter.setPermission(thisUser, targetID, p);
+			BaseUserInfo baseInfo = getUserInfo(thisUser);
+			if (ID.isGroupID(targetID)){
+				//通知群组内所有的人
+				Group g = dataCenter.getGroup(targetID);
+				for (ID id : g.getUserSet())
+					if (!id.equals(thisUser))
+						pushMessage(id, new ContactUpdatedMessage(filter(baseInfo, getFinalPermission(baseInfo.getID(), id)), idFactory
+								.getNewMessageID()));
+			}
+			else{
+				//通知对方
+				pushMessage(targetID, new ContactUpdatedMessage(filter(baseInfo, getFinalPermission(baseInfo.getID(), targetID)), idFactory
+						.getNewMessageID()));				
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new BoolInfo(ErrorType.SQL_ERROR);
@@ -638,7 +656,7 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 * @return
 	 * @throws SQLException
 	 */
-	protected Permission getFinalPermision(ID thisUser, ID targetUser,
+	protected Permission getFinalPermission(ID thisUser, ID targetUser,
 			Permission p2pPermission, List<Group> groups, List<Permission> gPs)
 			throws SQLException {
 		Permission res = (p2pPermission == null) ? new Permission()
@@ -697,13 +715,15 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 	 */
 	protected Permission getFinalPermission(ID thisUser, ID targetUser)
 			throws SQLException {
+		if (thisUser.equals(targetUser))
+			return Permission.getAllPassPermission();
 		List<Group> gList1 = dataCenter.getGroups(thisUser);
 		List<ID> gidList = new ArrayList<ID>();
 		for (Group g : gList1)
 			gidList.add(g.getID());
 		List<Permission> gPs = dataCenter.getPermissions(thisUser, gidList);
 		Permission p2pPermission = getPermission(thisUser, targetUser);
-		return getFinalPermision(thisUser, targetUser, p2pPermission, gList1,
+		return getFinalPermission(thisUser, targetUser, p2pPermission, gList1,
 				gPs);
 	}
 
@@ -715,18 +735,21 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			contacts = dataCenter.getUsersInfo(idList);
 			List<Permission> finalPermissions = new ArrayList<Permission>();
 
-			if (!onlineUsers.contains(thisUser)) {
-				List<Group> gList1 = dataCenter.getGroups(thisUser);
-				List<ID> gidList = new ArrayList<ID>();
-				for (Group g : gList1)
-					gidList.add(g.getID());
-				List<Permission> gPs = dataCenter.getPermissions(thisUser,
-						gidList);
-				List<Permission> p2pPermissions = dataCenter.getPermissions(
-						thisUser, idList);
-				for (int i = 0; i < idList.size(); i++)
-					finalPermissions.add(getFinalPermision(thisUser, idList
-							.get(i), p2pPermissions.get(i), gList1, gPs));
+			if (onlineUsers.contains(thisUser)) {
+//				废弃
+//				List<Group> gList1 = dataCenter.getGroups(thisUser);
+//				List<ID> gidList = new ArrayList<ID>();
+//				for (Group g : gList1)
+//					gidList.add(g.getID());
+//				List<Permission> gPs = dataCenter.getPermissions(thisUser,
+//						gidList);
+//				List<Permission> p2pPermissions = dataCenter.getPermissions(
+//						thisUser, idList);
+//				for (int i = 0; i < idList.size(); i++)
+//					finalPermissions.add(getFinalPermission(thisUser, idList
+//							.get(i), p2pPermissions.get(i), gList1, gPs));
+				for(int i=0; i<idList.size(); i++)
+					finalPermissions.add(getFinalPermission(idList.get(i), thisUser));
 			} else
 				for (int i = 0; i < idList.size(); i++)
 					finalPermissions.add(getGlobalPermission(idList.get(i)));

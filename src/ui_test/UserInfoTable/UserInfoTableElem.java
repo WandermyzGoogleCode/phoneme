@@ -91,7 +91,7 @@ public class UserInfoTableElem
 		}
 		if(userInfoTableType == UserInfoTableType.Synchronization)
 		{
-			//TODO: 处理权限
+			//不用处理权限，权限在服务器端就处理好了的……哪有到本地再处理的//TODO: 处理权限
 			return true;
 		}
 		else if(userInfoTableType == UserInfoTableType.Permission)
@@ -104,7 +104,7 @@ public class UserInfoTableElem
 		}
 		else if(userInfoTableType == UserInfoTableType.SearchRemoteResult)
 		{
-			//TODO: 处理权限
+			//不用处理权限，权限在服务器端就处理好了的……哪有到本地再处理的//TODO: 处理权限
 			return BaseInfoFieldName.contains(fieldName);
 		}
 		else if(userInfoTableType == UserInfoTableType.SearchLocalForm)
@@ -123,7 +123,7 @@ public class UserInfoTableElem
 		{
 			return BaseInfoFieldName.contains(fieldName);
 		}
-		else return false;
+		else return true;//没有特殊申明，都显示出来，比如群组联系人
 	}
 	
 	public CellEditor GetCellEditor(Composite parent)

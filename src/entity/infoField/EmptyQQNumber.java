@@ -15,7 +15,7 @@ public abstract class EmptyQQNumber extends EmptyInfoField implements IdenticalI
 
 	@Override
 	public String getName() {
-		return "QQNumber";
+		return Messages.getString("QQNumber"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -17,14 +17,14 @@ public class GroupDescription extends EmptyGroupDescription {
 	public GroupDescription(String desc)
 	{
 		if (!check(desc))
-			desc = "";
+			desc = ""; //$NON-NLS-1$
 		this.description=desc;
 	}
 	
 	public void setStringValue(String desc)
 	{
 		if (!check(desc))
-			desc = "";
+			desc = ""; //$NON-NLS-1$
 		this.description=desc;
 	}
 
@@ -35,6 +35,6 @@ public class GroupDescription extends EmptyGroupDescription {
 	
 	@Override
 	public boolean isEmpty() {
-		return description.equals("");
+		return description.equals(""); //$NON-NLS-1$
 	}
 }

@@ -15,14 +15,14 @@ public class Web extends EmptyWeb {
 	public Web(String web)
 	{
 		if (!check(web))
-			web = "";
+			web = ""; //$NON-NLS-1$
 		this.web = web;
 	}
 	
 	public void setStringValue(String web)
 	{
 		if (!check(web))
-			web = "";
+			web = ""; //$NON-NLS-1$
 		this.web = web;
 	}
 
@@ -33,6 +33,6 @@ public class Web extends EmptyWeb {
 	
 	@Override
 	public boolean isEmpty() {
-		return web.equals("");
+		return web.equals(""); //$NON-NLS-1$
 	}
 }

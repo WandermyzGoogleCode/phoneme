@@ -62,6 +62,7 @@ import entity.infoField.BaseInfoFieldName;
 import entity.infoField.CustomInfoFieldName;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldName;
+import entity.infoField.Relation;
 import entity.message.Message;
 
 //import ui_test.MainWindow.ToolItemAddressCustomGroupNewSelectionListener;
@@ -672,10 +673,12 @@ public class UserInfoDialog extends Dialog {
 				if (userInfoTableType == UserInfoTableType.Permission)
 					logicCenter.removePerContact(user.getBaseInfo().getID());
 				else {
-					if (userInfoTableType == UserInfoTableType.Synchronization)
+					Relation r = (Relation)user.getInfoField(InfoFieldName.Relation); 
+					if (r.isPersonal())
 						logicCenter
 								.removeSynContact(user.getBaseInfo().getID());
-					logicCenter.removeContactInfo(user.getBaseInfo().getID());
+					if (!r.hasGroup())
+						logicCenter.removeContactInfo(user.getBaseInfo().getID());
 				}
 				buttonPressed(IDialogConstants.CANCEL_ID);
 			} else {

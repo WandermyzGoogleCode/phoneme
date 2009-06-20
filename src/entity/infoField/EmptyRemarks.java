@@ -1,5 +1,7 @@
 package entity.infoField;
 
+import entity.Messages;
+
 /**
  * ±¸×¢
  * @author Administrator
@@ -14,7 +16,7 @@ public class EmptyRemarks extends EmptyInfoField {
 
 	@Override
 	public String getName() {
-		return "Remarks";
+		return entity.infoField.Messages.getString("Remarks");  //$NON-NLS-1$
 	}
 
 	@Override

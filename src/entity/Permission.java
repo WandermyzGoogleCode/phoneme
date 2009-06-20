@@ -21,6 +21,7 @@ public class Permission implements Serializable{
 	private static final long serialVersionUID = -8542014263985231177L;
 	//Map<字段名字，是否有权限知道>，其中字段名对应的就是InfoField.Name
 	private Map<String, Boolean> fields;
+	private boolean allPass = false;
 	
 	public void setField(String name, Boolean value)
 	{
@@ -34,6 +35,8 @@ public class Permission implements Serializable{
 	 */
 	public Boolean getField(String name)
 	{
+		if (allPass)
+			return true;
 		return (fields.get(name) == null) ? false : fields.get(name);
 	}
 	
@@ -61,6 +64,7 @@ public class Permission implements Serializable{
 		for(String key: p.getKeySet())
 			if (p.getField(key).booleanValue())
 				setField(key, Boolean.TRUE);
+		allPass = p.allPass;
 	}
 	
 	@Override
@@ -74,6 +78,12 @@ public class Permission implements Serializable{
 		Permission res = new Permission();
 		res.setField(InfoFieldName.Name.name(), true);
 		res.setField(InfoFieldName.Cellphone.name(), true);
+		return res;
+	}
+
+	public static Permission getAllPassPermission() {
+		Permission res = new Permission();
+		res.allPass = true;
 		return res;
 	}
 }

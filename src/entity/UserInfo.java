@@ -62,7 +62,7 @@ public class UserInfo {
 	 * @return
 	 */
 	public String getStringValue() {
-		String res = "";
+		String res = ""; //$NON-NLS-1$
 		if (baseInfo != null)
 			res += baseInfo.getStringValue();
 		if (customInfo != null)
@@ -121,6 +121,11 @@ public class UserInfo {
 			res.addAll(customInfo.getKeySet());
 		return res;
 	}
+	
+	@Override
+	public String toString() {
+		return getStringValue();
+	}	
 	
 	static public void main(String args[]){
 		Set<String> ss = new UserInfo().getKeySet();

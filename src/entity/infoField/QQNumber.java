@@ -11,20 +11,20 @@ public class QQNumber extends EmptyQQNumber {
 	private String number;
 
 	public static boolean check(String number){
-		return (number != null && number.length() <= maxLength && Pattern.matches("\\d+", number));
+		return (number != null && number.length() <= maxLength && Pattern.matches(Messages.getString("QQNumber.PatternFormat"), number)); //$NON-NLS-1$
 	}
 	
 	public QQNumber(String qnum)
 	{
 		if (!check(qnum))
-			qnum = "";
+			qnum = ""; //$NON-NLS-1$
 		this.number=qnum;
 	}
 	
 	public void setStringValue(String qnum)
 	{
 		if (!check(qnum))
-			qnum = "";
+			qnum = ""; //$NON-NLS-1$
 		this.number=qnum;
 	}
 
@@ -35,11 +35,11 @@ public class QQNumber extends EmptyQQNumber {
 	
 	@Override
 	public boolean isEmpty() {
-		return number.equals("");
+		return number.equals(""); //$NON-NLS-1$
 	}
 
 	@Override
 	public String toIDString() {
-		return getName()+":"+getStringValue();
+		return getName()+":"+getStringValue(); //$NON-NLS-1$
 	}
 }

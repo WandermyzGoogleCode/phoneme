@@ -105,7 +105,7 @@ public class ID implements Serializable{
 		Map<ID, Integer> map = new HashMap<ID, Integer>();
 		map.put(id1, 100);
 		System.out.println(map.get(id2));
-		String s1 = new String ("100"), s2 = new String("100");
+		String s1 = new String ("100"), s2 = new String("100"); //$NON-NLS-1$ //$NON-NLS-2$
 		Map<String, Integer> sMap = new HashMap<String, Integer>();
 		sMap.put(s1, 100);
 		System.out.println(s1 == s2);

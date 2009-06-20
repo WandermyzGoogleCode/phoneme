@@ -9,7 +9,7 @@ public class EmptyTag extends EmptyInfoField implements IndexedInfoField {
 
 	@Override
 	public String getName() {
-		return "Category";
+		return Messages.getString("Category"); //$NON-NLS-1$
 	}
 
 	@Override

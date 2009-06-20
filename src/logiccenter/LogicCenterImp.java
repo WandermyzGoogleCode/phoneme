@@ -226,11 +226,11 @@ public class LogicCenterImp implements LogicCenter {
 		allContactsBox = new AllContactsBox(this, bc);// 必须放在allGroupBox后面，
 		// 因为他会调用allGroupBox
 		try {
-			Registry registry = LocateRegistry.getRegistry("Localhost");// TODO
+			Registry registry = LocateRegistry.getRegistry(Messages.getString("LogicCenterImp.ServerAddress"));// TODO //$NON-NLS-1$
 			// 当前只是本机网络测试
-			server = (ServerLogicCenter) registry.lookup("logicCenterServer");
+			server = (ServerLogicCenter) registry.lookup(Messages.getString("LogicCenterImp.ServerName")); //$NON-NLS-1$
 		} catch (Exception e) {
-			System.err.println("Client exception: " + e.toString());
+			System.err.println("Client exception: " + e.toString()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
@@ -254,7 +254,7 @@ public class LogicCenterImp implements LogicCenter {
 		try {
 			LogicCenter center = LogicCenterImp.getInstance();
 			IdenticalInfoField idField = (IdenticalInfoField) InfoFieldFactory
-					.getFactory().makeInfoField("QQNumber", "11");
+					.getFactory().makeInfoField("QQNumber", "11"); //$NON-NLS-1$ //$NON-NLS-2$
 //			Password pwd = new Password("test");
 //			center.login(idField, pwd);
 //
@@ -380,8 +380,8 @@ class Tester implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		MessageBox box = (MessageBox) o;
-		System.out.println("State Changed, new State: " + box.getState());
+		System.out.println("State Changed, new State: " + box.getState()); //$NON-NLS-1$
 		if (box.getUpdateTime() != null)
-			System.out.println("UpdateTime: " + box.getUpdateTime() + "\n");
+			System.out.println("UpdateTime: " + box.getUpdateTime() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

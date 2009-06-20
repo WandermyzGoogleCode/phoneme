@@ -18,7 +18,7 @@ public abstract class EmptyCellphone extends EmptyInfoField implements Identical
 
 	@Override
 	public String getName() {
-		return "Cellphone";
+		return Messages.getString("Cellphone"); //$NON-NLS-1$
 	}
 
 	@Override

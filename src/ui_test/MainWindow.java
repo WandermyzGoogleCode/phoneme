@@ -1072,6 +1072,7 @@ public class MainWindow
 				try
 				{
 					logicCenter.logout();
+					shell.setText("PhoneM");					
 				} catch (RemoteException e1)
 				{
 					MessageDialog.openWarning(shell, "ÍË³öµÇÂ¼Ê§°Ü", "ÍË³öµÇÂ¼Ê§°Ü£¡");

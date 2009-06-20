@@ -84,4 +84,12 @@ public class PermissionTable {
 		}
 		return res;
 	}
+
+	public void removePermission(ID uid, ID id) throws SQLException {
+		String psql = "DELETE FROM Permission WHERE uid=? AND id=?";
+		PreparedStatement pStatement = connection.prepareStatement(psql);
+		pStatement.setLong(1, uid.getValue());
+		pStatement.setLong(2, id.getValue());
+		pStatement.execute();
+	}
 }

@@ -12,20 +12,20 @@ public class Phone extends EmptyPhone {
 
 	public static boolean check(String number){
 		//TODO 有空的话，更详细的判断
-		return (number != null && number.length() <= maxLength && Pattern.matches("(\\d+\\-)?\\d+", number));
+		return (number != null && number.length() <= maxLength && Pattern.matches(Messages.getString("Phone.PatternFormat"), number)); //$NON-NLS-1$
 	}
 	
 	public Phone(String number)
 	{
 		if (!check(number))
-			number = "";
+			number = ""; //$NON-NLS-1$
 		this.number=number;
 	}
 	
 	public void setStringValue(String number)
 	{
 		if (!check(number))
-			number = "";
+			number = ""; //$NON-NLS-1$
 		this.number=number;
 	}
 
@@ -36,6 +36,6 @@ public class Phone extends EmptyPhone {
 	
 	@Override
 	public boolean isEmpty() {
-		return number.equals("");
+		return number.equals(""); //$NON-NLS-1$
 	}
 }

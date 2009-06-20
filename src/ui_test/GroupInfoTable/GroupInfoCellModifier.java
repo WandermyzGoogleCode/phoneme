@@ -6,7 +6,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
-import ui_test.GroupTableTree.GroupInfoTableType;
 
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldFactory;
