@@ -19,14 +19,14 @@ public class Company extends EmptyCompany {
 	public Company(String company)
 	{
 		if (!check(company))
-			company = "";
+			company = ""; //$NON-NLS-1$
 		this.company=company;
 	}
 	
 	public void setStringValue(String company)
 	{
 		if (!check(company))
-			company = "";
+			company = ""; //$NON-NLS-1$
 		this.company=company;
 	}
 
@@ -37,6 +37,6 @@ public class Company extends EmptyCompany {
 	
 	@Override
 	public boolean isEmpty() {
-		return company.equals("");
+		return company.equals(""); //$NON-NLS-1$
 	}
 }

@@ -49,28 +49,28 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	public Relation(){}
 	
 	public Relation(String value){
-		if (value.equals("removed"))
+		if (value.equals("removed")) //$NON-NLS-1$
 			removed = true;
 	}
 	
 	@Override
 	public String getStringValue() {
 		if (isRemoved())
-			return "removed";
-		String res = "";
+			return "removed"; //$NON-NLS-1$
+		String res = ""; //$NON-NLS-1$
 		if (personal)
-			res += "Personal";
+			res += Messages.getString("Relation.Personal"); //$NON-NLS-1$
 		if (!groups.isEmpty())
 		{
 			if (personal)
-				res += " & ";
-			res += "Groups:";
+				res += Messages.getString("Relation.Partition"); //$NON-NLS-1$
+			res += Messages.getString("Relation.GroupsHead"); //$NON-NLS-1$
 			for(String s: groups){
 				if (res.length()+4+s.length() > maxLength){
-					res += "...";
+					res += "..."; //$NON-NLS-1$
 					break;
 				}
-				res += " "+s;
+				res += " "+s; //$NON-NLS-1$
 			}
 		}
 		return res;
@@ -108,12 +108,12 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	
 	public static void main(String args[]){
 		Relation r = new Relation();
-		r.addGroup("test");
+		r.addGroup("test"); //$NON-NLS-1$
 		System.out.println(r);
-		r.removeGroup("test");
+		r.removeGroup("test"); //$NON-NLS-1$
 		System.out.println(r);
-		r.addGroup("test");
-		r.addGroup("test");
+		r.addGroup("test"); //$NON-NLS-1$
+		r.addGroup("test"); //$NON-NLS-1$
 		System.out.println(r);
 	}
 
@@ -129,5 +129,9 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	public void setEmpty(){
 		personal = false;
 		groups.clear();
+	}
+	
+	public boolean hasGroup(){
+		return !groups.isEmpty();
 	}
 }

@@ -1,5 +1,7 @@
 package entity.infoField;
 
+import entity.Messages;
+
 public abstract class EmptyEmailAddr extends EmptyInfoField implements IdenticalInfoField 
 {
 
@@ -10,7 +12,7 @@ public abstract class EmptyEmailAddr extends EmptyInfoField implements Identical
 
 	@Override
 	public String getName() {
-		return "EmailAddress";
+		return entity.infoField.Messages.getString("EmailAddress");  //$NON-NLS-1$
 	}
 
 	@Override

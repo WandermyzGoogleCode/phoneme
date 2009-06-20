@@ -15,14 +15,14 @@ public class Tag extends EmptyTag {
 	public Tag(String tag)
 	{
 		if (!check(tag))
-			tag = "";
+			tag = ""; //$NON-NLS-1$
 		this.tag=tag;
 	}
 	
 	public void setStringValue(String tag)
 	{
 		if (!check(tag))
-			tag = "";
+			tag = ""; //$NON-NLS-1$
 		this.tag=tag;
 	}
 
@@ -33,6 +33,6 @@ public class Tag extends EmptyTag {
 	
 	@Override
 	public boolean isEmpty() {
-		return tag.equals("");
+		return tag.equals(""); //$NON-NLS-1$
 	}
 }

@@ -9,13 +9,13 @@ public class EmailAddr extends EmptyEmailAddr
 	 */
 	private static final long serialVersionUID = -3297353199701838427L;
 	public static final int maxLength = 100;
-	private static final String nullAddr = "";
+	private static final String nullAddr = ""; //$NON-NLS-1$
 	private String addr;
 
 	public static boolean check(String data){
 		if (data == null || data.length() > maxLength)
 			return false;
-		return Pattern.matches("\\w+@\\w+.\\w+", data);
+		return Pattern.matches(Messages.getString("EmailAddr.PatternFormat"), data); //$NON-NLS-1$
 	}
 	
 	public EmailAddr(String email)
@@ -44,6 +44,6 @@ public class EmailAddr extends EmptyEmailAddr
 
 	@Override
 	public String toIDString() {
-		return getName()+":"+getStringValue();
+		return getName()+":"+getStringValue(); //$NON-NLS-1$
 	}
 }

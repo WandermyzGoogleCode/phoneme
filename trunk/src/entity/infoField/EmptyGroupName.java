@@ -14,7 +14,7 @@ public class EmptyGroupName extends EmptyInfoField implements IndexedInfoField {
 
 	@Override
 	public String getName() {
-		return "GroupName";
+		return Messages.getString("GroupName"); //$NON-NLS-1$
 	}
 
 	@Override

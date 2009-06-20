@@ -27,72 +27,72 @@ public class InfoFieldFactory {
 	
 	public InfoField makeInfoField(String name, String value)
 	{
-		if (name.equals("EmailAddress"))
+		if (name.equals(Messages.getString("EmailAddress"))) //$NON-NLS-1$
 			return new EmailAddr(value);
-		if (name.equals("Cellphone"))
+		if (name.equals(Messages.getString("Cellphone"))) //$NON-NLS-1$
 			return new Cellphone(value);
 		//TODO ¸ü¶àµÄinfoField
-		if (name.equals("Address"))
+		if (name.equals(Messages.getString("Address"))) //$NON-NLS-1$
 		{
 			return new Address(value);
 		}
-		if (name.equals("Birthday"))
+		if (name.equals(Messages.getString("Birthday"))) //$NON-NLS-1$
 		{
 			return new Birthday(value);
 		}
-		if (name.equals("Cellphone"))
+		if (name.equals(Messages.getString("Cellphone"))) //$NON-NLS-1$
 		{
 			return new Cellphone(value);
 		}		
-		if (name.equals("Company"))
+		if (name.equals(Messages.getString("Company"))) //$NON-NLS-1$
 		{
 			return new Company(value);
 		}
-		if (name.equals("GroupDescription"))
+		if (name.equals(Messages.getString("GroupDescription"))) //$NON-NLS-1$
 		{
 			return new GroupDescription(value);
 		}
-		if (name.equals("GroupName"))
+		if (name.equals(Messages.getString("GroupName"))) //$NON-NLS-1$
 		{
 			return new GroupName(value);
 		}
-		if (name.equals("Image"))
+		if (name.equals(Messages.getString("Image"))) //$NON-NLS-1$
 		{
 			return new Img(value);
 		}
-		if (name.equals("Name"))
+		if (name.equals(Messages.getString("Name"))) //$NON-NLS-1$
 		{
 			return new Name(value);
 		}
-		if (name.equals("NickName"))
+		if (name.equals(Messages.getString("NickName"))) //$NON-NLS-1$
 		{
 			return new NickName(value);
 		}
-		if (name.equals("Phone"))
+		if (name.equals(Messages.getString("Phone"))) //$NON-NLS-1$
 		{
 			return new Phone(value);
 		}
-		if (name.equals("Position"))
+		if (name.equals(Messages.getString("Position"))) //$NON-NLS-1$
 		{
 			return new Position(value);
 		}
-		if (name.equals("QQNumber"))
+		if (name.equals(Messages.getString("QQNumber"))) //$NON-NLS-1$
 		{
 			return new QQNumber(value);
 		}
-		if (name.equals("Remarks"))
+		if (name.equals(Messages.getString("Remarks"))) //$NON-NLS-1$
 		{
 			return new Remarks(value);
 		}
-		if (name.equals("Category"))
+		if (name.equals(Messages.getString("Category"))) //$NON-NLS-1$
 		{
 			return new Tag(value);
 		}
-		if (name.equals("Website"))
+		if (name.equals(Messages.getString("Website"))) //$NON-NLS-1$
 		{
 			return new Web(value);
 		}
-		if (name.equals("Relation"))
+		if (name.equals(Messages.getString("Relation"))) //$NON-NLS-1$
 			return new Relation(value);
 		return null;
 	}
@@ -104,7 +104,7 @@ public class InfoFieldFactory {
 	{
 		ArrayList<InfoField> res = new ArrayList<InfoField>();
 		for(BaseInfoFieldName name: BaseInfoFieldName.values())
-			res.add(makeInfoField(name.name(), ""));
+			res.add(makeInfoField(name.name(), "")); //$NON-NLS-1$
 		return res;
 	}
 	
@@ -112,7 +112,7 @@ public class InfoFieldFactory {
 	{
 		ArrayList<InfoField> res = new ArrayList<InfoField>();
 		for(CustomInfoFieldName name: CustomInfoFieldName.values())
-			res.add(makeInfoField(name.name(), ""));
+			res.add(makeInfoField(name.name(), "")); //$NON-NLS-1$
 		return res;
 	}
 	

@@ -65,10 +65,10 @@ public class BaseUserInfo implements Serializable{
 	}
 	
 	public String getStringValue(){
-		String res = "";
+		String res = ""; //$NON-NLS-1$
 		for(String key: getKeySet())
 			if (getInfoField(key).getStringValue().length() > 0)
-				res += "<"+key+": "+getInfoField(key).getStringValue()+">  |";
+				res += String.format(Messages.getString("KeyValueFormat"), key, getInfoField(key).getStringValue()); //$NON-NLS-1$
 		return res;
 	}
 	
@@ -91,5 +91,10 @@ public class BaseUserInfo implements Serializable{
 				return (IdenticalInfoField)field;
 		}
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return getStringValue();
 	}
 }

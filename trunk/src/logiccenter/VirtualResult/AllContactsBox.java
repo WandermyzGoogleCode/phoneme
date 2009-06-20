@@ -108,6 +108,12 @@ public class AllContactsBox extends VirtualResult {
 		editContactImp(newInfo);
 		setUpdateNow();
 	}
+	
+	@Override
+	protected void setUpdateNow() {
+		super.setUpdateNow();
+		center.getAllGroupsBox().setUpdateNow();
+	}
 
 	public void removeContact(ID uid) {
 		bc.getContacts().remove(uid);

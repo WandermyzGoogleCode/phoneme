@@ -14,7 +14,7 @@ public class EmptyWeb extends EmptyInfoField implements IndexedInfoField {
 
 	@Override
 	public String getName() {
-		return "Website";
+		return Messages.getString("Website"); //$NON-NLS-1$
 	}
 
 	@Override

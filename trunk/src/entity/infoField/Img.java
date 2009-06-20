@@ -16,14 +16,14 @@ public class Img extends EmptyImg {
 	public Img(String url)
 	{
 		if (!check(url))
-			url = "";
+			url = ""; //$NON-NLS-1$
 		this.url=url;
 	}
 	
 	public void setStringValue(String url)
 	{
 		if (!check(url))
-			url = "";
+			url = ""; //$NON-NLS-1$
 		this.url=url;
 	}
 

@@ -8,14 +8,14 @@ public class Cellphone extends EmptyCellphone{
 	 */
 	private static final long serialVersionUID = 7291035141898489378L;
 	public static final int maxLength = 20;
-	private static final String nullNumber = "";
+	private static final String nullNumber = ""; //$NON-NLS-1$
 	private String number;
 	
 	public static boolean check(String data){
 		//TODO 有空的话，更加准确的检测
 		if (data == null || data.length() > maxLength)
 			return false;
-		return Pattern.matches("(\\+\\d{2})?\\d{11}", data);
+		return Pattern.matches(Messages.getString("Cellphone.PatternFormat"), data); //$NON-NLS-1$
 	}
 
 	public Cellphone(String number)
@@ -44,6 +44,6 @@ public class Cellphone extends EmptyCellphone{
 
 	@Override
 	public String toIDString() {
-		return getName()+":"+getStringValue();
+		return getName()+":"+getStringValue(); //$NON-NLS-1$
 	}
 }

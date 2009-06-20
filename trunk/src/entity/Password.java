@@ -20,15 +20,15 @@ public class Password implements Serializable {
 
 	static {
 		try {
-			encoder = MessageDigest.getInstance("MD5");
+			encoder = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
 		} catch (Exception e) {
-			System.err.println("Exception: " + e.toString());
+			System.err.println("Exception: " + e.toString()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
 
 	public Password(String value) {
-		if (value.equals(""))
+		if (value.equals("")) //$NON-NLS-1$
 			return;//不合法
 		//TODO 更详细的检查
 		nullFlag = false;
@@ -57,8 +57,8 @@ public class Password implements Serializable {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		Password a = new Password("winwinwin"), b = new Password("Win"), c = new Password(
-				"win");
+		Password a = new Password("winwinwin"), b = new Password("Win"), c = new Password( //$NON-NLS-1$ //$NON-NLS-2$
+				"win"); //$NON-NLS-1$
 		System.out.println(a.getEncodedValue());
 		System.out.println(b.getEncodedValue());
 		System.out.println(c.getEncodedValue());
@@ -76,7 +76,7 @@ public class Password implements Serializable {
 			System.out.println(baos.toByteArray());
 			System.out.println(str.getBytes().length);
 			System.out.println(str.getBytes());
-			System.out.println("你好".length());
+			System.out.println("你好".length()); //$NON-NLS-1$
 			ByteArrayInputStream bais = new ByteArrayInputStream(str.getBytes());
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			Password ra = (Password)ois.readObject();

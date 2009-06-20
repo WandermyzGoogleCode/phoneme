@@ -32,7 +32,7 @@ public class AdmitSynContactMessage extends Message {
 
 	@Override
 	public String detail() {
-		return "用户："+admitUser.getStringValue()+"批准了你的申请，同意成为你的同步联系人。";
+		return String.format("用户\"%s\"批准了你的申请，同意成为你的同步联系人。", admitUser.getStringValue());
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class AdmitSynContactMessage extends Message {
 
 	@Override
 	public String title() {
-		return "用户："+admitUser.getInfoField(InfoFieldName.Name.name())+"批准了你的申请";
+		return String.format("用户\"%s\"批准了你的申请", admitUser.getInfoField(InfoFieldName.Name.name()));
 	}
 
 	@Override

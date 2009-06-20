@@ -15,14 +15,14 @@ public class Remarks extends EmptyRemarks {
 	public Remarks(String rem)
 	{
 		if (!check(rem))
-			rem = "";
+			rem = ""; //$NON-NLS-1$
 		this.remarks=rem;
 	}
 	
 	public void setStringValue(String rem)
 	{
 		if (!check(rem))
-			rem = "";
+			rem = ""; //$NON-NLS-1$
 		this.remarks=rem;
 	}
 
@@ -33,6 +33,6 @@ public class Remarks extends EmptyRemarks {
 	
 	@Override
 	public boolean isEmpty() {
-		return remarks.equals("");
+		return remarks.equals(""); //$NON-NLS-1$
 	}
 }

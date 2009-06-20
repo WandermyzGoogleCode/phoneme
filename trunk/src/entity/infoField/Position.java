@@ -1,5 +1,7 @@
 package entity.infoField;
 
+import entity.Messages;
+
 public class Position extends EmptyPosition {
 	/**
 	 * 
@@ -15,14 +17,14 @@ public class Position extends EmptyPosition {
 	public Position(String pos)
 	{
 		if (!check(pos))
-			pos = "";
+			pos = ""; //$NON-NLS-1$
 		this.position=pos;
 	}
 	
 	public void setStringValue(String pos)
 	{
 		if (!check(pos))
-			pos = "";
+			pos = ""; //$NON-NLS-1$
 		this.position=pos;
 	}
 
@@ -33,6 +35,6 @@ public class Position extends EmptyPosition {
 	
 	@Override
 	public boolean isEmpty() {
-		return position.equals("");
+		return position.equals(""); //$NON-NLS-1$
 	}
 }

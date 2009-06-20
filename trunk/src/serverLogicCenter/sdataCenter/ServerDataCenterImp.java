@@ -127,8 +127,14 @@ public class ServerDataCenterImp implements ServerDataCenter {
 	public List<Group> getGroups(ID uid) throws SQLException {
 		List<Group> res = new ArrayList<Group>();
 		List<ID> gidList = groupMemTable.getBackRelations(uid);
-		for (ID id : gidList)
+		for (ID id : gidList){
+			Group g = getGroup(id);
+			if (g.getID().isNull()){
+				groupMemTable.removeRelation(id, uid);//群组不存在，删除该关系
+				continue;
+			}
 			res.add(getGroup(id));
+		}
 		return res;
 	}
 
@@ -209,6 +215,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 	public ReturnType removePerRelationship(ID uid1, ID uid2)
 			throws SQLException {
 		perRelationTable.removeRelation(uid1, uid2);
+		permissionTable.removePermission(uid1, uid2);
 		return null;
 	}
 

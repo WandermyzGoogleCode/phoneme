@@ -14,7 +14,7 @@ public class BoolInfo implements Serializable{
 	 */
 	private static final long serialVersionUID = -108515655303371172L;
 	private boolean bool = true;
-	private String info = "Default is true";
+	private String info = Messages.getString("BoolInfo.DefaultInfo"); //$NON-NLS-1$
 	
 	public BoolInfo(MyError err) {
 		bool = false;

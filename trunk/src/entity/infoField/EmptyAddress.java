@@ -19,7 +19,7 @@ public class EmptyAddress extends EmptyInfoField {
 
 	@Override
 	public String getName() {
-		return "Address";
+		return Messages.getString("Address"); //$NON-NLS-1$
 	}
 
 	@Override

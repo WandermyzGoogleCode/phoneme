@@ -6,7 +6,7 @@ public class Name extends EmptyName {
 	 */
 	private static final long serialVersionUID = 3189490709293556137L;
 	public static final int maxLength = 50;
-	private static final String nullName = "";
+	private static final String nullName = Messages.getString("nullName"); //$NON-NLS-1$
 	private String name;
 
 	public static boolean check(String name){

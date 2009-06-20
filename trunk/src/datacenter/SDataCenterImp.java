@@ -24,14 +24,14 @@ import entity.UserInfo;
 
 public class SDataCenterImp implements DataCenter {
 	// 数据库用户名
-	private String userName = "root";
+	private String userName = Messages.getString("DBUser"); //$NON-NLS-1$
 	// 密码
-	private String userPasswd = "81999";
+	private String userPasswd = Messages.getString("DBPassword"); //$NON-NLS-1$
 	// 数据库名
-	private String dbName = "PhoneMe";
+	private String dbName = Messages.getString("DBName"); //$NON-NLS-1$
 	// 联结字符串
-	private String url = "jdbc:mysql://localhost/" + dbName + "?user="
-			+ userName + "&password=" + userPasswd;
+	private String url = "jdbc:mysql://localhost/" + dbName + "?user=" //$NON-NLS-1$ //$NON-NLS-2$
+			+ userName + "&password=" + userPasswd; //$NON-NLS-1$
 
 	private static SDataCenterImp instance = null;
 
@@ -54,7 +54,7 @@ public class SDataCenterImp implements DataCenter {
 	private SDataCenterImp() {
 		// 建表
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName("com.mysql.jdbc.Driver").newInstance(); //$NON-NLS-1$
 			Connection connection = (Connection) DriverManager
 					.getConnection(url);
 			userInfoTable = new UserInfoTable(connection);
@@ -185,6 +185,8 @@ public class SDataCenterImp implements DataCenter {
 	public ReturnType removeGroup(Group g) {
 		try {
 			groupInfoTable.removeGroup(g);
+			for(ID id: g.getUserSet())
+				groupMemTable.removeRelation(g.getID(), id);
 		} catch (SQLException e) {
 			System.out.println(e);			
 			e.printStackTrace();

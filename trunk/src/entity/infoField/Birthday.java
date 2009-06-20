@@ -14,7 +14,7 @@ public class Birthday extends EmptyBirthday {
 	 */
 	private static final long serialVersionUID = -3884258647822327940L;
 	public static final int maxLength = 20;
-	private static final String nullData = "";
+	private static final String nullData = ""; //$NON-NLS-1$
 	private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 	private String day;
 	private int y, m, d;
@@ -50,7 +50,7 @@ public class Birthday extends EmptyBirthday {
 			return;
 		}
 
-		String date[]=birthday.split("-");
+		String date[]=birthday.split("-"); //$NON-NLS-1$
 		this.y=Integer.parseInt(date[yyyy]);
 		this.m=Integer.parseInt(date[mm]);
 		this.d=Integer.parseInt(date[dd]);
@@ -64,7 +64,7 @@ public class Birthday extends EmptyBirthday {
 			return;
 		}
 		
-		String date[]=birthday.split("-");
+		String date[]=birthday.split("-"); //$NON-NLS-1$
 		this.y=Integer.parseInt(date[yyyy]);
 		this.m=Integer.parseInt(date[mm]);
 		this.d=Integer.parseInt(date[dd]);
@@ -94,8 +94,8 @@ public class Birthday extends EmptyBirthday {
 	}
 	
 	public static void main(String args[]){
-		System.out.println(Birthday.check("2000-2-29"));
-		Birthday b = new Birthday("1989-7-9");
+		System.out.println(Birthday.check("2000-2-29")); //$NON-NLS-1$
+		Birthday b = new Birthday("1989-7-9"); //$NON-NLS-1$
 		System.out.println(b.getYear());
 	}
 }

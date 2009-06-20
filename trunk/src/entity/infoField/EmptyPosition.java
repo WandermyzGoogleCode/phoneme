@@ -15,7 +15,7 @@ public class EmptyPosition extends EmptyInfoField implements IndexedInfoField
 
 	@Override
 	public String getName() {
-		return "Position";
+		return Messages.getString("Position"); //$NON-NLS-1$
 	}
 
 	@Override

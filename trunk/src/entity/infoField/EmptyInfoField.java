@@ -14,7 +14,7 @@ public abstract class EmptyInfoField implements InfoField {
 
 	@Override
 	public String getStringValue() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 	
 	/**

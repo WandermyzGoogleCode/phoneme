@@ -18,14 +18,14 @@ public class Address extends EmptyAddress {
 	public Address(String address)
 	{
 		if (!check(address))
-			address = "";
+			address = ""; //$NON-NLS-1$
 		this.addr=address;
 	}
 	
 	public void setStringValue(String address)
 	{
 		if (!check(address))
-			address = "";
+			address = ""; //$NON-NLS-1$
 		this.addr=address;
 	}
 
@@ -36,6 +36,6 @@ public class Address extends EmptyAddress {
 	
 	@Override
 	public boolean isEmpty() {
-		return (addr.equals(""));
+		return (addr.equals("")); //$NON-NLS-1$
 	}
 }
