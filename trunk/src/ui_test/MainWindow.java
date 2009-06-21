@@ -671,7 +671,6 @@ public class MainWindow
 		toolItemAddressSep1.setText(Messages.getString("MainWindow.17")); //$NON-NLS-1$
 
 		toolItemAddressSyncLocal = new ToolItem(toolBarAddress, SWT.PUSH);
-		toolItemAddressSyncLocal.setEnabled(false);
 		toolItemAddressSyncLocal.addSelectionListener(new ToolItemAddressSyncLocalSelectionListener());
 		toolItemAddressSyncLocal.setToolTipText(Messages.getString("MainWindow.18")); //$NON-NLS-1$
 		toolItemAddressSyncLocal.setText(Messages.getString("MainWindow.SyncLocal")); //$NON-NLS-1$
@@ -1758,7 +1757,8 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			// TODO: 本地同步
+			LocalSynDialog dialog = new LocalSynDialog(shell, logicCenter.localSynchronize());
+			dialog.open();
 		}
 	}
 

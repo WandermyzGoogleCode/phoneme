@@ -208,10 +208,43 @@ public class GuiImp implements ui.Gui
 		return null;
 	}
 
+	class YesOrNoTask implements Runnable{
+		private String askInfo;
+		private boolean res;
+		
+		public YesOrNoTask(String askInfo) {
+			this.askInfo = askInfo;
+		}
+		
+		@Override
+		public void run() {
+			res = MessageDialog.openQuestion(shell, "提问", askInfo);
+		}
+		
+		public boolean getRes(){
+			return res;
+		}
+	}
+	
 	@Override
 	public boolean yesOrNo(String askInfo)
 	{
-		return MessageDialog.openQuestion(shell, "提问", askInfo);
+		YesOrNoTask task = new YesOrNoTask(askInfo);
+		Display.getDefault().syncExec(task);
+//		Thread thread = Display.getDefault().getSyncThread();
+//		thread = Display.getDefault().getThread();
+//		try {
+//			thread.join();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//			return false;
+//		}
+		return task.getRes();
+	}
+
+	@Override
+	public void showError(String info) {
+		MessageDialog.openError(shell, "错误", info);
 	}
 
 }
