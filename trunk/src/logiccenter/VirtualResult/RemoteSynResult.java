@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import logiccenter.LogicCenter;
 
@@ -17,14 +19,25 @@ import entity.MyRemoteException;
 import entity.UserInfo;
 
 public class RemoteSynResult extends OneTimeVirtualResult {
+	private Future<?> future;//用来看同步线程的执行结果
+	
 	public RemoteSynResult(LogicCenter center) {
 		super(center);
 		if (noLoginUser())
 			setError(ErrorType.NOT_LOGIN);
 		else
-			center.getExecutor().execute(task);
+			future = center.getExecutor().submit(task);
 	}
 
+	/**
+	 * 等待同步线程执行完毕
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
+	 */
+	public void waitForComplete() throws InterruptedException, ExecutionException{
+		future.get();
+	}
+	
 	@Override
 	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
 		// 更新群组信息

@@ -25,6 +25,7 @@ public abstract class VirtualResult extends Observable {
 	private VirtualState state = LOADING;//当前Result获取的状态
 	protected MyError err = null;//如果当前状态为出错，那么这个记录了出错信息
 	protected Date updateTime = null;//当前Result最后一次更新的时间，当Result不断更新的时候有用
+	protected String intermediateInfo = "";
 	
 	public VirtualState getState(){
 		return state;
@@ -73,5 +74,9 @@ public abstract class VirtualResult extends Observable {
 		super.addObserver(observer);
 		if (state != LOADING)
 			observer.update(this, null);
+	}
+	
+	public String getIntermediateInfo(){
+		return intermediateInfo;
 	}
 }
