@@ -17,11 +17,13 @@ public interface Gui {
 	public List<Boolean> checkUserList(List<UserInfo> userList, String askInfo);
 	
 	/**
-	 * ！由于当前没有本地同步，这个函数可以先不写了
+	 * 回答一个问题，yes or no
 	 * @param askInfo
 	 * @return
 	 */
 	public boolean yesOrNo(String askInfo);
+	
+	public void showError(String info);
 
 	/**
 	 * ！由于当前没有本地同步，这个函数可以先不写了
