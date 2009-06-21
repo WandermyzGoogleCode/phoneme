@@ -2,22 +2,22 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
-	<classpathentry kind="lib" path="lib/opencsv-1.8.jar"/>
-	<classpathentry kind="lib" path="swing2swt.jar"/>
-	<classpathentry kind="lib" path="lib/com.ibm.icu_3.8.1.v20080530.jar" sourcepath="E:/eclipse34/plugins/com.ibm.icu_3.8.1.v20080530.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.core.commands_3.4.0.I20080509-2000.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.core.commands.source_3.4.0.I20080509-2000.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.core.runtime_3.4.0.v20080512.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.core.runtime.source_3.4.0.v20080512.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.equinox.common.source_3.4.0.v20080421-2006.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.equinox.registry.source_3.4.0.v20080516-0950.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.jface_3.4.1.M20080827-2000.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.jface_3.4.0.I20080606-1300.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.jface.text_3.4.1.r341_v20080827-1100.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.jface.text_3.4.0.v20080603-2000.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.osgi.source_3.4.0.v20080605-1900.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.swt.win32.win32.x86_3.4.1.v3449c.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.swt.win32.win32.x86.source_3.4.0.v3448f.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.text_3.4.0.v20080605-1800.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.text.source_3.4.0.v20080605-1800.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.ui.forms_3.3.101.v20080708_34x.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.ui.forms.source_3.3.100.v20080611.jar"/>
-	<classpathentry kind="lib" path="lib/org.eclipse.ui.workbench_3.4.1.M20080827-0800a.jar" sourcepath="E:/eclipse34/plugins/org.eclipse.ui.workbench.source_3.4.0.I20080606-1300.jar"/>
-	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-client-1.0.jar" sourcepath="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-client-1.0.jar">
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/opencsv-1.8.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="swing2swt.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/com.ibm.icu_3.8.1.v20080530.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.core.commands_3.4.0.I20080509-2000.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.core.runtime_3.4.0.v20080512.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jface_3.4.1.M20080827-2000.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/org.eclipse.jface_3.4.1.M20080827-2000.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.jface.text_3.4.1.r341_v20080827-1100.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/org.eclipse.jface.text_3.4.1.r341_v20080827-1100.jar"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.swt.win32.win32.x86_3.4.1.v3449c.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.text_3.4.0.v20080605-1800.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.ui.forms_3.3.101.v20080708_34x.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="lib/org.eclipse.ui.workbench_3.4.1.M20080827-0800a.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/"/>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/lib/gdata-client-1.0.jar" sourcepath="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
 		</attributes>
