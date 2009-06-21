@@ -172,7 +172,7 @@ public class ServerDataCenterImp implements ServerDataCenter {
 
 	@Override
 	public boolean isPerContact(ID id1, ID id2) throws SQLException {
-		return perRelationTable.hasRelation(id1, id2);
+		return perRelationTable.hasRelation(id2, id1);
 	}
 
 	@Override
