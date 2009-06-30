@@ -13,7 +13,6 @@ import SQLite.JDBCDriver;
 
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
-import com.mysql.jdbc.Connection;
 
 import datacenter.google.GoogleContactOperator;
 
@@ -31,25 +30,16 @@ import entity.Permission;
 import entity.ReturnType;
 import entity.UserInfo;
 
-public class SDataCenterImp implements DataCenter {
-	// 数据库用户名
-	private String userName = Messages.getString("DBUser"); //$NON-NLS-1$
-	// 密码
-	private String userPasswd = Messages.getString("DBPassword"); //$NON-NLS-1$
-	// 数据库名
-	private String dbName = Messages.getString("DBName"); //$NON-NLS-1$
-	// 联结字符串
-	private String url = "jdbc:mysql://localhost/" + dbName + "?user=" //$NON-NLS-1$ //$NON-NLS-2$
-			+ userName + "&password=" + userPasswd; //$NON-NLS-1$
+public class DataCenterLiteImp implements DataCenter {
+	private String liteUrl = "jdbc:sqlite://.//PhoneMe.dblite";
 
-	private static SDataCenterImp instance = null;
+	private static DataCenterLiteImp instance = null;
 
 	private UserInfoTable userInfoTable;
 	private GroupInfoTable groupInfoTable;
 	private GroupMemTable groupMemTable;
 	private SynRelationTable synRelationTable;
 	private PerRelationTable perRelationTable;
-	private PermissionTable permissionTable;
 
 	@Override
 	public ReturnType addPerRelationship(ID uid) {
@@ -60,26 +50,25 @@ public class SDataCenterImp implements DataCenter {
 	/**
 	 * 构造函数，进行初始化类成员变量，若表不存在则建表等操作
 	 */
-	private SDataCenterImp() {
+	private DataCenterLiteImp() {
 		// 建表
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance(); //$NON-NLS-1$
-			Connection connection = (Connection) DriverManager.getConnection(url);
+		   Class.forName("SQLite.JDBCDriver").newInstance();
+		   java.sql.Connection connection = DriverManager.getConnection(liteUrl);
 			userInfoTable = new UserInfoTable(connection);
 			groupInfoTable = new GroupInfoTable(connection);
 			groupMemTable = new GroupMemTable(connection);
 			synRelationTable = new SynRelationTable(connection);
 			perRelationTable = new PerRelationTable(connection);
-			permissionTable = new PermissionTable(connection);
 		} catch (Exception e) {
 			System.out.println(e);
 			System.exit(0);
 		}
 	}
 
-	synchronized static public SDataCenterImp getInstance() {
+	synchronized static public DataCenterLiteImp getInstance() {
 		if (instance == null)
-			instance = new SDataCenterImp();
+			instance = new DataCenterLiteImp();
 		return instance;
 	}
 
@@ -254,14 +243,11 @@ public class SDataCenterImp implements DataCenter {
 		return null;
 	}
 
+	/**
+	 * 暂未实现
+	 */
 	@Override
 	public ReturnType setPermission(ID id, Permission p) {
-		try {
-			permissionTable.setPermission(ID.LOCAL_ID, id, p);
-		} catch (SQLException e) {
-			System.out.println(e);
-			e.printStackTrace();
-		}
 		return null;
 	}
 

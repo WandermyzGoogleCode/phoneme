@@ -20,6 +20,7 @@ import algorithm.Matcher;
 import datacenter.DataCenter;
 import datacenter.DataCenterImp;
 import datacenter.DataCenterImp_test;
+import datacenter.DataCenterLiteImp;
 import datacenter.SDataCenterImp;
 
 import serverLogicCenter.ServerLogicCenter;
@@ -28,6 +29,7 @@ import ui.Gui;
 import entity.BaseUserInfo;
 import entity.Group;
 import entity.ID;
+import entity.LocalSynSource;
 import entity.Password;
 import entity.Permission;
 import entity.StatResult;
@@ -51,7 +53,7 @@ public class LogicCenterImp implements LogicCenter {
 	
 	private BoxContent bc = new BoxContent();
 	
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	private ExecutorService executor = Executors.newCachedThreadPool();//Executors.newSingleThreadExecutor();////single?
 
 	private DataCenter dataCenter;
 
@@ -224,15 +226,8 @@ public class LogicCenterImp implements LogicCenter {
 		// allPerContactsBox = new AllPerContactsBox(this);
 		allGroupBox = new AllGroupsBox(this, bc);
 		allContactsBox = new AllContactsBox(this, bc);// 必须放在allGroupBox后面，
-		// 因为他会调用allGroupBox
-		try {
-			Registry registry = LocateRegistry.getRegistry(Messages.getString("LogicCenterImp.ServerAddress"));// TODO //$NON-NLS-1$
-			// 当前只是本机网络测试
-			server = (ServerLogicCenter) registry.lookup(Messages.getString("LogicCenterImp.ServerName")); //$NON-NLS-1$
-		} catch (Exception e) {
-			System.err.println("Client exception: " + e.toString()); //$NON-NLS-1$
-			e.printStackTrace();
-		}
+													// 因为他会调用allGroupBox
+		tryConnectServer();
 	}
 
 	@Override
@@ -271,7 +266,7 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public StatResult calcStat() {
 		StatResult res = new StatResult();
-		List<UserInfo> allUsers = dataCenter.getAllUserInfo(null);
+		List<UserInfo> allUsers = allContactsBox.getContacts();
 		res.setTotalCnt(allUsers.size());
 		@SuppressWarnings("unchecked")
 		ArrayList<UserInfo> distrib[] = new ArrayList[12];
@@ -291,7 +286,7 @@ public class LogicCenterImp implements LogicCenter {
 	@Override
 	public List<UserInfo> searchContacts(UserInfo info, Matcher matcher) {
 		// TODO 有空的话，加强一下搜索的智能性
-		List<UserInfo> allUsers = dataCenter.getAllUserInfo(null);
+		List<UserInfo> allUsers = allContactsBox.getContacts();
 		ArrayList<UserInfo> res = new ArrayList<UserInfo>();
 		for (UserInfo userInfo : allUsers)
 			if (matcher.match(info, userInfo))
@@ -301,7 +296,7 @@ public class LogicCenterImp implements LogicCenter {
 
 	public synchronized static LogicCenter getInstance() {
 		if (instance == null)
-			instance = new LogicCenterImp(SDataCenterImp.getInstance());
+			instance = new LogicCenterImp(DataCenterLiteImp.getInstance());
 		return instance;
 	}
 
@@ -376,9 +371,22 @@ public class LogicCenterImp implements LogicCenter {
 	}
 
 	@Override
-	public LocalSynResult localSynchronize() {
-		return new LocalSynResult(this);
+	public LocalSynResult localSynchronize(LocalSynSource source) {
+		return new LocalSynResult(source, this);
 	}
+
+	@Override
+	public void tryConnectServer() {
+		try {
+			Registry registry = LocateRegistry.getRegistry(Messages.getString("LogicCenterImp.ServerAddress"));//$NON-NLS-1$
+			server = (ServerLogicCenter) registry.lookup(Messages.getString("LogicCenterImp.ServerName")); //$NON-NLS-1$
+		} catch (Exception e) {
+			server = null;
+			System.err.println("Client exception: " + e.toString()); //$NON-NLS-1$
+			e.printStackTrace();
+		}
+	}
+
 }
 
 class Tester implements Observer {

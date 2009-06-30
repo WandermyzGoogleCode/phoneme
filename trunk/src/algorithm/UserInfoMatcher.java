@@ -6,7 +6,7 @@ import entity.UserInfo;
 import entity.infoField.InfoField;
 
 public abstract class UserInfoMatcher implements Matcher {
-	private double threshold = 0.5;
+	protected double threshold = 0.5;
 
 	abstract int similarity(String a, String b);
 	abstract int weight(String a, String b);
@@ -16,7 +16,7 @@ public abstract class UserInfoMatcher implements Matcher {
 		UserInfo patInfo=(UserInfo)pattern;
 		UserInfo tarInfo=(UserInfo)target;
 		//若ID相同则直接返回真
-		if(patInfo.getBaseInfo().getID().getValue()==tarInfo.getBaseInfo().getID().getValue())
+		if(!patInfo.getBaseInfo().getID().isNull() && patInfo.getBaseInfo().getID().getValue()==tarInfo.getBaseInfo().getID().getValue())
 			return true;
 		
 		//ID不同逐个匹配字段

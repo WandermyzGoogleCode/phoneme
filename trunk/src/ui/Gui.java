@@ -35,9 +35,9 @@ public interface Gui {
 	
 	/**
 	 * 让用户选择返回的用户信息中的每一个字段是来源于a还是来源于b
-	 * ！由于当前没有本地同步，这个函数可以先不写了
+	 * 最后将结果合并入a，返回成功与否
 	 */
-	public UserInfo mergeUserInfo(UserInfo a, UserInfo b);
+	public boolean mergeUserInfo(UserInfo a, UserInfo b);
 	
 	/**
 	 * 进入加targetUser为被授权联系人的流程。
@@ -59,4 +59,5 @@ public interface Gui {
 	 * @param g
 	 */
 	public void admitInvitation(Group g);
+
 }

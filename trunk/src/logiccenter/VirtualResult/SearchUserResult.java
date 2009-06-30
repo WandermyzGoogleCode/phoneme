@@ -6,6 +6,7 @@ import java.util.List;
 import logiccenter.LogicCenter;
 import entity.BaseUserInfo;
 import entity.BoolInfo;
+import entity.ErrorType;
 import entity.MyRemoteException;
 
 public class SearchUserResult extends OneTimeVirtualResult {
@@ -20,6 +21,11 @@ public class SearchUserResult extends OneTimeVirtualResult {
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
+		if (center.getServer() == null){
+			center.tryConnectServer();
+			if (center.getServer() == null)
+				return new BoolInfo(ErrorType.CANNOT_CONNECT_TO_SERVER);
+		}
 		res = center.getServer().searchUser(b);
 		return new BoolInfo();
 	}

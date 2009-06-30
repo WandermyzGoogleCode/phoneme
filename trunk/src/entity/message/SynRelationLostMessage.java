@@ -42,6 +42,7 @@ public class SynRelationLostMessage extends Message {
 	public void subproceed(LogicCenter center) throws RemoteException,
 			MyRemoteException {
 		List<ID> idList = new ArrayList<ID>();
+		center.getDataCenter().removeSynRelationship(synUser);
 		idList.add(synUser);
 		center.getAllContactsBox().updateRelation(idList);
 	}

@@ -78,12 +78,15 @@ import org.eclipse.swt.widgets.TreeItem;
 import ui.Gui;
 import ui_test.GroupInfoDialog.RemoveGroupResultTask;
 import ui_test.UserInfoTable.UserInfoTableType;
+import ui_test.localSyn.GetUserNameAndPwd;
+import ui_test.localSyn.LocalSynDialog;
 import ui_test.utility.VirtualResultObserver;
 
 import com.ibm.icu.impl.ICUService.Factory;
 import com.swtdesigner.SWTResourceManager;
 
 import entity.BaseUserInfo;
+import entity.GoogleSynSource;
 import entity.MyError;
 import entity.Password;
 import entity.StatResult;
@@ -235,6 +238,7 @@ public class MainWindow
 	private Map<String, Integer> contactsCategory = new HashMap<String, Integer>();
 	private AllPerContactsBox allPerContactsBox;
 	private ToolItem toolItemVisibility;
+	private Canvas canvas;
 	//private List<UserInfo> localSearchResult = null;
 	// [end]
 
@@ -300,7 +304,8 @@ public class MainWindow
 
 		// [start] 左侧Composite
 		compositeLeftList = new Composite(shell, SWT.NONE);
-		compositeLeftList.setLayout(new GridLayout());
+		GridLayout gridLayout = new GridLayout();
+		compositeLeftList.setLayout(gridLayout);
 		final FormData fd_compositeLeftList = new FormData();
 		fd_compositeLeftList.top = new FormAttachment(compositeMain, 0, SWT.TOP);
 		fd_compositeLeftList.bottom = new FormAttachment(100, 0);
@@ -701,7 +706,7 @@ public class MainWindow
 		tabItemAddressContact = new TabItem(tabFolderAddress, SWT.NONE);
 		tabItemAddressContact.setText(Messages.getString("MainWindow.21")); //$NON-NLS-1$
 
-		treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER);
+		treeAddressContact = new Tree(tabFolderAddress, SWT.BORDER | SWT.FULL_SELECTION);
 		treeAddressContact.addMouseListener(new TreeAddressContactMouseListener());
 		treeAddressContact.addSelectionListener(new TreeAddressContactSelectionListener());
 		treeAddressContact.setSortColumn(null);
@@ -737,7 +742,7 @@ public class MainWindow
 		tabItemAddressPermit = new TabItem(tabFolderAddress, SWT.NONE);
 		tabItemAddressPermit.setText(Messages.getString("MainWindow.28")); //$NON-NLS-1$
 
-		treeAddressPermit = new Tree(tabFolderAddress, SWT.BORDER);
+		treeAddressPermit = new Tree(tabFolderAddress, SWT.BORDER | SWT.FULL_SELECTION);
 		treeAddressPermit.addSelectionListener(new TreeAddressContactSelectionListener());
 		treeAddressPermit.setHeaderVisible(true);
 		tabItemAddressPermit.setControl(treeAddressPermit);
@@ -771,7 +776,7 @@ public class MainWindow
 		tabItemAddressSearchResult = new TabItem(tabFolderAddress, SWT.NONE);
 		tabItemAddressSearchResult.setText(Messages.getString("MainWindow.35")); //$NON-NLS-1$
 
-		treeAddressSearchResult = new Tree(tabFolderAddress, SWT.BORDER);
+		treeAddressSearchResult = new Tree(tabFolderAddress, SWT.BORDER | SWT.FULL_SELECTION);
 		treeAddressSearchResult.setHeaderVisible(true);
 		tabItemAddressSearchResult.setControl(treeAddressSearchResult);
 
@@ -832,6 +837,13 @@ public class MainWindow
 		toolItemMainLogout = new ToolItem(toolBarMain, SWT.PUSH);
 		toolItemMainLogout.addSelectionListener(new ToolItemMainLogoutSelectionListener());
 		toolItemMainLogout.setText(Messages.getString("MainWindow.Logout")); //$NON-NLS-1$
+		
+		canvas = new Canvas(compositeLeftList, SWT.NONE);
+		{
+			GridData gridData = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+			gridData.heightHint = 80;
+			canvas.setLayoutData(gridData);
+		}
 		// [end]
 
 		// [start] 左侧按钮
@@ -1482,6 +1494,7 @@ public class MainWindow
 		{
 			TreeItem current = (TreeItem) e.item;
 
+			
 			if (current.getParentItem() == null) // 选择了分组
 			{
 				toolItemAddressPermission.setEnabled(false);
@@ -1757,7 +1770,10 @@ public class MainWindow
 	{
 		public void widgetSelected(final SelectionEvent e)
 		{
-			LocalSynDialog dialog = new LocalSynDialog(shell, logicCenter.localSynchronize());
+			GetUserNameAndPwd getDialog = new GetUserNameAndPwd(shell);
+			if (getDialog.open() != IDialogConstants.OK_ID)
+				return;
+			LocalSynDialog dialog = new LocalSynDialog(shell, logicCenter.localSynchronize(new GoogleSynSource(getDialog.getUserName(), getDialog.getPwd())));
 			dialog.open();
 		}
 	}
@@ -2138,6 +2154,4 @@ public class MainWindow
 			displayStat(ro.getStatResult());
 		}
 	}
-	
-	//[end]
 }

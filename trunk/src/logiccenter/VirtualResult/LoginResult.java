@@ -33,6 +33,11 @@ public class LoginResult extends OneTimeVirtualResult {
 
 	@Override
 	protected BoolInfo getResult() throws RemoteException, MyRemoteException {
+		if (center.getServer() == null){
+			center.tryConnectServer();
+			if (center.getServer() == null)
+				return new BoolInfo(ErrorType.CANNOT_CONNECT_TO_SERVER);
+		}		
 		BaseUserInfo loginUser = center.getServer().login(identicalInfo, pwd);
 
 		//需要删除的同步关系

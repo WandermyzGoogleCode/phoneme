@@ -52,5 +52,8 @@
 			<attribute name="javadoc_location" value="file:/C:/SpaceFlyer/Tools/Programming/gdata/java/doc"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/deps/google-collect-1.0-rc1.jar"/>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Tools/Programming/gdata/java/deps/jsr305.jar"/>
+	<classpathentry kind="lib" path="C:/SpaceFlyer/Programming/Java/SE3/PhoneMe/lib/sqlite.jar" sourcepath="lib/sqlite.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

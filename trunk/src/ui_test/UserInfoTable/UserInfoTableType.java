@@ -54,6 +54,11 @@ public enum UserInfoTableType {
 	 * 新用户注册
 	 */
 	Register,
+	
+	/**
+	 * 正在合并的联系人
+	 */
+	Merge,
 
 	/**
 	 * 添加新本地联系人

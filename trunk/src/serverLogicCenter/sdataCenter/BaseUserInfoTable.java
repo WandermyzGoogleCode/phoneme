@@ -60,16 +60,20 @@ public class BaseUserInfoTable {
 				}
 			sql += ")";
 
-			sql += ", INDEX(";
-			for (String name : emptyInfo.getKeySet())
-				if (emptyInfo.getInfoField(name) instanceof IndexedInfoField) {
-					if (sql.charAt(sql.length() - 1) != '(')
-						sql += ", ";
-					sql += name;
-				}
-			sql += ")";
+			if (connection instanceof com.mysql.jdbc.Connection){//只有mysql支持的语法
+				sql += ", INDEX(";
+				for (String name : emptyInfo.getKeySet())
+					if (emptyInfo.getInfoField(name) instanceof IndexedInfoField) {
+						if (sql.charAt(sql.length() - 1) != '(')
+							sql += ", ";
+						sql += name;
+					}
+				sql += ")";
+			}
 
-			sql += ", PRIMARY KEY(uid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
+			sql += ", PRIMARY KEY(uid))";
+			if (connection instanceof com.mysql.jdbc.Connection)//只有mysql支持的语法
+				sql += " CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.executeUpdate(sql);
 		}
 	}

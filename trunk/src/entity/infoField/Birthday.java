@@ -1,6 +1,9 @@
 package entity.infoField;
 
 import java.text.DateFormat;
+import java.util.Date;
+
+import com.google.gdata.data.DateTime;
 
 
 /**
@@ -73,7 +76,11 @@ public class Birthday extends EmptyBirthday {
 
 	@Override
 	public String getStringValue() {
-		return day;
+		if (isEmpty())
+			return "";
+		DateTime dt = new DateTime(getDate());
+		dt.setDateOnly(true);
+		return dt.toString();
 	}
 	
 	public int getYear(){
@@ -97,5 +104,14 @@ public class Birthday extends EmptyBirthday {
 		System.out.println(Birthday.check("2000-2-29")); //$NON-NLS-1$
 		Birthday b = new Birthday("1989-7-9"); //$NON-NLS-1$
 		System.out.println(b.getYear());
+	}
+
+	public Date getDate() {
+		try {
+			return dateFormat.parse(day);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

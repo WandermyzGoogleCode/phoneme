@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.swing.text.TabableView;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
+import java.sql.Connection;
+import java.sql.Statement;
 
 import entity.ID;
 
@@ -24,12 +24,15 @@ public abstract class RelationTable {
 		
 		//如果表不存在，建立表
 		Statement statement = (Statement)connection.createStatement();
-		String sql = "DESCRIBE "+getTableName();
+		String sql = "SELECT COUNT(*) FROM "+getTableName();
 		try{
 			statement.execute(sql);
 		}
 		catch (Exception e) {
-			sql = "CREATE TABLE "+getTableName()+"(id1 BIGINT NOT NULL, id2 BIGINT NOT NULL, INDEX(id1, id2)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
+			if (connection instanceof com.mysql.jdbc.Connection)//只有mysql支持的语法
+				sql = "CREATE TABLE "+getTableName()+"(id1 BIGINT NOT NULL, id2 BIGINT NOT NULL, INDEX(id1, id2)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
+			else
+				sql = "CREATE TABLE "+getTableName()+"(id1 BIGINT NOT NULL, id2 BIGINT NOT NULL)";
 			statement.execute(sql);
 		}
 	}

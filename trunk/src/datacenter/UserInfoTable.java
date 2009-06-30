@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
+import java.sql.Connection;
+import java.sql.Statement;
 
 import entity.CustomUserInfo;
 import entity.UserInfo;
@@ -37,7 +37,7 @@ public class UserInfoTable {
 		Iterator<String> fieldNameIter = emptyInfo.getKeySet().iterator();
 
 		// 判断UserInfo信息表是否存在
-		String sql = "DESCRIBE UserInfo";
+		String sql = "SELECT COUNT(*) FROM UserInfo";
 		try {
 			statement.executeQuery(sql);
 		} catch (SQLException e) {
@@ -64,16 +64,20 @@ public class UserInfoTable {
 			//不能是UNIQUE的，因为有很多空的字段会存在，他们不是UNIQUE的。因此是否UNIQUE应该由自己的程序来判断。
 			//服务器端可以保留UNIQUE，因为服务器至少要求一个UNIQUE的东西非空。
 
-			sql += ", INDEX(";
-			for (String name : emptyInfo.getKeySet())
-				if (emptyInfo.getInfoField(InfoFieldName.valueOf(name)) instanceof IndexedInfoField) {
-					if (sql.charAt(sql.length() - 1) != '(')
-						sql += ", ";
-					sql += name;
-				}
-			sql += ")";
+			if (connection instanceof com.mysql.jdbc.Connection){//只有mysql支持的语法
+				sql += ", INDEX(";
+				for (String name : emptyInfo.getKeySet())
+					if (emptyInfo.getInfoField(InfoFieldName.valueOf(name)) instanceof IndexedInfoField) {
+						if (sql.charAt(sql.length() - 1) != '(')
+							sql += ", ";
+						sql += name;
+					}
+				sql += ")";
+			}
 
-			sql += ", PRIMARY KEY(uid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
+			sql += ", PRIMARY KEY(uid))";
+			if (connection instanceof com.mysql.jdbc.Connection)//只有mysql支持的语法
+				sql += " CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.executeUpdate(sql);
 		}
 	}

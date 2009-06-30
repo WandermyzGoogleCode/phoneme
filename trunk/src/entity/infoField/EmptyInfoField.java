@@ -30,4 +30,28 @@ public abstract class EmptyInfoField implements InfoField {
 	public String toString() {
 		return getStringValue();
 	}
+	
+	/**
+	 * 默认都能被编辑
+	 */
+	@Override
+	public boolean editable() {
+		return true;
+	}
+	
+	/**
+	 * 默认都能被显示
+	 */
+	@Override
+	public boolean visible() {
+		return true;
+	}
+	
+	/**
+	 * 默认都能被存储
+	 */
+	@Override
+	public boolean savable() {
+		return true;
+	}
 }

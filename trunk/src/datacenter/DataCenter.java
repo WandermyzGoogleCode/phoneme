@@ -1,5 +1,11 @@
 package datacenter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.sql.SQLException;
 import java.util.List;
+
+import com.google.gdata.util.AuthenticationException;
+import com.google.gdata.util.ServiceException;
 
 import entity.*;
 public interface DataCenter {
@@ -90,11 +96,17 @@ public interface DataCenter {
 	public ReturnType removeFromGroup(Group g, ID uid);
 
 	/***
+	 * source为null时，直接从数据库拿。
 	 * 
 	 * @param source 获取用户信息的途径。比如直接从自己的数据库，或者从Outlook，Google Synchronized中等
 	 * @return
+	 * @throws AuthenticationException 
+	 * @throws IOException 
+	 * @throws ServiceException 
+	 * @throws MalformedURLException 
+	 * @throws SQLException 
 	 */
-	public List<UserInfo> getAllUserInfo(LocalSynSource source);
+	public List<UserInfo> getAllUserInfo(LocalSynSource source) throws AuthenticationException, MalformedURLException, ServiceException, IOException, SQLException;
 	
 	public ReturnType removeUserInfo(ID uid);
 	
@@ -114,4 +126,15 @@ public interface DataCenter {
 	 * 获取所有已经加入的群组
 	 */
 	public List<Group> getAllGroups();
+
+	/**
+	 * 更具users中Extension字段包含的操作信息，
+	 * 更新source同步源中的联系人数据
+	 * @param users
+	 * @param source
+	 * @throws AuthenticationException 
+	 * @throws ServiceException 
+	 * @throws IOException 
+	 */
+	public void updateSource(List<UserInfo> users, LocalSynSource source) throws AuthenticationException, IOException, ServiceException;
 }

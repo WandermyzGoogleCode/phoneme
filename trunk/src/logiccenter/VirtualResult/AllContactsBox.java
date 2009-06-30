@@ -1,6 +1,9 @@
 package logiccenter.VirtualResult;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,11 +12,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.gdata.util.AuthenticationException;
+import com.google.gdata.util.ServiceException;
+
 import logiccenter.BoxContent;
 import logiccenter.LogicCenter;
 
 import entity.BaseUserInfo;
 import entity.CustomUserInfo;
+import entity.ErrorType;
 import entity.Group;
 import entity.ID;
 import entity.MyRemoteException;
@@ -34,25 +41,43 @@ public class AllContactsBox extends VirtualResult {
 	class GetTask implements Runnable {
 		@Override
 		public void run() {
-			bc.setContacts(new ConcurrentHashMap<ID, UserInfo>());
-			List<UserInfo> temp = center.getDataCenter().getAllUserInfo(null);
-			for (UserInfo info : temp)
-				bc.getContacts().put(info.getBaseInfo().getID(), info);
-			List<ID> synIDList = center.getDataCenter().getAllSynContactsID();
-			Set<ID> synIDSet = (synIDList == null) ? new HashSet<ID>()
-					: new HashSet<ID>(synIDList);
-			for (UserInfo contact : bc.getContacts().values()) {
-				Relation r = (Relation) contact
-						.getInfoField(InfoFieldName.Relation);
-				if (synIDSet.contains(contact.getBaseInfo().getID()))
-					r.setPersonal(true);
-				for (Group g : center.getAllGroupsBox().getGroups())
-					if (g.getUserSet().contains(contact.getBaseInfo().getID()))
-						r.addGroup(g.getInfoField(
-								InfoFieldName.GroupName.name())
-								.getStringValue());
+			try {
+				bc.setContacts(new ConcurrentHashMap<ID, UserInfo>());
+				List<UserInfo> temp;
+				temp = center.getDataCenter().getAllUserInfo(null);
+				for (UserInfo info : temp)
+					bc.getContacts().put(info.getBaseInfo().getID(), info);
+				List<ID> synIDList = center.getDataCenter().getAllSynContactsID();
+				Set<ID> synIDSet = (synIDList == null) ? new HashSet<ID>()
+						: new HashSet<ID>(synIDList);
+				for (UserInfo contact : bc.getContacts().values()) {
+					Relation r = (Relation) contact
+							.getInfoField(InfoFieldName.Relation);
+					if (synIDSet.contains(contact.getBaseInfo().getID()))
+						r.setPersonal(true);
+					for (Group g : center.getAllGroupsBox().getGroups())
+						if (g.getUserSet().contains(contact.getBaseInfo().getID()))
+							r.addGroup(g.getInfoField(
+									InfoFieldName.GroupName.name())
+									.getStringValue());
+				}
+				setUpdateNow();
+			} catch (AuthenticationException e) {
+				//IMPOSSIBLE
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				//IMPOSSIBLE
+				e.printStackTrace();
+			} catch (ServiceException e) {
+				//IMPOSSIBLE
+				e.printStackTrace();
+			} catch (IOException e) {
+				//IMPOSSIBLE
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				setError(ErrorType.SQL_ERROR);
 			}
-			setUpdateNow();
 		}
 	}
 

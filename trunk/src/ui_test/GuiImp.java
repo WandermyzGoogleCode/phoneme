@@ -14,11 +14,15 @@ import logiccenter.VirtualResult.VirtualState;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.hyperlink.URLHyperlink;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 
 import ui_test.GroupInfoTable.GroupInfoTableType;
 import ui_test.UserInfoTable.UserInfoTableType;
+import ui_test.localSyn.MergeUserInfoDialog;
 
 import entity.BaseUserInfo;
 import entity.Group;
@@ -194,11 +198,32 @@ public class GuiImp implements ui.Gui
 		return null;
 	}
 
+	class MergeUserInfoTask implements Runnable{
+		private UserInfo user1, user2;
+		private boolean res;
+		
+		public MergeUserInfoTask(UserInfo user1, UserInfo user2) {
+			this.user1 = user1;
+			this.user2 = user2;
+		}
+		
+		@Override
+		public void run() {
+			MergeUserInfoDialog dialog = new MergeUserInfoDialog(shell, user1, user2);	
+			res = (dialog.open() == IDialogConstants.OK_ID);
+		}
+		
+		public boolean getRes(){
+			return res;
+		}
+	}
+	
 	@Override
-	public UserInfo mergeUserInfo(UserInfo a, UserInfo b)
+	public boolean mergeUserInfo(UserInfo a, UserInfo b)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		MergeUserInfoTask task = new MergeUserInfoTask(a, b);
+		Display.getDefault().syncExec(task);
+		return task.getRes();
 	}
 
 	@Override
@@ -231,14 +256,6 @@ public class GuiImp implements ui.Gui
 	{
 		YesOrNoTask task = new YesOrNoTask(askInfo);
 		Display.getDefault().syncExec(task);
-//		Thread thread = Display.getDefault().getSyncThread();
-//		thread = Display.getDefault().getThread();
-//		try {
-//			thread.join();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			return false;
-//		}
 		return task.getRes();
 	}
 

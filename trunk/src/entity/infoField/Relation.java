@@ -134,4 +134,12 @@ public class Relation extends EmptyInfoField implements IndexedInfoField {
 	public boolean hasGroup(){
 		return !groups.isEmpty();
 	}
+	
+	/**
+	 * ²»ÄÜ±»±à¼­
+	 */
+	@Override
+	public boolean editable() {
+		return false;
+	}
 }

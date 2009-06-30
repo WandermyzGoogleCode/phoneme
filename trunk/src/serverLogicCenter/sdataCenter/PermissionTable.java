@@ -10,8 +10,8 @@ import java.util.Map;
 
 import javax.sql.rowset.serial.SerialBlob;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
+import java.sql.Connection;
+import java.sql.Statement;
 
 import entity.ID;
 import entity.Permission;

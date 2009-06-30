@@ -6,8 +6,10 @@ import java.util.Set;
 
 import entity.infoField.BaseInfoFieldName;
 import entity.infoField.CustomInfoFieldName;
+import entity.infoField.Extension;
 import entity.infoField.InfoField;
 import entity.infoField.InfoFieldName;
+import entity.infoField.Relation;
 
 public class UserInfo {
 	private BaseUserInfo baseInfo = null;
@@ -95,6 +97,8 @@ public class UserInfo {
 	 * @return
 	 */
 	public boolean setInfoField(InfoField info) {
+		if (info == null)
+			return false;
 		return setInfoField(InfoFieldName.get(info.getName()), info);
 	}
 
@@ -127,6 +131,19 @@ public class UserInfo {
 		return getStringValue();
 	}	
 	
+	/**
+	 * ÅÐ¶ÏÓÐÎÞÀ©Õ¹×Ö¶Î
+	 * @return
+	 */
+	public boolean hasExtension(){
+		Extension ext = (Extension) getInfoField(InfoFieldName.Extension);
+		return !ext.isEmpty();
+	}
+	
+	public boolean hasRelation(){
+		Relation r = (Relation) getInfoField(InfoFieldName.Relation);
+		return !r.isEmpty();
+	}
 	static public void main(String args[]){
 		Set<String> ss = new UserInfo().getKeySet();
 		System.out.println(ss.size());

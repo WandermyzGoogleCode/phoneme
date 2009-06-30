@@ -94,6 +94,8 @@ public class InfoFieldFactory {
 		}
 		if (name.equals(Messages.getString("Relation"))) //$NON-NLS-1$
 			return new Relation(value);
+		if (name.equals("Extension"))
+			return new Extension();
 		return null;
 	}
 	

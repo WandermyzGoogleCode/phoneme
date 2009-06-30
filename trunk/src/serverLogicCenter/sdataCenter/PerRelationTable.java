@@ -2,7 +2,7 @@ package serverLogicCenter.sdataCenter;
 
 import java.sql.SQLException;
 
-import com.mysql.jdbc.Connection;
+import java.sql.Connection;
 
 public class PerRelationTable extends RelationTable {
 

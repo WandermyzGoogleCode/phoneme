@@ -308,7 +308,12 @@ public interface LogicCenter {
 	 */
 	public RemoteSynResult remoteSynchronize();
 	
-	public LocalSynResult localSynchronize();
+	/**
+	 * 根据给定的本地同步资源进行同步
+	 * @param source
+	 * @return
+	 */
+	public LocalSynResult localSynchronize(LocalSynSource source);
 	
 	/**
 	 * 程序退出之前要调用这个，否则会有线程
@@ -323,8 +328,15 @@ public interface LogicCenter {
 	public void editLoginUser(BaseUserInfo baseInfo);
 	
 	/**
-	 * 获取一个单线程的Executor，负责处理后台任务，避免死锁
+	 * 获取一个Executor，负责处理后台任务
+	 * 当前是cachedThreadPool
 	 * @return
 	 */
 	public ExecutorService getExecutor();
+
+	/**
+	 * 尝试通过RMI获得服务器连接
+	 */
+	public void tryConnectServer();
+
 }

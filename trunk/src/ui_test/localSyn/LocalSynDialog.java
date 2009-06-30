@@ -1,4 +1,4 @@
-package ui_test;
+package ui_test.localSyn;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,11 +20,28 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ProgressBar;
 
 public class LocalSynDialog extends Dialog {
+	public class RefreshProgressTask implements Runnable {
+		double progress;
+		
+		public RefreshProgressTask(Double progress) {
+			this.progress = progress;
+		}
+
+		@Override
+		public void run() {
+			progressBar.setSelection((int)(progressBar.getMaximum()*progress));
+		}
+
+	}
+
 	private Label labelNowState;
 	private Text textOutput;
 	private LocalSynResult synResult;
+	private FormData formData_1;
+	private ProgressBar progressBar;
 
 	/**
 	 * Create the dialog.
@@ -32,6 +49,7 @@ public class LocalSynDialog extends Dialog {
 	 */
 	public LocalSynDialog(Shell parentShell, LocalSynResult synResult) {
 		super(parentShell);
+		setShellStyle(SWT.CLOSE | SWT.MAX | SWT.RESIZE);
 		this.synResult = synResult;
 		SynObserver observer = new SynObserver();
 		this.synResult.addObserver(observer);
@@ -40,7 +58,10 @@ public class LocalSynDialog extends Dialog {
 	class SynObserver implements Observer{
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			Display.getDefault().syncExec(new SynObserverTask((LocalSynResult)arg0));
+			if (arg1 != null && (arg1 instanceof Double))
+				Display.getDefault().syncExec(new RefreshProgressTask((Double)arg1));
+			else
+				Display.getDefault().syncExec(new SynObserverTask((LocalSynResult)arg0));
 		}
 	}
 	
@@ -54,17 +75,20 @@ public class LocalSynDialog extends Dialog {
 		@Override
 		public void run() {
 			if (result.getState() == VirtualState.LOADING){
-				labelNowState.setText(result.getIntermediateInfo());
+				labelNowState.setText(result.getIntermediateInfo().trim());
 				textOutput.append(result.getIntermediateInfo()+"\n");
+				progressBar.setSelection((int)(progressBar.getMaximum()*result.getProgress()));
 			}
 			else if (result.getState() == VirtualState.PREPARED){
 				labelNowState.setText("同步完成");
-				textOutput.append("同步完成\n");				
+				textOutput.append("同步完成\n");	
+				progressBar.setSelection(progressBar.getMaximum());
 			}
 			else if (result.getState() == VirtualState.ERRORED){
 				labelNowState.setText("同步出错");
-				textOutput.append(String.format("同步出错%s\n", result.getError().toString()));
+				textOutput.append(String.format("同步出错：%s\n", result.getError().toString()));
 				MessageDialog.openError(getShell(), "同步出错", result.getError().toString());
+				progressBar.setSelection(progressBar.getMinimum());
 			}
 		}
 	}
@@ -80,22 +104,34 @@ public class LocalSynDialog extends Dialog {
 		{
 			labelNowState = new Label(container, SWT.NONE);
 			{
-				FormData formData = new FormData();
-				formData.top = new FormAttachment(0, 10);
-				formData.left = new FormAttachment(0, 10);
-				labelNowState.setLayoutData(formData);
+				formData_1 = new FormData();
+				formData_1.left = new FormAttachment(0, 10);
+				formData_1.top = new FormAttachment(0, 10);
+				labelNowState.setLayoutData(formData_1);
 			}
 			labelNowState.setText("\u5F53\u524D\u72B6\u6001");
 		}
 		{
-			textOutput = new Text(container, SWT.BORDER);
+			textOutput = new Text(container, SWT.BORDER | SWT.MULTI);
+			formData_1.right = new FormAttachment(textOutput, 0, SWT.RIGHT);
+			textOutput.setEditable(false);
 			{
 				FormData formData = new FormData();
-				formData.bottom = new FormAttachment(100, -10);
-				formData.right = new FormAttachment(100, -10);
+				formData.bottom = new FormAttachment(100, -31);
 				formData.top = new FormAttachment(labelNowState, 6);
+				formData.right = new FormAttachment(100, -10);
 				formData.left = new FormAttachment(0, 10);
 				textOutput.setLayoutData(formData);
+			}
+		}
+		{
+			progressBar = new ProgressBar(container, SWT.NONE);
+			{
+				FormData formData = new FormData();
+				formData.right = new FormAttachment(labelNowState, 0, SWT.RIGHT);
+				formData.top = new FormAttachment(textOutput, 6);
+				formData.left = new FormAttachment(0, 10);
+				progressBar.setLayoutData(formData);
 			}
 		}
 
@@ -121,5 +157,4 @@ public class LocalSynDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(450, 300);
 	}
-
 }
