@@ -526,9 +526,12 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			return new BoolInfo(ErrorType.ILLEGAL_NULL);
 		try {
 			dataCenter.removePerRelationship(thisUser, targetID);
-			pushMessage(targetID, new SynRelationLostMessage(thisUser,
-					getUserInfo(thisUser).getName(), idFactory
-							.getNewMessageID()));
+			if (dataCenter.isSynContact(thisUser, targetID)){
+				dataCenter.removeSynRelationship(targetID, thisUser);
+				pushMessage(targetID, new SynRelationLostMessage(thisUser,
+						getUserInfo(thisUser).getName(), idFactory
+								.getNewMessageID()));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new BoolInfo(ErrorType.SQL_ERROR);
@@ -773,9 +776,13 @@ public class ServerLogicCenterImp implements ServerLogicCenter {
 			e.printStackTrace();
 			throw new MyRemoteException(ErrorType.SQL_ERROR);
 		}
-		senders.get(targetUser).addMessage(
-				new AdmitSynContactMessage(getUserInfo(admitUser, targetUser),
-						targetUser, visibility, idFactory.getNewMessageID()));
+		try {
+			pushMessage(targetUser, new AdmitSynContactMessage(getUserInfo(admitUser, targetUser),
+					targetUser, visibility, idFactory.getNewMessageID()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new MyRemoteException(ErrorType.SQL_ERROR);
+		}
 	}
 
 	@Override

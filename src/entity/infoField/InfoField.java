@@ -29,8 +29,26 @@ public interface InfoField extends Serializable{
 	public boolean isEmpty();
 	
 	/**
+	 * 该字段是否显示出来
+	 * @return
+	 */
+	public boolean visible();
+	
+	/**
+	 * 该字段是否能被编辑
+	 * @return
+	 */
+	public boolean editable();
+	
+	/**
 	 * getStringValue的最大长度
 	 * @return
 	 */
 	public int getMaxLength();
+	
+	/**
+	 * 该字段能否被存到数据库中
+	 * @return
+	 */
+	public boolean savable();
 }

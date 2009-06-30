@@ -1207,4 +1207,10 @@ public class DataCenterImp_test implements DataCenter {
 		}
 		return result;
 	}
+
+	@Override
+	public void updateSource(List<UserInfo> users, LocalSynSource source) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -156,6 +156,15 @@ public interface ServerDataCenter {
 	public List<ID> getPerContactID(ID uid) throws SQLException;
 	
 	/**
+	 * 判断id1是否是id2的同步联系人
+	 * @param id1
+	 * @param id2
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean isSynContact(ID id1, ID id2) throws SQLException;
+	
+	/**
 	 * 判断id1是否是id2的被授权联系人。
 	 * 为了效率，所以专门设置这样一个函数，以提高相应
 	 * 操作的速度。

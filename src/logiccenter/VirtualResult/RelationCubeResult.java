@@ -19,10 +19,7 @@ public class RelationCubeResult extends OneTimeVirtualResult {
 		super(center);
 		this.from = from;
 		this.to = to;
-		if (noLoginUser())
-			setError(ErrorType.NOT_LOGIN);
-		else
-			center.getExecutor().execute(task);
+		center.getExecutor().execute(task);
 	}
 
 	@Override

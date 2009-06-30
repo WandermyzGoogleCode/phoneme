@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
+import java.sql.Connection;
+import java.sql.Statement;
 
 import entity.BaseUserInfo;
 import entity.Group;
@@ -34,7 +34,7 @@ public class GroupInfoTable {
 		Iterator<String> fieldNameIter = emptyGroup.getKeySet().iterator();
 
 		// 判断GroupInfo信息表是否存在
-		String sql = "DESCRIBE GroupInfo";
+		String sql = "SELECT COUNT(*) FROM GroupInfo";
 		try {
 			statement.executeQuery(sql);
 		} catch (SQLException e) {
@@ -61,15 +61,19 @@ public class GroupInfoTable {
 			if (!uniquePart.equals(", UNIQUE()"))
 				sql += uniquePart;
 
-			sql += ", INDEX(admin";
-			for (String name : emptyGroup.getKeySet())
-				if (emptyGroup.getInfoField(name) instanceof IndexedInfoField) {
-					sql += ", ";
-					sql += name;
-				}
-			sql += ")";
+			if (connection instanceof com.mysql.jdbc.Connection){//只有mysql支持的语法
+				sql += ", INDEX(admin";
+				for (String name : emptyGroup.getKeySet())
+					if (emptyGroup.getInfoField(name) instanceof IndexedInfoField) {
+						sql += ", ";
+						sql += name;
+					}
+				sql += ")";
+			}
 
-			sql += ", PRIMARY KEY(gid)) CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
+			sql += ", PRIMARY KEY(gid))";
+			if (connection instanceof com.mysql.jdbc.Connection)//只有mysql支持的语法
+				sql += " CHARACTER SET gbk COLLATE gbk_bin TYPE InnoDB;";
 			statement.executeUpdate(sql);
 		}
 

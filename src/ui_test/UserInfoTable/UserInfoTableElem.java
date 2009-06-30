@@ -34,6 +34,9 @@ public class UserInfoTableElem
 	
 	public boolean IsEditable()
 	{
+		if (!infoField.editable())
+			return false;
+		
 		String fieldName = infoField.getName();
 		
 		if(fieldName == Messages.getString("UserInfoTableElem.relation")) return false; //$NON-NLS-1$
@@ -82,6 +85,9 @@ public class UserInfoTableElem
 	public boolean IsVisible()
 	{
 		String fieldName = infoField.getName();
+		
+		if (!infoField.visible())
+			return false;
 		
 		if(fieldName == Messages.getString("UserInfoTableElem.relation")) return false; //$NON-NLS-1$
 		

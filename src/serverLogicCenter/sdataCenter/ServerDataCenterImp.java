@@ -405,4 +405,9 @@ public class ServerDataCenterImp implements ServerDataCenter {
 	public void setPwd(ID uid, Password pwd) throws SQLException {
 		pwdTable.setPwd(uid, pwd);
 	}
+
+	@Override
+	public boolean isSynContact(ID id1, ID id2) throws SQLException {
+		return synRelationTable.hasRelation(id2, id1);
+	}
 }

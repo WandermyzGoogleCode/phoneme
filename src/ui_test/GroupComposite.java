@@ -57,7 +57,6 @@ public class GroupComposite extends Composite
 	private ToolItem toolEditGroup;
 	private ToolItem toolNewGroup;
 	private ToolBar toolBar;
-	
 	private GroupTableTreeContentProvider contentProvider;
 	private GroupSearchContentProvider searchContentProvider;
 	
